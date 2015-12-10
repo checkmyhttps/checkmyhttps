@@ -3,7 +3,11 @@ We propose a user-friendly that allow you to check if your encrypted web traffic
 
 #Author
 Designed & developed : Raphaël PION and Hugo MEZIANI. 
+
+
 Original idea & Supervision : ESIEA/CNS/Rexy
+
+
 Logo : Clément SICCARDI
 
 #LICENSE
