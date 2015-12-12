@@ -5,9 +5,9 @@
           <em:type>2</em:type>
           <em:bootstrap>true</em:bootstrap>
           <em:unpack>false</em:unpack>
-          <em:version>1.0.0</em:version>
+          <em:version>1.0.1</em:version>
           <em:name>CheckMyHTTPS</em:name>
-          <em:description>Check if your connection HTTPS is secure right now ! website : https://www.checkmyhttps.net</em:description>
+          <em:description>Check if your HTTPS connections are secure. You can visit our website : https://www.checkmyhttps.net</em:description>
           <em:targetApplication>
             <Description>
               <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
