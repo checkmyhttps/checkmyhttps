@@ -1,0 +1,6 @@
+content   checkmyhttps                 chrome/content/
+skin      checkmyhttps   classic/1.0   chrome/skin/
+locale    checkmyhttps   en-US         chrome/locale/en-US/
+locale    checkmyhttps   fr         	 chrome/locale/fr/
+overlay   chrome://browser/content/browser.xul   chrome://checkmyhttps/content/checkmyhttps.xul
+style	  chrome://global/content/customizeToolbar.xul	chrome://calomelsslvalidation/skin/overlay.css

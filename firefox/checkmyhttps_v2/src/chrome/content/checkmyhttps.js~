@@ -1,0 +1,156 @@
+/*CheckmyHTTPS
+/*We propose a user-friendly that allow you to check if your encrypted web traffic (SSL/TLS) towards secured Internet servers (HTTPS) is not intercepted (being listened to). 
+/*
+/*Designed & developed : Raphaël PION and Hugo MEZIANI.
+/*Original idea & Supervision : ESIEA/CNS/Rexy
+/*website : http://checkmyhttps.net
+*/
+
+var StockWatcher = {
+
+	startUp: function(url){
+		this.refreshInformation(url);
+	},
+	
+	refreshInformation: function(url){
+	
+		function infoReceived()
+		{
+			var samplePanel = document.getElementById('is_secure');
+			var output = httpRequest.responseText;
+				
+			if (output.length)
+			{
+				if(output.search("<center><h1><font color=\"green\">Yes</font></h1></center>") != -1)
+				{
+					samplePanel.textContent = "no MITM";
+					document.getElementById("calomelsslvalidation-urlicon").image="chrome://checkmyhttps/skin/green.png";
+				}
+				else if(output.search("<font color=\"red\">") != -1)
+				{
+					samplePanel.textContent = "Empreinte différentes!";
+					document.getElementById("calomelsslvalidation-urlicon").image="chrome://checkmyhttps/skin/red.png";
+				}
+				else
+				{
+					document.getElementById("calomelsslvalidation-urlicon").image="chrome://checkmyhttps/skin/unknown.png";	
+				}
+			}
+		}
+		
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.open("GET", url, true);
+		httpRequest.onload = infoReceived;
+		httpRequest.send(null);
+	}
+}
+
+
+var checkmyhttps = {
+
+
+	// view details
+	website: function(event) {
+		openUILink("https://www.checkmyhttps.net", event, false, true);
+	},
+
+	// left click on toolbar button 
+	buttonPanel: function(event) {
+		if (event.type == "click" && event.button == 0) { this._panel.openPopup(this._panel_image, 'after_start'); }
+	},
+
+	//get xul element for the panel
+	get _panel () { return document.getElementById("panel"); },
+	get _panel_image () { return document.getElementById("calomelsslvalidation-urlicon"); },
+	get _domain_name () { return document.getElementById("domain_name"); },
+	get _secured () { return document.getElementById("is_secure"); },
+	get _sha1 () { return document.getElementById("fingerprint_sha1"); },
+	get _sha256 () { return document.getElementById("fingerprint_sha256"); },
+	get _date () { return document.getElementById("current_date"); },
+
+
+	//add listner on each page
+	onPageLoad: function() {
+
+		const ci = Components.interfaces;
+		const cc = Components.classes;
+		const gb = window.getBrowser();
+
+		var panel_updateListener = {
+			onStateChange:    function(aWebProgress, aRequest, aFlag, aStatus) { checkmyhttps.onPageUpdate(); },
+			onLocationChange: function(aWebProgress, aRequest, aURI) { checkmyhttps.onPageUpdate(); },
+			onSecurityChange: function(aWebProgress, aRequest, aState) { checkmyhttps.onPageUpdate(); },
+			onStatusChange: function(aWebProgress) { return; },
+			onProgressChange: function(aWebProgress) { return; }
+		};
+		
+		gb.addProgressListener(panel_updateListener);
+	},
+
+	//we check in this function if your SSL is secure.
+	onPageUpdate: function() {
+
+	const cc = Components.classes;
+	const ci = Components.interfaces;
+	const gb = window.getBrowser();
+	var currentBrowser = gb.selectedBrowser;
+	var ui = currentBrowser.securityUI;
+	var protocol_url = window.content.location.protocol;
+	var c_domain_name = window.content.location.hostname;
+   
+	// if toolbar button unused
+	if (document.getElementById("calomelsslvalidation-urlicon") == null ) return;
+
+	//init strings
+	checkmyhttps._domain_name.textContent = null;
+	checkmyhttps._secured.textContent = null;
+	checkmyhttps._sha1.textContent = null;
+	checkmyhttps._sha256.textContent = null;  
+	checkmyhttps._date.textContent = null;  
+	//loading icon
+	document.getElementById("calomelsslvalidation-urlicon").image="chrome://checkmyhttps/skin/unknown.png";
+
+
+
+	// if https connection
+	if (protocol_url == "https:") {
+
+		if (ui)  
+		{
+			ui.QueryInterface(ci.nsISSLStatusProvider);
+			
+			var status = ui.SSLStatus;
+			if (!status) return;
+			var c_ssl_cert = status.serverCert;
+	
+			if (!(c_ssl_cert)) return;
+				var url = 'https://checkmyhttps.net/addon.php?url=https://'+c_domain_name+'&thumbprint='+c_ssl_cert.sha1Fingerprint+'&thumbprint_256='+c_ssl_cert.sha256Fingerprint;
+				checkmyhttps._domain_name.textContent             = ("\nNom de l'hote : "+ c_domain_name);
+				checkmyhttps._sha1.textContent         = ("\nEmpreinte sha1 : " + c_ssl_cert.sha1Fingerprint);
+				checkmyhttps._sha256.textContent     = ("\nEmpreinte sha256 : " + c_ssl_cert.sha256Fingerprint);
+				StockWatcher.startUp(url);
+				checkmyhttps._date.textContent        = ("\n" + new Date());
+		}
+
+	}// if http connection
+	else if (protocol_url == "http:") {
+		checkmyhttps._domain_name.textContent   = ("Nom de l'hote : " + c_domain_name);
+		checkmyhttps._secured.textContent = ("Security   : None - Unsecured");
+		checkmyhttps._date.textContent        = (new Date());
+		document.getElementById("calomelsslvalidation-urlicon").image="chrome://checkmyhttps/skin/unknown.png";
+	}
+	else{
+		checkmyhttps._domain_name.textContent   = ("You are not browsing!");
+		checkmyhttps._secured.textContent = ("Local");
+		checkmyhttps._date.textContent        = (new Date());
+		document.getElementById("calomelsslvalidation-urlicon").image="chrome://checkmyhttps/skin/unknown.png";
+	}
+	
+
+   },
+
+};
+
+
+
+

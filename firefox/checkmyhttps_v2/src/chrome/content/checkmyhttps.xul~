@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://checkmyhttps/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://checkmyhttps/locale/overlay.dtd">
+<overlay id="checkmyhttps-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="checkmyhttps.js"/>
+
+
+  <script type="application/x-javascript">
+    window.addEventListener("load",   function() { checkmyhttps.onPageLoad(); },   false);
+  </script>
+  
+<toolbarpalette id="BrowserToolbarPalette">
+  <toolbarbutton id="calomelsslvalidation-urlicon" class="toolbarbutton-1" label="Calomel SSL Validation" oncontextmenu="event.preventDefault()" onclick="checkmyhttps.buttonPanel(event);" />
+</toolbarpalette>
+
+  <popupset label="info" type="panel">
+    <panel id="panel">
+      <hbox id="panel-box" align="top">
+        <image id="left-banner" validate="never"/>
+        <vbox id="panel-content">
+          <label id="title" value="&title;" />
+          <separator/>
+   	  <description id="domain_name"/>
+   	  <description id="is_secure"/>
+   	  <description id="fingerprint_sha1"/>
+   	  <description id="fingerprint_sha256"/>
+   	  <description id="current_date"/>
+          <menuitem id="credit" oncommand="checkmyhttps.website(event)" onclick="checkForLeftClick(this, event)" label="&website;"/>
+        </vbox>
+      </hbox>
+    </panel>
+  </popupset>
+
+</overlay>

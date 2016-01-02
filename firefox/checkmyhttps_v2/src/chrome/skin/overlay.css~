@@ -1,0 +1,53 @@
+#calomelsslvalidation-urlicon > .toolbarbutton-menubutton-button {
+  padding: 0px !important;
+  list-style-image: url("chrome://calomelsslvalidation/skin/unknown.png");
+  -moz-appearance: none !important;
+}
+
+#panel-box {
+  min-width: 450px;
+  border-color: #CCCCCC;
+  border-style: solid; 
+}
+
+#left-banner {
+  height: 200px;
+  width: 50px;
+  background-image: url("chrome://calomelsslvalidation/skin/bg.png");
+}
+
+#panel-content {
+  white-space: pre-wrap;
+}
+
+#domain_name
+#is_secure
+#fingerprint_sha1
+#fingerprint_sha256
+#current_date {
+  color: #000000;
+  font-family:monospace;
+  max-width: 450px;
+}
+
+#title {
+  color: #000000;
+  font-family:Verdana;
+  font-size:150%;
+  max-width: 450px;
+}
+
+#current_date {
+  color: #000000;
+  font-family:Verdana;
+  font-size: 90%;
+  max-width: 450px;
+}
+
+#website:hover {
+  color: #0000ff;
+  font-family:Verdana;
+  font-size: 90%;
+  max-width: 450px;
+  text-decoration: underline;
+}
