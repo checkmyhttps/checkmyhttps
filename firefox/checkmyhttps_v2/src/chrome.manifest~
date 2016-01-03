@@ -1,0 +1,5 @@
+content   calomelsslvalidation                 chrome/content/
+skin      calomelsslvalidation   classic/1.0   chrome/skin/
+locale    calomelsslvalidation   en-US         chrome/locale/en-US/
+overlay   chrome://browser/content/browser.xul   chrome://calomelsslvalidation/content/calomelsslvalidation.xul
+style	  chrome://global/content/customizeToolbar.xul	chrome://calomelsslvalidation/skin/overlay.css

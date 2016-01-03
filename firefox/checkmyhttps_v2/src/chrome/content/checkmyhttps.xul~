@@ -10,29 +10,25 @@
   </script>
   
 <toolbarpalette id="BrowserToolbarPalette">
-  <toolbarbutton id="checkmyhttps-icon" class="toolbarbutton-1" label="Check my HTTPS" oncontextmenu="event.preventDefault()" onclick="checkmyhttps.buttonPanel(event);" />
+  <toolbarbutton id="calomelsslvalidation-urlicon" class="toolbarbutton-1" label="Calomel SSL Validation" oncontextmenu="event.preventDefault()" onclick="checkmyhttps.buttonPanel(event);" />
 </toolbarpalette>
 
   <popupset label="info" type="panel">
     <panel id="panel">
       <hbox id="panel-box" align="top">
         <image id="left-banner" validate="never"/>
-        
         <vbox id="panel-content">
           <label id="title" value="&title;" />
-						<description id="domain_name"  field="&f_domain_name;" local="&f_internals_pages;"/>
-						<description id="is_secured" field="&f_question;" yes-field="&f_is_secured;" no-field="&f_is_not_secured;" http-field="&f_http;" yes-value="green" no-value="red" http-value="blue" fast="&f_too_fast;"/>
-						<description id="reason" field="&f_reason;" />
-						
-						<label id="details" button-up="&details;" button-down="&no-details;" url-base="&f_url_base;"/>
-						
-          <button id="credit" oncommand="checkmyhttps.website()" onclick="checkForLeftClick(this, event)" label="&website;"/>
-          <description id="current_date"/>
+          <separator/>
+   	  <description id="domain_name"/>
+   	  <description id="is_secure"/>
+   	  <description id="fingerprint_sha1"/>
+   	  <description id="fingerprint_sha256"/>
+   	  <description id="current_date"/>
+          <menuitem id="credit" oncommand="checkmyhttps.website(event)" onclick="checkForLeftClick(this, event)" label="&website;"/>
         </vbox>
       </hbox>
     </panel>
   </popupset>
-  
-  
 
 </overlay>

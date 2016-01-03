@@ -8,11 +8,11 @@
 
 var StockWatcher = {
 
-	startUp: function(url,sha1,sha256){
-		this.refreshInformation(url,sha1,sha256);
+	startUp: function(url){
+		this.refreshInformation(url);
 	},
 	
-	refreshInformation: function(url,sha1,sha256){
+	refreshInformation: function(url){
 	
 		function infoReceived()
 		{
@@ -20,29 +20,34 @@ var StockWatcher = {
 				
 			if (output.length)
 			{
-				if(output.search("<center><h1><font color=\"green\">Yes</font></h1></center>") != -1)
+				if(output.search("<center><h1><font color=\"green\">") != -1)
 				{
+					checkmyhttps._reason.textContent = "";
 					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("yes-value");
 					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("yes-field")+"\n"+"\n"+"\n";
 					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/green.png";
 				}
 				else if(output.search("<font color=\"red\">") != -1)
 				{
-					//get sha1 seen by the server
-					var sha1_server_search = output.split("Server Fingerprint </br> ");
-					sha1_server_search = sha1_server_search[1].split("<br/><br/></center>");
-					var sha1_server = sha1_server_search[0];
-					//get sha256 seen by the server
-					var sha256_server_search = output.split("Server Fingerprint </br> ");
-					sha256_server_search = sha256_server_search[2].split("<br/><br/></center>");
-					var sha256_server = sha256_server_search[0];
+					var domain_check = output.split("</center></h1><center><h2>");
+					domain_check = domain_check[1].split("</h2>");
 					
-					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
-					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field");
+					if(checkmyhttps._domain_name.textContent.search(domain_check[0]) != -1)
+					{
+						checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
+						checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field");
 					
-					checkmyhttps._reason.textContent = checkmyhttps._reason.getAttribute("field")
+						checkmyhttps._reason.textContent = checkmyhttps._reason.getAttribute("field");
 					
-					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/red.png";
+						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/red.png";
+					}
+					else
+					{
+						checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
+						checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("fast");
+						checkmyhttps._reason.textContent = "";
+						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";	
+					}
 				}
 				else
 				{
@@ -63,14 +68,10 @@ var checkmyhttps = {
 
 
 	// view details
-	website: function(event) {
-		openUILink("https://www.checkmyhttps.net", event, false, true);
+	website: function() {
+		openUILinkIn("https://www.checkmyhttps.net", "tab");
 	},
 
-	//view details
-	details_url: function(event,url) {
-		openUILink(url, event, false, true);
-	},
 	
 	// left click on toolbar button 
 	buttonPanel: function(event) {
@@ -86,6 +87,7 @@ var checkmyhttps = {
 	get _date () { return document.getElementById("current_date"); },
 	get _details () { return document.getElementById("details"); },
 
+
 	//add listner on each page
 	onPageLoad: function() {
 
@@ -94,11 +96,7 @@ var checkmyhttps = {
 		const gb = window.getBrowser();
 
 		var panel_updateListener = {
-			//onStateChange:    function(aWebProgress, aRequest, aFlag, aStatus) { checkmyhttps.onPageUpdate(); }, to avoid to get lots of request on the same page.
-			onLocationChange: function(aWebProgress, aRequest, aURI) { checkmyhttps.onPageUpdate(); },
 			onSecurityChange: function(aWebProgress, aRequest, aState) { checkmyhttps.onPageUpdate(); },
-			onStatusChange: function(aWebProgress) { return; },
-			onProgressChange: function(aWebProgress) { return; }
 		};
 		
 		gb.addProgressListener(panel_updateListener);
@@ -120,9 +118,13 @@ var checkmyhttps = {
 
 	//init strings
 	checkmyhttps._domain_name.textContent = null;
+	checkmyhttps._secured.className = null;
 	checkmyhttps._secured.textContent = null;
+	checkmyhttps._secured.className = null;
 	checkmyhttps._reason.textContent = null; 
+	checkmyhttps._secured.className = null;
 	checkmyhttps._date.textContent = null;  
+	checkmyhttps._secured.className = null;
 	//loading icon
 	document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
 
@@ -140,13 +142,13 @@ var checkmyhttps = {
 			var c_ssl_cert = status.serverCert;
 	
 			if (!(c_ssl_cert)) return;
-				var url = 'https://checkmyhttps.net/addon.php?url=https://'+c_domain_name+'&thumbprint='+c_ssl_cert.sha1Fingerprint+'&thumbprint_256='+c_ssl_cert.sha256Fingerprint;
+				var url = checkmyhttps._details.getAttribute("url-base") +c_domain_name+'&thumbprint='+c_ssl_cert.sha1Fingerprint+'&thumbprint_256='+c_ssl_cert.sha256Fingerprint;
 				
 				checkmyhttps._details.href = url;
 				checkmyhttps._details.value = checkmyhttps._details.getAttribute("button-up");
 				checkmyhttps._details.className = "text-link details";
 				
-				StockWatcher.startUp(url,c_ssl_cert.sha1Fingerprint,c_ssl_cert.sha256Fingerprint);
+				StockWatcher.startUp(url);
 				
 				checkmyhttps._domain_name.className = "blue";
 				checkmyhttps._domain_name.textContent             =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("field") + c_domain_name);
