@@ -49,6 +49,13 @@ var StockWatcher = {
 						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";	
 					}
 				}
+				else if(output.search("<font color=\"yellow\">") != -1)
+				{
+					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
+					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("google-pbm");
+					checkmyhttps._reason.textContent = "\n";
+					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
+				}
 				else
 				{
 					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";	
@@ -75,7 +82,8 @@ var checkmyhttps = {
 	
 	// left click on toolbar button 
 	buttonPanel: function(event) {
-		if (event.type == "click" && event.button == 0) { this._panel.openPopup(this._panel_image, 'after_start'); }
+		if (event.type == "click" && event.button == 0) { checkmyhttps.onPageUpdate(); }
+		if (event.type == "click" && event.button == 2) { this._panel.openPopup(this._panel_image, 'after_start'); }
 	},
 
 	//get xul element for the panel
@@ -87,23 +95,13 @@ var checkmyhttps = {
 	get _date () { return document.getElementById("current_date"); },
 	get _details () { return document.getElementById("details"); },
 
-
-	//add listner on each page
-	onPageLoad: function() {
-
-		const ci = Components.interfaces;
-		const cc = Components.classes;
-		const gb = window.getBrowser();
-
-		var panel_updateListener = {
-			onSecurityChange: function(aWebProgress, aRequest, aState) { checkmyhttps.onPageUpdate(); },
-		};
-		
-		gb.addProgressListener(panel_updateListener);
-	},
+	
 
 	//we check in this function if your SSL is secure.
 	onPageUpdate: function() {
+	
+	
+	
 
 	const cc = Components.classes;
 	const ci = Components.interfaces;
@@ -112,6 +110,14 @@ var checkmyhttps = {
 	var ui = currentBrowser.securityUI;
 	var protocol_url = window.content.location.protocol;
 	var c_domain_name = window.content.location.hostname;
+   
+   var panel_updateListener = {
+		onSecurityChange: function(aWebProgress, aRequest, aState) { document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png"; },
+	};
+
+	gb.addProgressListener(panel_updateListener);
+   
+  
    
 	// if toolbar button unused
 	if (document.getElementById("checkmyhttps-icon") == null ) return;
@@ -126,7 +132,7 @@ var checkmyhttps = {
 	checkmyhttps._date.textContent = null;  
 	checkmyhttps._secured.className = null;
 	//loading icon
-	document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
+	document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/working.png";
 
 
 
@@ -185,9 +191,8 @@ var checkmyhttps = {
 		checkmyhttps._secured.className = "";
 		
 		document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
-		checkmyhttps._date.textContent = (new Date());
 	}
-	
+	 
 
    },
 

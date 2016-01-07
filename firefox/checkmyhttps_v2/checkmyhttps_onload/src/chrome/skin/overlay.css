@@ -1,0 +1,71 @@
+#checkmyhttps-icon > .toolbarbutton-menubutton-button {
+  list-style-image: url("chrome://checkmyhttps/skin/unknown.png");
+  -moz-appearance: none !important;
+}
+
+.details{
+	padding: 10px 15px;
+	background: #4479BA;
+	color: #FFF;
+	text-align: center;
+}	
+
+.gray-button
+{
+	padding: 10px 15px;
+	background: #CCCCCC;
+	color: #FFF;
+	text-align: center;
+}
+
+#panel-box {
+  min-width: 100px;
+  border-color: #CCCCCC;
+  background: #FFFFFF;
+  border-style: solid; 
+}
+
+.red{
+	color: red;
+}
+
+.green{
+	color: green;
+}
+
+.blue{
+	color: #194775;
+}
+
+#left-banner {
+  height: 220px;
+  width: 60px;
+  background-image: url("chrome://checkmyhttps/skin/bg.png");
+}
+
+#panel-content {
+  white-space: pre-wrap;
+}
+
+#domain_name
+#is_secure
+{
+  max-width: 450px;
+}
+
+#title {
+	text-align: center;
+  color: #003366;
+  font-family:Verdana;
+  font-size:150%;
+  max-width: 450px;
+}
+
+#current_date {
+  color: #003366;
+  font-family:Verdana;
+  font-size: 75%;
+  max-width: 450px;
+ 	text-align: center;
+}
+

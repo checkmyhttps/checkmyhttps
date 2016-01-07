@@ -1,5 +1,4 @@
 #checkmyhttps-icon > .toolbarbutton-menubutton-button {
-  padding: 0px !important;
   list-style-image: url("chrome://checkmyhttps/skin/unknown.png");
   -moz-appearance: none !important;
 }
@@ -20,7 +19,7 @@
 }
 
 #panel-box {
-  min-width: 450px;
+  min-width: 100px;
   border-color: #CCCCCC;
   background: #FFFFFF;
   border-style: solid; 

@@ -2,13 +2,13 @@
 <!ENTITY details "Consulter les détails">
 <!ENTITY no-details "Détails indisponibles">
 <!ENTITY website "Notre site Internet">
-<!ENTITY f_domain_name "Nom du Domaine : ">
-<!ENTITY f_internals_pages "Vous naviguez sur des pages internes du navigateur.                 ">
-<!ENTITY f_reason "Vous êtes probablement interceptés, les empreintes vu par le client et le serveur diffèrent. Clickez sur Consulter les détails.">
+<!ENTITY f_domain_name "Test effectué sur : ">
+<!ENTITY f_internals_pages "Vous naviguez sur des pages internes du navigateur.">
+<!ENTITY f_reason "Vous êtes probablement interceptés, les empreintes vues par le client et le serveur diffèrent. Cliquez sur Consulter les détails.">
 <!ENTITY f_url_base "https://checkmyhttps.net/addon_fr.php?url=https://">
 <!ENTITY f_question "Ma connexion HTTPS est-t-elle sécurisée? ">
-<!ENTITY f_is_secured "Oui! :)                          ">
+<!ENTITY f_is_secured "Oui! :)">
 <!ENTITY f_is_not_secured "Non ...">
 <!ENTITY f_too_fast "Vous changez de page trop rapidement. Le test n'a pas le temps de se faire. Rechargez la page ( Pressez F5) pour obtenir des résultats.">
 <!ENTITY f_http "Les connexions HTTP ne sont pas sécurisées. Faites attention!">
-
+<!ENTITY f_problem_google "Nous ne pouvons pas tester ce site web car il présente plusieurs certificats.">
