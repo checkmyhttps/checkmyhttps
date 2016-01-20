@@ -3,7 +3,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://checkmyhttps/locale/overlay.dtd">
 <overlay id="checkmyhttps-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="checkmyhttps.js"/>
-
+  
 
   
 <toolbarpalette id="BrowserToolbarPalette">
@@ -17,9 +17,9 @@
         
         <vbox id="panel-content">
           <label id="title" value="&title;" />
-						<description id="domain_name"  field="&f_domain_name;" local="&f_internals_pages;"/>
-						<description id="is_secured" field="&f_question;" yes-field="&f_is_secured;" no-field="&f_is_not_secured;" http-field="&f_http;" yes-value="green" no-value="red" http-value="blue" fast="&f_too_fast;" google-pbm="&f_problem_google;"/>
-						<description id="reason" field="&f_reason;" />
+						<description id="domain_name"  field="&f_domain_name;" local="&f_internals_pages;" startup="&f_startup;"/>
+						<description id="is_secured" field="&f_question;" yes-field="&f_is_secured;" no-field="&f_is_not_secured;" http-field="&f_http;" yes-value="green" no-value="red" http-value="blue" fast="&f_too_fast;" google-pbm="&f_problem_google;" notif-http="&n_http;" notif-intern="&n_intern;" />
+						<description id="reason" field="&f_reason;" /> 
 						
 						<label id="details" button-up="&details;" button-down="&no-details;" url-base="&f_url_base;"/>
 						

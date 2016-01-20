@@ -3,6 +3,7 @@
 <!ENTITY no-details "No details available">
 <!ENTITY website "Our website">
 <!ENTITY f_domain_name "Tested on : ">
+<!ENTITY f_startup "A quick test has been launched during the Firefox start up on checkmyhttps">
 <!ENTITY f_internals_pages "You are browsing on the browser internal pages. (no HTTPS )">
 <!ENTITY f_reason "You are probably intercepted, certificates fingerprints seen by the client and the server do not match. Click on View Details">
 <!ENTITY f_url_base "https://checkmyhttps.net/addon_en.php?url=https://">
@@ -12,3 +13,7 @@
 <!ENTITY f_too_fast "You are switching tabs too fast! The test needs more time. Reload this page (Press F5) to get the result.">
 <!ENTITY f_http "This an HTTP connection, which are unsecured. Be careful!">
 <!ENTITY f_problem_google "We cannot check this website because it uses multiple certificates.">
+<!ENTITY n_http "This is HTTP only. Test on a HTTPS website.">
+<!ENTITY n_intern "This is an internal page. Test on a HTTPS website.">
+
+
