@@ -6,86 +6,13 @@
 /*website : http://checkmyhttps.net
 */
 
-var website_SHA1 = "" ;
-var website_SHA256 = "" ;
-var startup = 0; //will set to 1 when Firefox has been finished to start up
-
-
-var requestWebsite = {
-
-	sendRequest: function(url){
-		this.refreshInformation(url);
-	
-	},
-	
-	refreshInformation: function(url){
-	
-		function infoReceived()
-		{
-			var output = httpRequest.responseText;
-				
-			if (output.length)
-			{
-				if(output.search("<center><h1><font color=\"green\">") != -1)
-				{
-					checkmyhttps._reason.textContent = "";
-					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("yes-value");
-					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("yes-field")+"\n"+"\n"+"\n";
-					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/green.png";
-				}
-				else if(output.search("<font color=\"red\">") != -1)
-				{
-					var domain_check = output.split("</center></h1><center><h2>");
-					domain_check = domain_check[1].split("</h2>");
-					
-					if(checkmyhttps._domain_name.textContent.search(domain_check[0]) != -1)
-					{
-						checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
-						checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field");
-					
-						checkmyhttps._reason.textContent = checkmyhttps._reason.getAttribute("field");
-					
-						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/red.png";
-					}
-					else
-					{
-						checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
-						checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("fast");
-						checkmyhttps._reason.textContent = "";
-						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";	
-					}
-				}
-				else if(output.search("<font color=\"yellow\">") != -1)
-				{
-					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
-					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("google-pbm");
-					checkmyhttps._reason.textContent = "\n";
-					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
-				}
-				else
-				{
-					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";	
-				}
-			}
-		}
-		
-		var httpRequest = new XMLHttpRequest();
-		httpRequest.open("GET", url, true);
-		httpRequest.onload = infoReceived;
-		httpRequest.send(null);
-	}
-	
-	
-	
-}
-
 
 var checkmyhttps = {
-
+	
 
 	// view details
 	website: function() {
-		openUILinkIn("https://www.checkmyhttps.net", "tab");
+		openUILinkIn("https://checkmyhttps.net", "tab");
 	},
 
 	
@@ -103,10 +30,36 @@ var checkmyhttps = {
 	get _reason () { return document.getElementById("reason"); },
 	get _date () { return document.getElementById("current_date"); },
 	get _details () { return document.getElementById("details"); },
+	get _auto () { return document.getElementById("auto"); },
 	get _version () { return 2.00; },
+	//add listner on each page
+	onPageLoad: function() {
+
+		const ci = Components.interfaces;
+		const cc = Components.classes;
+		const gb = window.getBrowser();
+
+		var panel_updateListener = {
+			onSecurityChange: function(aWebProgress, aRequest, aState) { checkmyhttps.onPageUpdate(); },
+		};
+		
+		gb.addTabsProgressListener(panel_updateListener);
+		
+	},
 	
 	
-	
+	//notification
+
+  popUp: function(title, text) {
+		try {
+		  Components.classes['@mozilla.org/alerts-service;1']
+		            .getService(Components.interfaces.nsIAlertsService)
+		            .showAlertNotification(null, title, text, false, '', null);
+		} catch(e) {
+		  // prevents runtime error on platforms that don't implement nsIAlertsService
+		}
+	},
+
 
 	//we check in this function if your SSL is secure.
 	onPageUpdate: function() {
@@ -123,9 +76,7 @@ var checkmyhttps = {
 		onSecurityChange: function(aWebProgress, aRequest, aState) { document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png"; },
 	};
 
-	
-
-	gb.addProgressListener(panel_updateListener);
+	gb.addTabsProgressListener(panel_updateListener);
    
   
    
@@ -143,7 +94,8 @@ var checkmyhttps = {
 	checkmyhttps._secured.className = null;
 	//loading icon
 	document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/working.png";
-
+	
+	
 
 
 	// if https connection
@@ -164,10 +116,12 @@ var checkmyhttps = {
 				checkmyhttps._details.value = checkmyhttps._details.getAttribute("button-up");
 				checkmyhttps._details.className = "text-link details";
 				
-				requestWebsite.sendRequest(url);
+				checkmyhttps.serverTestAnswer(url,0);
 				
 				checkmyhttps._domain_name.className = "blue";
-				checkmyhttps._domain_name.textContent             =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("field") + c_domain_name);
+				checkmyhttps._domain_name.textContent =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("field") + c_domain_name );
+				
+				
 			  
 				checkmyhttps._date.textContent        = ("\n" + new Date() + " version : " + checkmyhttps._version);
 		}
@@ -187,7 +141,14 @@ var checkmyhttps = {
 		checkmyhttps._secured.textContent = "\n"+checkmyhttps._secured.getAttribute("field") + "\n" + checkmyhttps._secured.getAttribute("http-field") + "\n" + "\n"  ;
 		document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
 		checkmyhttps._date.textContent = (new Date());
-		popup("CheckMyHTTPS", checkmyhttps._secured.getAttribute("notif-http"));
+
+
+		if(!checkmyhttps._auto.checked)
+		{
+			checkmyhttps.popUp("CheckMyHTTPS", checkmyhttps._secured.getAttribute("notif-http"));
+		}
+		
+		
 	}
 	else{
 		checkmyhttps._details.href = "";		
@@ -200,78 +161,186 @@ var checkmyhttps = {
 		checkmyhttps._secured.className = "";
 		checkmyhttps._date.textContent = (new Date());
 		document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
-		popup("CheckMyHTTPS", checkmyhttps._secured.getAttribute("notif-intern"));
+		
+		if(!checkmyhttps._auto.checked)
+		{
+			checkmyhttps.popUp("CheckMyHTTPS", checkmyhttps._secured.getAttribute("notif-intern"));
+		}
+		
 	}
 	 
 
    },
+   
+   
+   //send thumbprint to server
+		serverTestAnswer: function(url,secondtry){
+	
+		checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("info-co");
+		
+		//get informations from the server about how secured is my connection (lock color)
+		function infoReceived()
+		{
+			var output = httpRequest.responseText;
+			
+			if (output.length)
+			{
+				if(output.search("<center><h1><font color=\"green\">") != -1)
+				{
+					checkmyhttps._reason.textContent = "";
+					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("yes-value");
+					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("yes-field")+"\n"+"\n"+"\n";
+					
+					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/green.png";
+					
+				}
+				else if(output.search("<font color=\"red\">") != -1)
+				{
+				
+					/*var domain_check = output.split("</center></h1><center><h2>");
+					domain_check = domain_check[1].split("</h2>");
+					
+					if(checkmyhttps._domain_name.textContent.search(domain_check[0]) != -1)
+					{*/
+					
+						//if a website is using multiple certificates, thumbprints will be different. So we will check on another secured website randomly
+						if(secondtry)
+						{
+							checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
+							checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field");
+
+							checkmyhttps._reason.textContent = checkmyhttps._reason.getAttribute("field");
+							document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/red.png";
+							checkmyhttps.popUp("CheckMyHTTPS", checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field"));
+							
+						}
+						else
+						{
+							checkmyhttps.whiteList();
+						}
+						
+					/*}
+					else //if user switch too fast between tabs (possible if you had enabled "auto_check", if you test on each visited website)
+					{
+						checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
+						checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("fast");
+						checkmyhttps._reason.textContent = "";
+						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
+					}*/
+				}
+				else
+				{
+					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
+					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("hs");
+				}
+				
+			}
+			else
+			{
+				document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
+				checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("hs");
+			}
+		}
+		
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.open("GET", url, true);
+		httpRequest.onload = infoReceived;
+		httpRequest.send(null);
+	},
+   
+ 
+	 
+	//STARTUP : First of all, we will check the server certificate seen by the server on checkmyhttps.net
+
+	//get server certificate from client of a specific website
+	dumpSecurityInfo: function(xhr,website_visited,startup) {
+	checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("info-co");
+		let channel = xhr.channel;
+		  let secInfo = channel.securityInfo;
+			 
+		  if (secInfo instanceof Ci.nsITransportSecurityInfo) {
+		    secInfo.QueryInterface(Ci.nsITransportSecurityInfo);
+	
+			if (secInfo instanceof Ci.nsISSLStatusProvider) 
+			{
+				var cert = secInfo.QueryInterface(Ci.nsISSLStatusProvider)
+								.SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
+				var website_SHA1 = cert.sha1Fingerprint;
+				var website_SHA256 = cert.sha256Fingerprint;
+				
+				var url = checkmyhttps._details.getAttribute("url-base") +website_visited+'&thumbprint='+website_SHA1+'&thumbprint_256='+website_SHA256+'&version='+checkmyhttps._version + "TATA:"+startup;
+				
+				
+				if(!startup)
+				{
+					url += "&severalcert=1";
+					
+					checkmyhttps._domain_name.textContent =   "\n" + "\n" + checkmyhttps._domain_name.getAttribute("website-pbm") + "\n" + (checkmyhttps._domain_name.getAttribute("check-pbm") + website_visited);
+				}
+				else
+				{
+					checkmyhttps._domain_name.textContent =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("startup") + website_visited);
+					checkmyhttps.auto_check();
+				}
+				checkmyhttps.serverTestAnswer(url,1);
+			
+				checkmyhttps._details.href = url;
+				checkmyhttps._details.value = checkmyhttps._details.getAttribute("button-up");
+				checkmyhttps._details.className = "text-link details";
+
+				
+				checkmyhttps._domain_name.className = "blue";
+				checkmyhttps._date.textContent        = ("\n" + new Date() + " version : " + checkmyhttps._version);
+			  
+			}
+		}
+	},
+
+	//check certificate client side from server response
+	testStartup : function(url,startup) {
+	
+
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.open("GET", "https://"+url, true);
+		httpRequest.onload = function(e) {checkmyhttps.dumpSecurityInfo(httpRequest,url,startup);};
+		httpRequest.send(null);
+	},
+	
+	//test automatically on each website
+	auto_check: function() {
+	
+		if(checkmyhttps._auto.checked)
+		{
+			checkmyhttps.onPageLoad();
+		}	
+		
+	},
+ 
+	whiteList: function(){
+	var url = "https://checkmyhttps.net/whitelist.php";
+	
+	function getList()
+		{
+			var output = httpRequest.responseText;
+			
+			if (output.length)
+			{
+				checkmyhttps._domain_name.textContent =   "\n" + "\n" + checkmyhttps._domain_name.getAttribute("website-pbm") + "\n" + (checkmyhttps._domain_name.getAttribute("check-pbm") + output);
+				checkmyhttps.testStartup(output,0);
+			}
+		}
+		
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.open("GET", url, true);
+		httpRequest.onload = getList;
+		httpRequest.send(null);
+	
+	},
+ 
 
 };
 
 
-//STARTUP : First of all, we will check the server certificate seen by the server on checkmyhttps.net
-
-//get server certificate from client of a specific website
-function dumpSecurityInfo(xhr) {
-
-	let channel = xhr.channel;
-    let secInfo = channel.securityInfo;
-	   
-    if (secInfo instanceof Ci.nsITransportSecurityInfo) {
-      secInfo.QueryInterface(Ci.nsITransportSecurityInfo);
-	
-		if (secInfo instanceof Ci.nsISSLStatusProvider) 
-		{
-		  var cert = secInfo.QueryInterface(Ci.nsISSLStatusProvider)
-							.SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
-		  website_SHA1 = cert.sha1Fingerprint;
-		  website_SHA256 = cert.sha256Fingerprint;
-		  checkmyhttps._secured.textContent = website_SHA1;
-		  
-			var url = checkmyhttps._details.getAttribute("url-base") +"checkmyhttps.net"+'&thumbprint='+website_SHA1+'&thumbprint_256='+website_SHA256+'&version='+checkmyhttps._version;
-			
-			checkmyhttps._details.href = url;
-			checkmyhttps._details.value = checkmyhttps._details.getAttribute("button-up");
-			checkmyhttps._details.className = "text-link details";
-
-			requestWebsite.sendRequest(url);
-
-			checkmyhttps._domain_name.className = "blue";
-			checkmyhttps._domain_name.textContent             =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("startup"));
-
-			checkmyhttps._date.textContent        = ("\n" + new Date() + " version : " + checkmyhttps._version);
-			
-			
-		}
-	}
-}
-
-//check certificate client side from server response
-function test(url) {
-	var httpRequest = new XMLHttpRequest();
-	httpRequest.open("GET", url, true);
-	httpRequest.onload = function(e) {dumpSecurityInfo(httpRequest);};
-	httpRequest.send(null);
-	
-}
-
 //quick test during the startup on checkmyhttps
-if(startup == 0)
-{
-	test("https://checkmyhttps.net");
-	startup = 1;
-}
-
-
-//notification
-
-function popup(title, text) {
-  try {
-    Components.classes['@mozilla.org/alerts-service;1']
-              .getService(Components.interfaces.nsIAlertsService)
-              .showAlertNotification(null, title, text, false, '', null);
-  } catch(e) {
-    // prevents runtime error on platforms that don't implement nsIAlertsService
-  }
-}
+checkmyhttps.testStartup("checkmyhttps.net",1);
 

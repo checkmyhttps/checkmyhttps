@@ -4,7 +4,6 @@
 <overlay id="checkmyhttps-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="checkmyhttps.js"/>
   
-
   
 <toolbarpalette id="BrowserToolbarPalette">
   <toolbarbutton id="checkmyhttps-icon" image="chrome://checkmyhttps/skin/unknown.png" class="toolbarbutton-1" label="Check my HTTPS" oncontextmenu="event.preventDefault()" onclick="checkmyhttps.buttonPanel(event);" />
@@ -17,11 +16,15 @@
         
         <vbox id="panel-content">
           <label id="title" value="&title;" />
-						<description id="domain_name"  field="&f_domain_name;" local="&f_internals_pages;" startup="&f_startup;"/>
-						<description id="is_secured" field="&f_question;" yes-field="&f_is_secured;" no-field="&f_is_not_secured;" http-field="&f_http;" yes-value="green" no-value="red" http-value="blue" fast="&f_too_fast;" google-pbm="&f_problem_google;" notif-http="&n_http;" notif-intern="&n_intern;" />
+						<description id="domain_name"  field="&f_domain_name;" local="&f_internals_pages;" startup="&f_startup;" website-pbm="&f_problem_website;" check-pbm="&f_problem_check;"/>
+						<description id="is_secured" field="&f_question;" yes-field="&f_is_secured;" no-field="&f_is_not_secured;" http-field="&f_http;" yes-value="green" no-value="red" http-value="blue" fast="&f_too_fast;"  notif-http="&n_http;" notif-intern="&n_intern;" notif-reboot="&n_reboot;" info-co="&f_problem_hs;" />
 						<description id="reason" field="&f_reason;" /> 
 						
 						<label id="details" button-up="&details;" button-down="&no-details;" url-base="&f_url_base;"/>
+						
+						<vbox oncommand="checkmyhttps.popUp('CheckMyHTTPS', '&n_reboot;');">
+							<checkbox id="auto" label="&c_auto;"  checked="false" persist="checked"/>
+						</vbox>
 						
           <button id="credit" oncommand="checkmyhttps.website()" onclick="checkForLeftClick(this, event)" label="&website;"/>
           <description id="current_date"/>
@@ -29,8 +32,6 @@
       </hbox>
     </panel>
   </popupset>
-  
-  
   
 
 </overlay>
