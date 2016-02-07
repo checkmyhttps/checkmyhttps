@@ -4,6 +4,11 @@
 <overlay id="checkmyhttps-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="checkmyhttps.js"/>
   
+   <script type="application/x-javascript">
+    checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/unknown.png";
+  </script>
+  
+  
   
 <toolbarpalette id="BrowserToolbarPalette">
   <toolbarbutton id="checkmyhttps-icon" image="chrome://checkmyhttps/skin/unknown.png" class="toolbarbutton-1" label="Check my HTTPS" oncontextmenu="event.preventDefault()" onclick="checkmyhttps.buttonPanel(event);" />
@@ -25,6 +30,8 @@
 						<vbox oncommand="checkmyhttps.popUp('CheckMyHTTPS', '&n_reboot;');">
 							<checkbox id="auto" label="&c_auto;"  checked="false" persist="checked"/>
 						</vbox>
+						
+						<checkbox id="print_sha" label="&c_sha;"  checked="false" persist="checked"/>
 						
           <button id="credit" oncommand="checkmyhttps.website()" onclick="checkForLeftClick(this, event)" label="&website;"/>
           <description id="current_date"/>

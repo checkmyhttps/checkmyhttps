@@ -1,4 +1,4 @@
-<!ENTITY title "Check My HTTPS">
+<!ENTITY title "Check My HTTPS v2.04">
 <!ENTITY details "View Details">
 <!ENTITY no-details "No details available">
 <!ENTITY website "Our website">
@@ -17,7 +17,8 @@
 <!ENTITY f_problem_hs "Connection to checkmyhttps.net ... If you have issuescheck your network settings or check the server state (http://www.downforeveryoneorjustme.com/checkmyhttps.net)">
 <!ENTITY n_http "This is HTTP only. Test on a HTTPS website.">
 <!ENTITY n_intern "This is an internal page. Test on a HTTPS website.">
-<!ENTITY c_auto "Check if you want to test on each website automatically. (your browsing might be slowed a bit)">
+<!ENTITY c_auto "Test on each visited HTTPS website.">
+<!ENTITY c_sha "Show SHA1-SHA256 fingerprint.">
 <!ENTITY n_reboot "Reboot Firefox.">
 
 

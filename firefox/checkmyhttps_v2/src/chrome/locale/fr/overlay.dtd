@@ -1,4 +1,4 @@
-<!ENTITY title "Check My HTTPS">
+<!ENTITY title "Check My HTTPS v2.04">
 <!ENTITY details "Consulter les détails">
 <!ENTITY no-details "Détails indisponibles">
 <!ENTITY website "Notre site Internet">
@@ -17,5 +17,6 @@
 <!ENTITY f_problem_hs "Connexion au serveur de test checkmyhttps.net... Si la connexion est trop longue, vérifiez vos paramètres réseaux ou l'état du serveur (http://www.downforeveryoneorjustme.com/checkmyhttps.net).">
 <!ENTITY n_http "C'est une page HTTP. Testez sur une page HTTPS.">
 <!ENTITY n_intern "C'est une page interne. Testez sur une page HTTPS.">
-<!ENTITY c_auto "Cochez si vous voulez automatiser les tests. (votre connexion risque de ralentir légèrement)">
+<!ENTITY c_auto "Testez chaque site https consultés">
+<!ENTITY c_sha "Afficher les empreintes SHA1/SHA256">
 <!ENTITY n_reboot "Redémarrez Firefox.">

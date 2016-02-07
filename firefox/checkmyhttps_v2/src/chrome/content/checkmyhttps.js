@@ -31,7 +31,8 @@ var checkmyhttps = {
 	get _date () { return document.getElementById("current_date"); },
 	get _details () { return document.getElementById("details"); },
 	get _auto () { return document.getElementById("auto"); },
-	get _version () { return 2.00; },
+	get _print_sha () { return document.getElementById("print_sha"); },
+	get _version () { return 2.04; },
 	//add listner on each page
 	onPageLoad: function() {
 
@@ -72,28 +73,24 @@ var checkmyhttps = {
 	var protocol_url = window.content.location.protocol;
 	var c_domain_name = window.content.location.hostname;
    
+  // if toolbar button unused
+	if (checkmyhttps._panel_image.image == null ) return;
+   
    var panel_updateListener = {
-		onSecurityChange: function(aWebProgress, aRequest, aState) { document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png"; },
+		onSecurityChange: function(aWebProgress, aRequest, aState) { checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/unknown.png"; },
 	};
 
 	gb.addTabsProgressListener(panel_updateListener);
    
-  
-   
-	// if toolbar button unused
-	if (document.getElementById("checkmyhttps-icon") == null ) return;
 
 	//init strings
 	checkmyhttps._domain_name.textContent = null;
 	checkmyhttps._secured.className = null;
 	checkmyhttps._secured.textContent = null;
-	checkmyhttps._secured.className = null;
 	checkmyhttps._reason.textContent = null; 
-	checkmyhttps._secured.className = null;
 	checkmyhttps._date.textContent = null;  
-	checkmyhttps._secured.className = null;
 	//loading icon
-	document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/working.png";
+	checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/working.png";
 	
 	
 
@@ -116,7 +113,7 @@ var checkmyhttps = {
 				checkmyhttps._details.value = checkmyhttps._details.getAttribute("button-up");
 				checkmyhttps._details.className = "text-link details";
 				
-				checkmyhttps.serverTestAnswer(url,0);
+				checkmyhttps.serverTestAnswer(url,0,c_ssl_cert.sha1Fingerprint,c_ssl_cert.sha256Fingerprint);
 				
 				checkmyhttps._domain_name.className = "blue";
 				checkmyhttps._domain_name.textContent =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("field") + c_domain_name );
@@ -139,7 +136,7 @@ var checkmyhttps = {
 		
 		checkmyhttps._secured.className = checkmyhttps._secured.getAttribute("http-value");
 		checkmyhttps._secured.textContent = "\n"+checkmyhttps._secured.getAttribute("field") + "\n" + checkmyhttps._secured.getAttribute("http-field") + "\n" + "\n"  ;
-		document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
+		checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/unknown.png";
 		checkmyhttps._date.textContent = (new Date());
 
 
@@ -160,7 +157,7 @@ var checkmyhttps = {
 		
 		checkmyhttps._secured.className = "";
 		checkmyhttps._date.textContent = (new Date());
-		document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/unknown.png";
+		//checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/unknown.png";
 		
 		if(!checkmyhttps._auto.checked)
 		{
@@ -169,12 +166,11 @@ var checkmyhttps = {
 		
 	}
 	 
-
    },
    
    
    //send thumbprint to server
-		serverTestAnswer: function(url,secondtry){
+		serverTestAnswer: function(url,secondtry,c_sha1,c_sha256){
 	
 		checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("info-co");
 		
@@ -189,28 +185,31 @@ var checkmyhttps = {
 				{
 					checkmyhttps._reason.textContent = "";
 					checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("yes-value");
-					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("yes-field")+"\n"+"\n"+"\n";
+					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("yes-field")+"\n"+"\n";
 					
-					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/green.png";
+					checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/green.png";
+					
+					if(checkmyhttps._print_sha.checked)
+					{
+							checkmyhttps._secured.textContent +=  "SHA1 - client/server" + "\n" + c_sha1 + "\n" + output.split(": </br> ")[1].split("<br/>")[0] + "\n" + "SHA256 - client/server" + "\n" + c_sha256 + "\n" + output.split(": </br> ")[4].split("<br/>")[0];
+							
+					}
 					
 				}
 				else if(output.search("<font color=\"red\">") != -1)
 				{
-				
-					/*var domain_check = output.split("</center></h1><center><h2>");
-					domain_check = domain_check[1].split("</h2>");
-					
-					if(checkmyhttps._domain_name.textContent.search(domain_check[0]) != -1)
-					{*/
-					
 						//if a website is using multiple certificates, thumbprints will be different. So we will check on another secured website randomly
 						if(secondtry)
 						{
 							checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
 							checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field");
-
+							
+							if(checkmyhttps._print_sha.checked)
+							{
+									checkmyhttps._secured.textContent += "\n" + "SHA1 - client/server" + "\n" + c_sha1 + "\n" + "" + "\n" + "SHA256 - client/server" + "\n" + c_sha256 + + "\n" + "" + "\n" ;
+							}
 							checkmyhttps._reason.textContent = checkmyhttps._reason.getAttribute("field");
-							document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/red.png";
+							checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/red.png";
 							checkmyhttps.popUp("CheckMyHTTPS", checkmyhttps._secured.getAttribute("field") + checkmyhttps._secured.getAttribute("no-field"));
 							
 						}
@@ -219,25 +218,17 @@ var checkmyhttps = {
 							checkmyhttps.whiteList();
 						}
 						
-					/*}
-					else //if user switch too fast between tabs (possible if you had enabled "auto_check", if you test on each visited website)
-					{
-						checkmyhttps._secured.className =  checkmyhttps._secured.getAttribute("no-value");
-						checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("fast");
-						checkmyhttps._reason.textContent = "";
-						document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
-					}*/
 				}
 				else
 				{
-					document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
+					checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/yellow.png";	
 					checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("hs");
 				}
 				
 			}
 			else
 			{
-				document.getElementById("checkmyhttps-icon").image="chrome://checkmyhttps/skin/yellow.png";	
+  			checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/yellow.png";	
 				checkmyhttps._secured.textContent = checkmyhttps._secured.getAttribute("hs");
 			}
 		}
@@ -275,14 +266,14 @@ var checkmyhttps = {
 				{
 					url += "&severalcert=1";
 					
-					checkmyhttps._domain_name.textContent =   "\n" + "\n" + checkmyhttps._domain_name.getAttribute("website-pbm") + "\n" + (checkmyhttps._domain_name.getAttribute("check-pbm") + website_visited);
+					checkmyhttps._domain_name.textContent =   "\n" + "\n" + checkmyhttps._domain_name.getAttribute("website-pbm") + "\n" + (checkmyhttps._domain_name.getAttribute("check-pbm") + website_visited) ;
 				}
 				else
 				{
 					checkmyhttps._domain_name.textContent =  "\n" + "\n" + (checkmyhttps._domain_name.getAttribute("startup") + website_visited);
 					checkmyhttps.auto_check();
 				}
-				checkmyhttps.serverTestAnswer(url,1);
+				checkmyhttps.serverTestAnswer(url,1,website_SHA1,website_SHA256);
 			
 				checkmyhttps._details.href = url;
 				checkmyhttps._details.value = checkmyhttps._details.getAttribute("button-up");
@@ -298,8 +289,6 @@ var checkmyhttps = {
 
 	//check certificate client side from server response
 	testStartup : function(url,startup) {
-	
-
 		var httpRequest = new XMLHttpRequest();
 		httpRequest.open("GET", "https://"+url, true);
 		httpRequest.onload = function(e) {checkmyhttps.dumpSecurityInfo(httpRequest,url,startup);};
@@ -340,7 +329,7 @@ var checkmyhttps = {
 
 };
 
-
 //quick test during the startup on checkmyhttps
 checkmyhttps.testStartup("checkmyhttps.net",1);
+//checkmyhttps._panel_image.image="chrome://checkmyhttps/skin/unknown.png";
 
