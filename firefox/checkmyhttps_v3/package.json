@@ -1,0 +1,17 @@
+{
+  "title": "CheckMyHTTPS",
+  "name": "checkmyhttps-sdk",
+  "version": "3.0.0",
+  "description": "Check if your HTTPS connections are secure. You can visit our website : https://www.checkmyhttps.net",
+  "main": "index.js",
+  "author": "CNS-ESIEA <info@checkmyhttps.net>",
+  "homepage" : "https://checkmyhttps.net",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "GPLv3",
+  "keywords": [
+    "jetpack"
+  ]
+}

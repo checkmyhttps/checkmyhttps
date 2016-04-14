@@ -259,7 +259,7 @@ var checkmyhttps = {
 				var website_SHA1 = cert.sha1Fingerprint;
 				var website_SHA256 = cert.sha256Fingerprint;
 				
-				var url = checkmyhttps._details.getAttribute("url-base") +website_visited+'&thumbprint='+website_SHA1+'&thumbprint_256='+website_SHA256+'&version='+checkmyhttps._version + "TATA:"+startup;
+				var url = checkmyhttps._details.getAttribute("url-base") +website_visited+'&thumbprint='+website_SHA1+'&thumbprint_256='+website_SHA256+'&version='+checkmyhttps._version;
 				
 				
 				if(!startup)
