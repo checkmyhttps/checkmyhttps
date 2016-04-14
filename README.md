@@ -1,5 +1,6 @@
 #CheckMyHTTPS
 We propose a user-friendly addon that allows you to check if your encrypted web traffic (SSL/TLS) towards secured Internet servers (HTTPS) is not intercepted (being listened to). 
+<<<<<<< HEAD
 
 #How it works ?
 
@@ -48,6 +49,8 @@ C'est très embêtant, néanmoins notre extension permet de déceler ce genre de
 CheckmyHTTPS permet de comparer le certificat d'un site sécurisé vu par votre navigateur avec le certificat vu par un équipement réseau contrôlé sur Internet. Si les certificats diffèrent, alors votre connexion est sur écoute car l'identité du serveur est usurpé => cadenas ROUGE
 
 ##########################################################################
+=======
+>>>>>>> origin/master
 
 #Author
 Designed & developed : Raphaël PION and Hugo MEZIANI. 
