@@ -1,0 +1,28 @@
+#CHANGELOG 2016-04-22 10:14:19Z ESIEA CNS-CVO 
+
+************ CHECKMYHTTPS CHANGELOG *********** 
+
+####################VERSION 3.4###################
+-Now you can use checkmyhttps during your private browsing 
+
+####################VERSION 3.3###################
+-we notify users when they are testing on private ip address because checkmyhttps server couldn't reach private ip !
+
+####################VERSION 3.1###################
+-Logo has been changed for colorblind people
+
+####################VERSION 3#####################
+-need to be updated to SDK.
+-left click on the addon to check your HTTPS on the consulting website.
+-test on CheckMyHTTPS server certificate during start-up.
+
+####################VERSION 2#####################
+-switch SDK to Xul-based addon
+-left click on the addon to check your HTTPS on the consulting website.
+-show details : right click on the addon.
+
+
+####################VERSION 1#####################
+-developped using Firefox SDK
+-comparaison des certificats vu par le client et le serveur
+-test on CheckMyHTTPS server certificate only.

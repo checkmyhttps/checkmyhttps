@@ -5,9 +5,14 @@ var buttons = require('sdk/ui/button/action');
 var Request = require("sdk/request").Request;
 var tabs = require("sdk/tabs");
 var notifications = require("sdk/notifications");
+var { MatchPattern } = require("sdk/util/match-pattern");
 var _ = require("sdk/l10n").get;
 
 //######################GUI######################//
+
+//private ip address
+var re_private_ip = /(^https:\/\/127\.)|(^https:\/\/10\.)|(^https:\/\/172\.1[6-9]\.)|(^https:\/\/172\.2[0-9]\.)|(^https:\/\/172\.3[0-1]\.)|(^https:\/\/192\.168\.)/;
+
 
 var button = buttons.ActionButton({
   id: "checkmyhttps-icon",
@@ -20,11 +25,24 @@ var button = buttons.ActionButton({
 function handleClick(state) {
 	var url_tested = tabs.activeTab.url;
 
+  button.icon = "./working.png";
+  
+  //checkmyhttps server couldn't reach private ip !
+  if(url_tested.match(re_private_ip))
+	{
+		notifications.notify({
+			title:  _("l_alert"),
+			text:  _("l_privateip"),
+		});
+	}
+  
   
   if(url_tested.search("https://") != -1)
   {
-  button.icon = "./working.png";
-  Get_Current_Cert(url_tested);
+ 
+  
+		button.icon = "./working.png";
+		Get_Current_Cert(url_tested);
   }
   else
   {
@@ -41,7 +59,6 @@ function request(url,second_time) {
 	Request({
 		url: url,
 		onComplete: function (response) {
-			//console.log(url);
 			if(response.status == 200)
 			{
 				var page = response.text;
@@ -107,7 +124,7 @@ function Get_Current_Cert(url_tested) {
         root_issuer = root_issuer.issuer;
     }
     //send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)	
-		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.00", 0);
+		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.04", 0);
 }
 
 //check if the server certificate is valid ( = recognized by your Firefox browser)
@@ -140,7 +157,7 @@ function Get_Specific_Cert(xhr,specific_url,second_time) {
 		{
 			var cert = secInfo.QueryInterface(Ci.nsISSLStatusProvider).SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
 			//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)		
-			request(_("l_check")+specific_url+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.00", second_time);
+			request(_("l_check")+specific_url+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.04", second_time);
 		}
 		
 	}

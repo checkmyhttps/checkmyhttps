@@ -1,0 +1,8 @@
+-Automatisation des tests de checkmyhttps : Ajouter cette fonctionnalité dans les préférences.
+-Rendre le logo vert de l'addon terne après le test au démarrage.
+-Inscrire l'empreinte du certificat serveur de checkmyhttps (si le mitm ssl modifie la réponse retournée par le serveur)
+-Traiter la réponse HTTP, si il y a une alerte de certificat serveur pour checkmyhttps => cadenas rouge.
+-checkmyhttps android :
+https://blog.mozilla.org/addons/2012/02/06/mobile-add-on-development-using-the-add-on-sdk/
+https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm-mobile
+
