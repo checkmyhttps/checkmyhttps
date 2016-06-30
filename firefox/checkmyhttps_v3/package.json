@@ -2,16 +2,20 @@
   "title": "CheckMyHTTPS",
   "name": "checkmyhttps",
   "id" : "info@checkmyhttps.net",
-  "version": "3.0.5",
+  "version": "3.0.7",
   "description": "Check if your HTTPS connections are secure. You can visit our website : https://www.checkmyhttps.net",
   "main": "index.js",
   "author": "ESIEA CNS-CVO <info@checkmyhttps.net>",
   "homepage" : "https://checkmyhttps.net",
-  "permissions": {"private-browsing": true},
+  "permissions": {
+  	"private-browsing": true,
+  	"multiprocess": true
+  	},
   "engines": {
     "firefox": ">=38.0a1",
     "fennec": ">=38.0a1"
   },
+  
   "license": "GPLv3",
   "keywords": [
     "jetpack"

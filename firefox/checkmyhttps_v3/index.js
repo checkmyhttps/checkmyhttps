@@ -13,6 +13,8 @@ var _ = require("sdk/l10n").get;
 //private ip address
 var re_private_ip = /(^https:\/\/127\.)|(^https:\/\/10\.)|(^https:\/\/172\.1[6-9]\.)|(^https:\/\/172\.2[0-9]\.)|(^https:\/\/172\.3[0-1]\.)|(^https:\/\/192\.168\.)/;
 
+//thumprint SHA256 of https://checkmyhttps.net
+var thumbprint_trusted = "E2:86:CE:78:31:7C:76:67:41:35:15:8D:A5:4D:F9:1F:67:AA:B6:AF:51:C1:FD:FA:6A:36:3E:65:7B:B8:1B:77";
 
 var button = buttons.ActionButton({
   id: "checkmyhttps-icon",
@@ -116,15 +118,23 @@ function request(url,second_time) {
 function Get_Current_Cert(url_tested) {
     var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
     var mainWindow = wm.getMostRecentWindow("navigator:browser");
-    var cert = get_valid_cert(mainWindow.gBrowser);
-    
-    
-    var root_issuer = cert.issuer;
-    while (root_issuer && root_issuer.issuer) {
-        root_issuer = root_issuer.issuer;
+    try
+    {
+	var cert = get_valid_cert(mainWindow.gBrowser);
+	var root_issuer = cert.issuer;
+	while (root_issuer && root_issuer.issuer) {
+	root_issuer = root_issuer.issuer;
+	}
+	//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)	
+	request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.04", 0);
+    }	
+    catch(err)
+    {
+	notifications.notify({
+		title: _("l_alert"),
+		text: _("l_pbm"),
+	});
     }
-    //send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)	
-		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.04", 0);
 }
 
 //check if the server certificate is valid ( = recognized by your Firefox browser)
@@ -152,13 +162,49 @@ function Get_Specific_Cert(xhr,specific_url,second_time) {
 		 
 	  if (secInfo instanceof Ci.nsITransportSecurityInfo) {
 	    secInfo.QueryInterface(Ci.nsITransportSecurityInfo);
-
+	try
+	{
 		if (secInfo instanceof Ci.nsISSLStatusProvider) 
 		{
+
 			var cert = secInfo.QueryInterface(Ci.nsISSLStatusProvider).SSLStatus.QueryInterface(Ci.nsISSLStatus).serverCert;
-			//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)		
-			request(_("l_check")+specific_url+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.04", second_time);
+			if(second_time)
+			{
+				//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)		
+				request(_("l_check")+specific_url+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.04", second_time);
+			}
+			else
+			{	
+				if(cert.sha256Fingerprint == thumbprint_trusted)
+				{
+					button.icon = "./green.png"; 
+				}
+				else
+				{
+					button.icon = "./red.png";
+					notifications.notify({
+						title: _("l_alert"),
+						text:  _("l_danger"),
+						data: _("l_mitm"),
+						onClick: function (data) {
+							tabs.open(data);
+						}
+					});
+				}
+			}
 		}
+	}
+	catch(err)
+	{
+		notifications.notify({
+			title: _("l_alert"),
+			text: _("l_pbm"),
+			data: _("l_mitm"),
+			onClick: function (data) {
+			tabs.open(data);
+			}
+		});
+	}
 		
 	}
 	
