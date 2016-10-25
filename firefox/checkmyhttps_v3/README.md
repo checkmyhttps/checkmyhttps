@@ -34,7 +34,9 @@ N'oubliez pas de le faire sur un site HTTPS ("https://" visible dans l'URL)
 
 #Concernant ma vie privé :
 L'extension a besoin de ces paramètres :
+
 [+] Le lien du site https
+
 [+] L'empreinte SHA1/SHA256 du certificat serveur choisi par vous.
 
 Vous avez le libre choix concernant le site à "checker". Comme ça personne n'aura accès à votre vie privée ! :)
