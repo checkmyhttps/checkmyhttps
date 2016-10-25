@@ -9,13 +9,15 @@ var { MatchPattern } = require("sdk/util/match-pattern");
 var _ = require("sdk/l10n").get;
 
 //######################GUI######################//
+//version de l'addon (format string)
+var version_addon = require("./package.json").version;
 
 //regexp d'une adresse IP privée. Le serveur checkmyhttps ne pourra pas comparer les certificats.
 var re_private_ip = /(^https:\/\/127\.)|(^https:\/\/10\.)|(^https:\/\/172\.1[6-9]\.)|(^https:\/\/172\.2[0-9]\.)|(^https:\/\/172\.3[0-1]\.)|(^https:\/\/192\.168\.)/;
 
 //empreinte SHA256 du site https://checkmyhttps.net
 //cette empreinte est codé en dure afin d'éviter que le MITM SSL modifie l'empreinte envoyée sur le serveur checkmyhttps.
-var thumbprint_trusted = "E2:86:CE:78:31:7C:76:67:41:35:15:8D:A5:4D:F9:1F:67:AA:B6:AF:51:C1:FD:FA:6A:36:3E:65:7B:B8:1B:77";
+var thumbprint_trusted = "88:9F:63:E8:E7:F9:8F:67:E3:57:50:59:1C:D6:6B:C3:2A:17:A4:B4:FA:2A:44:76:3D:BE:F8:D7:56:15:61:65";
 
 //création du boutton de l'addon.
 var button = buttons.ActionButton({
@@ -65,9 +67,9 @@ function handleClick(state) {
 //+"&thumbprint_256=" + cert.sha256Fingerprint : empreinte SHA256 du certificat serveur
 //+"&version=3.07 : version de l'addon
 function request(url,second_time) {
-	
+	console.log(url);
 	Request({
-		url: url, //url de checkmyhttps contenant toutes les informations
+		url: url, //url de checkmyhttps contenant les empreintes du certificat vu par le client
 		onComplete: function (response) { 
 			//si le serveur est joignable, on récupère la réponse du serveur.
 			if(response.status == 200)
@@ -113,6 +115,7 @@ function request(url,second_time) {
 					else
 					{
 						button.icon = "./unknown.png";
+
 					}
 		}
 		else // sinon le serveur checkmyhttps n'est pas joignable. On avertis l'utilisateur.
@@ -123,7 +126,6 @@ function request(url,second_time) {
 			});
 		}		
 	}}).get();
-
 }
 
 //######################TEST CURRENT WEBSITE######################//
@@ -145,7 +147,7 @@ function Get_Current_Cert(url_tested) {
 			root_issuer = root_issuer.issuer;
 		}
 		//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)	
-		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.07", 0);
+		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version="+version_addon, 0);
 	}	
 	catch(err) //si une erreur est survenue, on avertis l'utilisateur
 	{
@@ -199,7 +201,7 @@ function Get_Specific_Cert(xhr,specific_url,second_time) {
 				if(second_time) //si le test s'effectue pas au démarrage (cela est utile pour tester les faux positifs, cad lorsqu'il y a plusieurs certificats pour un meme site)
 				{
 					//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)		
-					request(_("l_check")+specific_url+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version=3.07", second_time);
+					request(_("l_check")+specific_url+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version="+version_addon, second_time);
 				}
 				else
 				{	
@@ -227,7 +229,7 @@ function Get_Specific_Cert(xhr,specific_url,second_time) {
 	{
 		notifications.notify({
 			title: _("l_alert"),
-			text: _("l_pbm"),
+			text: _("l_danger"),
 			data: _("l_mitm"),
 			onClick: function (data) {
 			tabs.open(data);
@@ -251,7 +253,48 @@ function specific_test(specific_url,second_time)
 	httpRequest.send(null);
 }
 
-//Exécution de la fonction au démarrage
-specific_test("https://checkmyhttps.net",0);
+//le test au démarrage du navigateur commence ICI.
+//Vérification de la version de checkmyhttps sur le site
+Request({
+	url: "https://checkmyhttps.net/version_addon.txt",
+	onComplete: function (response) { 
+	//si le serveur est joignable, on récupère la réponse du serveur.
+	if(response.status == 200)
+	{
+		//récupération de la version courante
+		var page = response.text;
+		if(page.search(version_addon) != -1) // la version de l'addon est a jour, on peut donc lancer le test.
+		{
+			specific_test("https://checkmyhttps.net",0);
+		}
+		else // la version n'est pas à jour, on impose à l'utilisateur de la mettre à jour en cliquant sur la fenêtre d'alerte.
+		{
+			button.icon = "./warning.png"; 
+			notifications.notify({
+				title: _("l_alert"),
+				text:  _("l_update"),
+				data: _("l_marketplace"),
+				onClick: function (data) {
+					tabs.open(data);
+				}
+			});
+		}
+
+		
+	}
+	else
+	{
+		// sinon le serveur checkmyhttps n'est pas joignable. On avertis l'utilisateur.
+		button.icon = "./unknown.png";
+		notifications.notify({
+			title: _("l_alert"),
+			text: _("l_pbm"),
+		});
+	}
+		
+}}).get();
+
+
+
 
 
