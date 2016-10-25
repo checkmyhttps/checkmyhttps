@@ -1,21 +1,24 @@
 #CHANGELOG 2016-07-01 00:22:19Z ESIEA CNS-CVO 
 
 ************ CHECKMYHTTPS CHANGELOG *********** 
+####################VERSION 3.0.8###################
+mise a jour de l'empreinte avec le nouveau certificat
+Prévenir l'utilisateur lorsqu'une mise à jour est disponible.
 
-####################VERSION 3.7###################
+####################VERSION 3.0.7###################
 thumbprint of server certificate is now hardcoded to avoid pirate's modifications (if there is a MITM SSL).
 
-####################VERSION 3.5###################
+####################VERSION 3.0.5###################
 author has been changed :
 ESIEA CNS -> ESIEA CNS-CVO 
 
-####################VERSION 3.4###################
+####################VERSION 3.0.4###################
 -Now you can use checkmyhttps during your private browsing 
 
-####################VERSION 3.3###################
+####################VERSION 3.0.3###################
 -we notify users when they are testing on private ip address because checkmyhttps server couldn't reach private ip !
 
-####################VERSION 3.1###################
+####################VERSION 3.0.1###################
 -Logo has been changed for colorblind people
 
 ####################VERSION 3#####################
