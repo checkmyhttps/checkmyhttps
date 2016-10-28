@@ -67,7 +67,6 @@ function handleClick(state) {
 //+"&thumbprint_256=" + cert.sha256Fingerprint : empreinte SHA256 du certificat serveur
 //+"&version=3.07 : version de l'addon
 function request(url,second_time) {
-	console.log(url);
 	Request({
 		url: url, //url de checkmyhttps contenant les empreintes du certificat vu par le client
 		onComplete: function (response) { 
@@ -83,40 +82,32 @@ function request(url,second_time) {
 				}
 				else if(page.search("<font color=\"red\">") != -1) // si du rouge est présent sur la page, la connection est compromise
 				{
-					//maybe this HTTPS website has severals certificat (like google, youtube, outlook, exploit-db ...)
-					//certains sites dispose de plusieurs certificat serveur. Il est possible d'avoir deux certificats différents sans pour autant avoir une connection sécurisé
-					//pour cela nous avons listé quelques site HTTPS de confiance. La page whitelist.php permet d'en sélectionner un aléatoirement.
-					random_trusted_https = "https://checkmyhttps.net/whitelist.php";
-					//on effectue alors un second test.
-					Request({
-					url: random_trusted_https,
-					onComplete: function (response) {
-							if(response.status == 200 && !second_time)
-							{
-								//we test this random trusted website
-								specific_test("https://"+response.text,1);			
-							}
-							else
-							{
-								button.icon = "./red.png";
-								notifications.notify({
-									title: _("l_alert"),
-									text:  _("l_danger"),
-									data: url,
-									onClick: function (data) {
-										tabs.open(data);
-									}
-								});
-							}
+					button.icon = "./red.png";
+					notifications.notify({
+						title: _("l_alert"),
+						text:  _("l_danger"),
+						data: url,
+						onClick: function (data) {
+							tabs.open(data);
 						}
-					}).get();
+					});
+				}
+				else if(page.search("<font color=\"yellow\">") != -1)
+				{
+				//maybe this HTTPS website has severals certificat (like google, youtube, outlook, exploit-db ...)
+				//certains sites dispose de plusieurs certificat serveur. Il est possible d'avoir deux certificats différents sans pour autant avoir une connection sécurisé. La liste de ces sites est ici : ""https://checkmyhttps.net/website_exceptions.txt".
+				button.icon = "./warning.png";
+					notifications.notify({
+						title: _("l_alert"),
+						text:  _("l_several_certificats"),
+					});
+				}
+				else
+				{
 					
-					}
-					else
-					{
-						button.icon = "./unknown.png";
+					button.icon = "./unknown.png";
 
-					}
+				}
 		}
 		else // sinon le serveur checkmyhttps n'est pas joignable. On avertis l'utilisateur.
 		{
@@ -263,7 +254,8 @@ Request({
 	{
 		//récupération de la version courante
 		var page = response.text;
-		if(page.search(version_addon) != -1) // la version de l'addon est a jour, on peut donc lancer le test.
+		var version_site = parseFloat(page);
+		if(version_addon >= parseFloat(page)) // la version de l'addon est a jour, on peut donc lancer le test.
 		{
 			specific_test("https://checkmyhttps.net",0);
 		}
