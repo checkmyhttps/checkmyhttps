@@ -3,7 +3,7 @@
 ************ CHECKMYHTTPS CHANGELOG ***********
 ####################VERSION 3.0.9###################
 amélioration du check de la version
-l'utilisateur est avertis lorsqu'il teste son HTTPS sur un site d'exception (site HTTPS présentant plusieurs certificats)
+l'utilisateur est avertis lorsqu'il teste son HTTPS sur un site d'exception (site HTTPS présentant plusieurs certificats). La liste de ces exceptions se trouve ici : https://checkmyhttps.net/website_exception.txt)
 
 ####################VERSION 3.0.8###################
 mise a jour de l'empreinte avec le nouveau certificat
