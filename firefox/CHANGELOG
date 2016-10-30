@@ -1,8 +1,8 @@
 #CHANGELOG 2016-07-01 00:22:19Z ESIEA CNS-CVO 
 
 ************ CHECKMYHTTPS CHANGELOG ***********
-####################VERSION 3.0.9###################
-amélioration du check de la version
+####################VERSION 3.1###################
+amélioration de la vérification de la version
 l'utilisateur est avertis lorsqu'il teste son HTTPS sur un site d'exception (site HTTPS présentant plusieurs certificats). La liste de ces exceptions se trouve ici : https://checkmyhttps.net/website_exception.txt)
 
 ####################VERSION 3.0.8###################
