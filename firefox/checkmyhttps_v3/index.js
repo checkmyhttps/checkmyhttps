@@ -40,6 +40,7 @@ function handleClick(state) {
 			title:  _("l_alert"),
 			text:  _("l_privateip"),
 		});
+		return;
 	}
 
 	//le site testé doit etre en HTTPS

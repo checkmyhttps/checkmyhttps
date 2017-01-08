@@ -2,7 +2,7 @@
   "title": "CheckMyHTTPS",
   "name": "checkmyhttps",
   "id" : "info@checkmyhttps.net",
-  "version": "3.1",
+  "version": "3.1.1",
   "description": "Check if your HTTPS connections are secure. You can visit our website : https://www.checkmyhttps.net",
   "main": "index.js",
   "author": "ESIEA CNS-CVO <info@checkmyhttps.net>",
