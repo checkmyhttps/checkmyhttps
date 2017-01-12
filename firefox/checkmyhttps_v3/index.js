@@ -245,6 +245,35 @@ function specific_test(specific_url,second_time)
 	httpRequest.send(null);
 }
 
+function compareVersion(remoteVersion, currentVersion) {
+	if (remoteVersion === currentVersion) {
+	   return 0;
+	}
+
+	var remoteVersionArray  = remoteVersion.split('.');
+	var currentVersionArray = currentVersion.split('.');
+
+	var versionLength = Math.min(remoteVersionArray.length, currentVersionArray.length);
+
+	for (var i = 0; i < versionLength; i++) {
+		if (parseInt(remoteVersionArray[i]) > parseInt(currentVersionArray[i])) {
+			return 1;
+		}
+		if (parseInt(remoteVersionArray[i]) < parseInt(currentVersionArray[i])) {
+			return -1;
+		}
+	}
+
+	if (remoteVersionArray.length > currentVersionArray.length) {
+		return 1;
+	}
+	if (remoteVersionArray.length < currentVersionArray.length) {
+		return -1;
+	}
+
+	return 0;
+}
+
 //le test au démarrage du navigateur commence ICI.
 //Vérification de la version de checkmyhttps sur le site
 Request({
@@ -254,9 +283,8 @@ Request({
 	if(response.status == 200)
 	{
 		//récupération de la version courante
-		var page = response.text;
-		var version_site = parseFloat(page);
-		if(version_addon >= parseFloat(page)) // la version de l'addon est a jour, on peut donc lancer le test.
+		var lastVersion = response.text;
+		if(compareVersion(lastVersion, version_addon) <= 0) // la version de l'addon est a jour, on peut donc lancer le test.
 		{
 			specific_test("https://checkmyhttps.net",0);
 		}
