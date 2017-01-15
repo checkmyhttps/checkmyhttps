@@ -1,6 +1,5 @@
 #CheckMyHTTPS
 We propose a user-friendly addon that allows you to check if your encrypted web traffic (SSL/TLS) towards secured Internet servers (HTTPS) is not intercepted (being listened to). 
-<<<<<<< HEAD
 
 #How it works ?
 
@@ -21,7 +20,8 @@ We gave the possibility to be free concerning the HTTPS website to check. You ju
 Normally, a secured website has to prove its identity to your browser by sending a certificate validated by a recognized certificate authority. Interception techniques, to be able to work, generate dynamically forged certificates.
 CheckMyHTTPS checks that the received certificate from a visited HTTPS website matches the certificate seen by a remote server, ensuring no interception is taking place within your local network. This is sufficient to prove the interception.
 
-##########################################################################
+________________________________________________________________________________
+
 #CheckMyHTTPS
 Nous proposons une extension Firefox facile d'utilisation permettant de vérifier si vos connexions HTTPS sont sur-écoutes.
 
@@ -48,19 +48,14 @@ C'est très embêtant, néanmoins notre extension permet de déceler ce genre de
 
 CheckmyHTTPS permet de comparer le certificat d'un site sécurisé vu par votre navigateur avec le certificat vu par un équipement réseau contrôlé sur Internet. Si les certificats diffèrent, alors votre connexion est sur écoute car l'identité du serveur est usurpé => cadenas ROUGE
 
-##########################################################################
-=======
->>>>>>> origin/master
+________________________________________________________________________________
 
 #Author
-Designed & developed : Raphaël PION and Hugo MEZIANI. 
+Design & development: Raphaël PION, Hugo MEZIANI & Tom HOUDAYER
 
-Original idea & Supervision : ESIEA/CNS/Rexy
+Original idea & Supervision: Richard REY (aka Rexy)
 
-Logo : Clément SICCARDI
+Logo: Clément SICCARDI
 
 #LICENSE
 GPL v3
-
-
-
