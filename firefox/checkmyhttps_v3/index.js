@@ -7,6 +7,7 @@ var tabs = require("sdk/tabs");
 var notifications = require("sdk/notifications");
 var { MatchPattern } = require("sdk/util/match-pattern");
 var _ = require("sdk/l10n").get;
+var preferences = require("sdk/simple-prefs");
 
 //######################GUI######################//
 //version de l'addon (format string)
@@ -24,22 +25,22 @@ var button = buttons.ActionButton({
   id: "checkmyhttps-icon",
   label: _("l_inst"),
   icon: "./unknown.png",
-  onClick: handleClick
+  onClick: function (state) {
+    checkCurrentUrl(tabs.activeTab.url, true);
+  }
 });
 
 //lorsque l'utilisateur clique sur le boutton de l'addon pour effectuer un test,
-function handleClick(state) {
-	//on prend l'url du site actuel 
-	var url_tested = tabs.activeTab.url;
-	button.icon = "./working.png";
-
+function checkCurrentUrl(url_tested, showNotifications) {
 	//checkmyhttps ne peut pas joindre une adresse IP d'un réseau privé
 	if(url_tested.match(re_private_ip))
 	{
-		notifications.notify({
-			title:  _("l_alert"),
-			text:  _("l_privateip"),
-		});
+		if (showNotifications) {
+			notifications.notify({
+				title:  _("l_alert"),
+				text:  _("l_privateip"),
+			});
+		}
 		return;
 	}
 
@@ -51,10 +52,12 @@ function handleClick(state) {
 	}
 	else
 	{
-	notifications.notify({
-			title:  _("l_alert"),
-			text:  _("l_nohttps"),
-		});
+		if (showNotifications) {
+			notifications.notify({
+				title:  _("l_alert"),
+				text:  _("l_nohttps"),
+			});
+		}
 	}
 }
 
@@ -273,6 +276,23 @@ function compareVersion(remoteVersion, currentVersion) {
 
 	return 0;
 }
+
+function checkOnPageLoad(e_tab) {
+	checkCurrentUrl(e_tab.url, false);
+}
+
+function onPreferenceChange(prefName) {
+	if ((prefName === 'checkOnPageLoad') || (prefName === '')) {
+		if (preferences.prefs['checkOnPageLoad']) {
+			tabs.on('ready', checkOnPageLoad);
+		} else {
+			tabs.removeListener('ready', checkOnPageLoad);
+		}
+	}
+}
+preferences.on('', onPreferenceChange);
+
+onPreferenceChange('');
 
 //le test au démarrage du navigateur commence ICI.
 //Vérification de la version de checkmyhttps sur le site

@@ -1,6 +1,9 @@
 #CHANGELOG 2016-07-01 00:22:19Z ESIEA CNS-CVO 
 
 ************ CHECKMYHTTPS CHANGELOG ***********
+####################VERSION 3.2.0###################
+-Add automatic check on page loaded
+
 ####################VERSION 3.1.2###################
 -Fix update checker
 
