@@ -136,11 +136,6 @@ function Get_Current_Cert(url_tested) {
 	try
 	{
 		var cert = get_valid_cert(mainWindow.gBrowser); //récupération du certificat serveur
-		var root_issuer = cert.issuer;
-
-		while (root_issuer && root_issuer.issuer) {
-			root_issuer = root_issuer.issuer;
-		}
 		//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)	
 		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version="+version_addon, 0);
 	}	
@@ -165,7 +160,7 @@ function get_valid_cert(gb) {
         return ui.SSLStatus.serverCert;
     }
     catch (e) {
-        Pers_debug.d_print("error", "Perspectives Error: " + e);
+        console.debug('Error: ' + e);
         return null;
     }
 }
@@ -334,8 +329,3 @@ Request({
 	}
 		
 }}).get();
-
-
-
-
-
