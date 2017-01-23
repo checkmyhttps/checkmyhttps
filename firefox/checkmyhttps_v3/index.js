@@ -4,6 +4,7 @@ let {Cc, Ci} = require("chrome");
 var buttons = require('sdk/ui/button/action');
 var Request = require("sdk/request").Request;
 var tabs = require("sdk/tabs");
+var tabsUtils = require("sdk/tabs/utils");
 var notifications = require("sdk/notifications");
 var { MatchPattern } = require("sdk/util/match-pattern");
 var _ = require("sdk/l10n").get;
@@ -26,12 +27,12 @@ var button = buttons.ActionButton({
   label: _("l_inst"),
   icon: "./unknown.png",
   onClick: function (state) {
-    checkCurrentUrl(tabs.activeTab.url, true);
+    checkCurrentUrl(tabs.activeTab.url, tabs.activeTab.id, true);
   }
 });
 
 //lorsque l'utilisateur clique sur le boutton de l'addon pour effectuer un test,
-function checkCurrentUrl(url_tested, showNotifications) {
+function checkCurrentUrl(url_tested, tabId, showNotifications) {
 	//checkmyhttps ne peut pas joindre une adresse IP d'un réseau privé
 	if(url_tested.match(re_private_ip))
 	{
@@ -48,7 +49,7 @@ function checkCurrentUrl(url_tested, showNotifications) {
 	if(url_tested.search("https://") != -1)
 	{
 		button.icon = "./working.png";
-		Get_Current_Cert(url_tested); //commencement de la compraison des certificats
+		Get_Current_Cert(url_tested, tabId); //commencement de la compraison des certificats
 	}
 	else
 	{
@@ -128,14 +129,10 @@ function request(url,second_time) {
 //Fonction permettant d'obtenir le certificat serveur du site courant visité par l'utilisateur. 
 //On l'utilise lorsque l'utilisateur clique sur le boutton de checkmyhttps.net
 //url_tested : URL du site internet actuellement consulté par l'utilisateur
-function Get_Current_Cert(url_tested) {
-	//initialisation
-	var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
-	var mainWindow = wm.getMostRecentWindow("navigator:browser");
-	
+function Get_Current_Cert(url_tested, tabId) {
 	try
 	{
-		var cert = get_valid_cert(mainWindow.gBrowser); //récupération du certificat serveur
+		var cert = get_valid_cert(tabsUtils.getBrowserForTab(tabsUtils.getTabForId(tabId))); //récupération du certificat serveur
 		//send informations to compare server certificate seen by the client and the other seen by our server (checkmyhttps)	
 		request(_("l_check")+url_tested+"&thumbprint=" + cert.sha1Fingerprint +"&thumbprint_256=" + cert.sha256Fingerprint + "&version="+version_addon, 0);
 	}	
@@ -273,7 +270,7 @@ function compareVersion(remoteVersion, currentVersion) {
 }
 
 function checkOnPageLoad(e_tab) {
-	checkCurrentUrl(e_tab.url, false);
+	checkCurrentUrl(e_tab.url, e_tab.id, false);
 }
 
 function onPreferenceChange(prefName) {
