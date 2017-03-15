@@ -6,7 +6,7 @@
   "id": "info@checkmyhttps.net",
   "title": "CheckMyHTTPS",
   "homepage": "https://checkmyhttps.net",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "keywords": [
     "checkmyhttps", "certificate", "https", "man-in-the-middle", "mitm", "company", "privacy", "security", "spoofing", "sslsplit", "ssl", "tls"
   ],
@@ -19,8 +19,8 @@
   },
   "main": "lib/main.js",
   "permissions": {
-  	"private-browsing": true,
-  	"multiprocess": true
+    "private-browsing": true,
+    "multiprocess": true
   },
   "preferences": [
     {

@@ -23,32 +23,32 @@ const CMH = {
  * Compare two version numbers.
  */
 const compareVersion = function (remoteVersion, currentVersion) {
-	if (remoteVersion === currentVersion) {
-		return 0;
-	}
+    if (remoteVersion === currentVersion) {
+        return 0;
+    }
 
-	const remoteVersionArray  = remoteVersion.split('.');
-	const currentVersionArray = currentVersion.split('.');
+    const remoteVersionArray  = remoteVersion.split('.');
+    const currentVersionArray = currentVersion.split('.');
 
-	const versionLength = Math.min(remoteVersionArray.length, currentVersionArray.length);
+    const versionLength = Math.min(remoteVersionArray.length, currentVersionArray.length);
 
-	for (let i = 0; i < versionLength; i++) {
-		if (parseInt(remoteVersionArray[i]) > parseInt(currentVersionArray[i])) {
-			return 1;
-		}
-		if (parseInt(remoteVersionArray[i]) < parseInt(currentVersionArray[i])) {
-			return -1;
-		}
-	}
+    for (let i = 0; i < versionLength; i++) {
+        if (parseInt(remoteVersionArray[i]) > parseInt(currentVersionArray[i])) {
+            return 1;
+        }
+        if (parseInt(remoteVersionArray[i]) < parseInt(currentVersionArray[i])) {
+            return -1;
+        }
+    }
 
-	if (remoteVersionArray.length > currentVersionArray.length) {
-		return 1;
-	}
-	if (remoteVersionArray.length < currentVersionArray.length) {
-		return -1;
-	}
+    if (remoteVersionArray.length > currentVersionArray.length) {
+        return 1;
+    }
+    if (remoteVersionArray.length < currentVersionArray.length) {
+        return -1;
+    }
 
-	return 0;
+    return 0;
 };
 
 /**
@@ -58,22 +58,22 @@ const compareVersion = function (remoteVersion, currentVersion) {
  */
 const checkUpdate = function () {
     CMH.certificatesManager.getCertUrl('https://checkmyhttps.net/version_addon.txt', function (datas_url) {
-    	if (datas_url.xhr.status !== 200) {
-    		CMH.ui.button.setStatus(CMH.common.status.UNKNOWN);
+        if (datas_url.xhr.status !== 200) {
+            CMH.ui.button.setStatus(CMH.common.status.UNKNOWN);
             CMH.ui.notification.show(_('l_serverUnreachable'));
-    		return;
-    	}
+            return;
+        }
 
-    	// Check new version
-    	const version_addon = self.version;
-    	const lastVersion   = datas_url.response;
-    	if (compareVersion(lastVersion, version_addon) > 0) {
-    		// New version available
-    		CMH.ui.button.setStatus(CMH.common.status.WARNING);
+        // Check new version
+        const version_addon = self.version;
+        const lastVersion   = datas_url.response;
+        if (compareVersion(lastVersion, version_addon) > 0) {
+            // New version available
+            CMH.ui.button.setStatus(CMH.common.status.WARNING);
             CMH.ui.notification.show(_('l_clickToUpdate'), _('l_update'), function (data) {
                 tabs.open('https://addons.mozilla.org/firefox/addon/checkmyhttps/');
             });
-    	}
+        }
     });
 }
 

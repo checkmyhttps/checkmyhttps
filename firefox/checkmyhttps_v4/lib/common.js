@@ -60,7 +60,7 @@ const parseURL = function (urlStr) {
     const host = url.host;
     const port = url.port || 443;
 
-	return { host: host, port: port };
+    return { host: host, port: port };
 };
 
 exports.isPlatform = isPlatform;

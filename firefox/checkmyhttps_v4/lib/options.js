@@ -11,7 +11,7 @@ const preferences  = require('sdk/simple-prefs');
  * Cache of add-on options.
  */
 const prefs = {
-	checkOnPageLoad: false
+    checkOnPageLoad: false
 };
 
 /**
@@ -21,13 +21,13 @@ const prefs = {
  * Load option in cache on change.
  */
 const onPreferenceChange = function (prefName) {
-	if (prefName === '') { // Reload all options.
-		for (let name in prefs) {
-			prefs[name] = preferences.prefs[name];
-		}
-	} else {
-		prefs[prefName] = preferences.prefs[prefName];
-	}
+    if (prefName === '') { // Reload all options.
+        for (let name in prefs) {
+            prefs[name] = preferences.prefs[name];
+        }
+    } else {
+        prefs[prefName] = preferences.prefs[prefName];
+    }
 };
 preferences.on('', onPreferenceChange);
 

@@ -5,7 +5,7 @@
  */
 
 const CMH = {
-	common: require('./common')
+    common: require('./common')
 };
 
 let uiPlatform;

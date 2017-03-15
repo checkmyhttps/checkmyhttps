@@ -20,14 +20,14 @@ const CMH = {
 const requestFromUrl = function (urlTested, callback) {
     const { host, port } = CMH.common.parseURL(urlTested);
 
-	CMH.certificatesManager.getCertUrl('https://checkmyhttps.net/api.php?host='+encodeURIComponent(host)+'&port='+port, function (datas) {
-		if (datas.xhr.status !== 200) { // Error in response
-			callback({error: datas.xhr.statusText});
-			return;
-		}
+    CMH.certificatesManager.getCertUrl('https://checkmyhttps.net/api.php?host='+encodeURIComponent(host)+'&port='+port, function (datas) {
+        if (datas.xhr.status !== 200) { // Error in response
+            callback({error: datas.xhr.statusText});
+            return;
+        }
 
-		callback({cert: JSON.parse(datas.response)});
-	})
+        callback({cert: JSON.parse(datas.response)});
+    })
 };
 
 exports.requestFromUrl = requestFromUrl;
