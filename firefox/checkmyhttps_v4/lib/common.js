@@ -1,7 +1,7 @@
 /**
  * @file Common file.
  * @author CheckMyHTTPS's team
- * @license GPLv3
+ * @license GPL-3.0
  */
 
 const systemXulApp = require('sdk/system/xul-app');

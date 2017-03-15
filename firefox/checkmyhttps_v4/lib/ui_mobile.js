@@ -1,7 +1,7 @@
 /**
  * @file UI on mobile.
  * @author CheckMyHTTPS's team
- * @license GPLv3
+ * @license GPL-3.0
  */
 
 const _             = require('sdk/l10n').get;

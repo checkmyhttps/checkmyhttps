@@ -1,7 +1,7 @@
 /**
  * @file Tabs manager.
  * @author CheckMyHTTPS's team
- * @license GPLv3
+ * @license GPL-3.0
  */
 
 const tabs          = require('sdk/tabs');

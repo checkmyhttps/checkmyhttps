@@ -1,7 +1,7 @@
 /**
  * @file UI adapter.
  * @author CheckMyHTTPS's team
- * @license GPLv3
+ * @license GPL-3.0
  */
 
 const CMH = {
