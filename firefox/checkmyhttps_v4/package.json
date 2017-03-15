@@ -1,0 +1,34 @@
+{
+  "name": "checkmyhttps",
+  "description": "Check if your HTTPS connections are secure. You can visit our website: https://checkmyhttps.net",
+  "version": "4.0.0",
+  "author": "ESIEA CNS-CVO <info@checkmyhttps.net>",
+  "id": "info@checkmyhttps.net",
+  "title": "CheckMyHTTPS",
+  "homepage": "https://checkmyhttps.net",
+  "license": "GPLv3",
+  "keywords": [
+    "checkmyhttps", "certificate", "https", "man-in-the-middle", "mitm", "company", "privacy", "security", "spoofing", "sslsplit", "ssl", "tls"
+  ],
+  "locales": {
+    "fr": { "description": "Vérifie si vos connexions HTTPS sont sécurisées. Vous pouvez visiter notre site Web : https://checkmyhttps.net" }
+  },
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec":  ">=38.0a1"
+  },
+  "main": "lib/main.js",
+  "permissions": {
+  	"private-browsing": true,
+  	"multiprocess": true
+  },
+  "preferences": [
+    {
+      "name": "checkOnPageLoad",
+      "title": "Check on page load",
+      "description": "Check HTTPS connection on every new page",
+      "type": "bool",
+      "value": false
+    }
+  ]
+}
