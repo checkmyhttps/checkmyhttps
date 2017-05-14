@@ -4,9 +4,12 @@
  * @license GPL-3.0
  */
 
+const _ = require('sdk/l10n').get;
+
 const CMH = {
-    ui:      require('./ui'),
-    updater: require('./updater')
+    common:              require('./common'),
+    certificatesManager: require('./certificatesManager'),
+    ui:                  require('./ui')
 };
 
 exports.main = function (options, callbacks) {
@@ -18,5 +21,16 @@ exports.onUnload = function (reason) {
     CMH.ui.unregister();
 };
 
-// Check update at start (+ check SSL of the CheckMyHTTPS server)
-CMH.updater.checkUpdate();
+// Check SSL connection with the CheckMyHTTPS server
+CMH.certificatesManager.getCertUrl('https://checkmyhttps.net/success.txt', function (datas) {
+    if (datas.xhr.status !== 200) {
+        CMH.ui.button.setStatus(CMH.common.status.UNKNOWN);
+        CMH.ui.notification.show(_('l_serverUnreachable'));
+        return;
+    }
+
+    if (datas.response.trim() !== 'success') {
+        CMH.ui.button.setStatus(CMH.common.status.INVALID);
+        CMH.ui.notification.show(_('l_danger'));
+    }
+});
