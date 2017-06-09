@@ -12,6 +12,7 @@ const CMH = {
     api:                 require('./api'),
     certificatesManager: require('./certificatesManager'),
     common:              require('./common'),
+    options:             require('./options'),
     tabsManager:         require('./tabsManager'),
     ui:                  require('./ui')
 };
@@ -57,7 +58,6 @@ const isCheckableUrl = function (urlTested, showNotifications) {
  * Check a tab.
  */
 const checkTab = function (tab, showNotifications) {
-    const tabId     = tab.id;
     const urlTested = CMH.tabsManager.getTabUrl(tab);
 
     if (!isCheckableUrl(urlTested, showNotifications)) {
@@ -65,7 +65,7 @@ const checkTab = function (tab, showNotifications) {
     }
 
     CMH.tabsManager.setTabStatus(tab, CMH.common.status.WORKING);
-    const cert = CMH.certificatesManager.getCertTab(tabId);
+    const cert = CMH.certificatesManager.getCertTab(tab.id);
     if (cert === null) {
         CMH.tabsManager.setTabStatus(tab, CMH.common.status.UNKNOWN);
         return;
@@ -113,6 +113,17 @@ const verifyCertificate = function (userCertificate, CmhCertificate, showNotific
     if (CMH.certificatesManager.compareCertificateFingerprints(userCertificate, CmhCertificate)) {
         if (tab !== null) {
             CMH.tabsManager.setTabStatus(tab, CMH.common.status.VALID);
+        }
+        if ((CMH.options.prefs.alertOnUnicodeIDNDomainNames) && (!CMH.options.sysPrefs['network.IDN_show_punycode'])) {
+            // Check if the domain name is an IDN printed in Unicode
+            const domainName = CmhCertificate.host.split(':')[0];
+            const names = domainName.split('.');
+            for (let name of names) {
+                if (name.startsWith('xn--')) {
+                    CMH.ui.notification.show(_('l_IDNwarning', domainName));
+                    break;
+                }
+            }
         }
     } else {
         if (CmhCertificate.whitelisted) { // Certificate whitelisted

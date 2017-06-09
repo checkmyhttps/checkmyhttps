@@ -1,7 +1,7 @@
 {
   "name": "checkmyhttps",
   "description": "Check if your HTTPS connections are secure. You can visit our website: https://checkmyhttps.net",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "author": "ESIEA CNS-CVO <info@checkmyhttps.net>",
   "id": "info@checkmyhttps.net",
   "title": "CheckMyHTTPS",
@@ -29,6 +29,13 @@
       "description": "Check HTTPS connection on every new page",
       "type": "bool",
       "value": false
+    },
+    {
+      "name": "alertOnUnicodeIDNDomainNames",
+      "title": "Alert on Unicode IDN",
+      "description": "Show a warning if the domain name is an international and your browser shows it in Unicode",
+      "type": "bool",
+      "value": true
     }
   ]
 }

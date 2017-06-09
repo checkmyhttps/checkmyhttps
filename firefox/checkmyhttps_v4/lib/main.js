@@ -32,5 +32,6 @@ CMH.certificatesManager.getCertUrl('https://checkmyhttps.net/success.txt', funct
     if (datas.response.trim() !== 'success') {
         CMH.ui.button.setStatus(CMH.common.status.INVALID);
         CMH.ui.notification.show(_('l_danger'));
+        return;
     }
 });

@@ -1,4 +1,7 @@
-# CheckMyHTTPS changelog
+# CheckMyHTTPS Changelog
+
+## 4.1.0 - 2017-06-09
+- Show a warning message for international domain names printed in Unicode.
 
 ## 4.0.1 - 2017-05-14
 - Remove update checker (not allowed by Firefox).

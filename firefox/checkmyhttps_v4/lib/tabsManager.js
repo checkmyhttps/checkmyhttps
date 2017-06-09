@@ -81,7 +81,7 @@ const deleteTabStatus = function (tab) {
  * Event on page loaded.
  */
 const onTabReady = function (tab) {
-    if (CMH.options.prefs.checkOnPageLoad === true) {
+    if (CMH.options.prefs.checkOnPageLoad) {
         // Check on page load
         CMH.certificatesChecker.checkTab(tab, false);
     } else if ((typeof tabsStatus[tab.id] !== 'undefined') && (tabsStatus[tab.id].host !== urls.URL(getTabUrl(tab)).host)) {
