@@ -1,5 +1,8 @@
 # CheckMyHTTPS Changelog
 
+## 4.1.1 - 2017-06-25
+- Add support to "Waterfox".
+
 ## 4.1.0 - 2017-06-09
 - Show a warning message for international domain names printed in Unicode.
 

@@ -42,9 +42,9 @@ exports.statusCode = [
  */
 const isPlatform = function (platform) {
     if (platform === 'desktop') {
-        return (systemXulApp.name === 'Firefox');
+        return (systemXulApp.isOneOf(['Firefox', 'Waterfox']));
     } else if (platform === 'mobile') {
-        return (systemXulApp.name === 'Fennec');
+        return (systemXulApp.is('Fennec'));
     }
 }
 
