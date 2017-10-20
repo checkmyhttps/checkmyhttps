@@ -1,5 +1,9 @@
 # CheckMyHTTPS Changelog
 
+## 4.2.0 - 2017-10-20
+- Add the ability to self-host the check server.
+- Fix a bug on Android.
+
 ## 4.1.1 - 2017-06-25
 - Add support to "Waterfox".
 

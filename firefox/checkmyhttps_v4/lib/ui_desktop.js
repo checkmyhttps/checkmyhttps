@@ -29,7 +29,7 @@ exports.register = function () {
     actionButton = buttons.ActionButton({
         id: 'checkmyhttps-icon',
         label: _('l_clickToCheck'),
-        icon: './' + CMH.common.statusCode[CMH.common.status.UNKNOWN] + '.png',
+        icon: './images/' + CMH.common.statusCode[CMH.common.status.UNKNOWN] + '.png',
         onClick: function (state) {
             // Check active tab
             CMH.certificatesChecker.checkTab(tabs.activeTab, true);
@@ -56,7 +56,7 @@ exports.button = {
      * Set status of the action button.
      */
     setStatus: function (status) {
-        actionButton.icon = './' + CMH.common.statusCode[status] + '.png';
+        actionButton.icon = './images/' + CMH.common.statusCode[status] + '.png';
     }
 };
 

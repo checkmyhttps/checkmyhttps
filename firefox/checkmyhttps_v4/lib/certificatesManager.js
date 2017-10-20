@@ -13,15 +13,16 @@ const { XMLHttpRequest } = require('sdk/net/xhr');
 
 const CMH = {
     common:      require('./common'),
+    options:     require('./options'),
     tabsManager: require('./tabsManager'),
     ui:          require('./ui')
 };
 
 /**
  * @type {object}
- * Finguerprints of the CheckMyHTTPS server.
+ * Fingerprints of the CheckMyHTTPS server.
  */
-const CMHServerFinguerprints = {
+const CMHServerFingerprints = {
     sha1:   'FF33641253DAA21E6C5CADEBF15430B2B7E498E6',
     sha256: '889F63E8E7F98F67E35750591CD66BC32A17A4B4FA2A44763DBEF8D756156165'
 };
@@ -87,12 +88,12 @@ const getCertUrl = function (urlTested, callback) {
         cert = formatCertificate(cert);
 
         // SSL pinning
-        if (urls.URL(urlTested).host === 'checkmyhttps.net') {
-            if ((cert !== null) && (!compareCertificateFingerprints(cert, { fingerprints: CMHServerFinguerprints }))) {
+        if (urls.URL(urlTested).host === urls.URL(CMH.options.prefs.checkServerUrl).host) {
+            if ((cert !== null) && (!compareCertificateFingerprints(cert, { fingerprints: { sha1: CMH.options.prefs.checkServerFingerprintsSha1, sha256: CMH.options.prefs.checkServerFingerprintsSha256 } }))) {
                 CMH.tabsManager.setTabStatus(tabs.activeTab, CMH.common.status.INVALID);
                 CMH.ui.notification.show(_('l_danger'), _('view'), function (data) {
                     const { host, port } = CMH.common.parseURL(urlTested);
-                    tabs.open('https://checkmyhttps.net/result.php?host='+encodeURIComponent(host)+'&port='+port+'&fingerprints[sha1]='+userCertificate.fingerprints.sha1+'&fingerprints[sha256]='+userCertificate.fingerprints.sha256);
+                    tabs.open('https://checkmyhttps.net/result.php?host='+encodeURIComponent(host)+'&port='+port+'&fingerprints[sha1]='+cert.fingerprints.sha1+'&fingerprints[sha256]='+cert.fingerprints.sha256);
                 });
                 return;
             }
@@ -129,7 +130,7 @@ const formatCertificate = function (certificate) {
  * @param {object} userCertificate - Certificate from the user
  * @param {object} CmhCertificate  - Certificate from the server
  * @returns {bool}
- * Compare Finguerprints of two certificates.
+ * Compare fingerprints of two certificates.
  */
 const compareCertificateFingerprints = function (userCertificate, CmhCertificate) {
     return ((userCertificate.fingerprints.sha1 === CmhCertificate.fingerprints.sha1) && (userCertificate.fingerprints.sha256 === CmhCertificate.fingerprints.sha256));

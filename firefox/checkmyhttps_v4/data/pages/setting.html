@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Check server settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    div.form {
+        display: table;
+    }
+    div.form-row {
+        display: table-row;
+    }
+    div.form-row > label, div.form-row > input[type="text"] {
+        display: table-cell;
+        margin: 3px 10px;
+    }
+    p.message {
+        color: red;
+    }
+    </style>
+</head>
+<body style="display: none;">
+    <h1>Check server settings</h1>
+
+    <div class="form">
+        <div class="form-row">
+            <label for="api_server">Server address</label>
+            <input type="text" name="api_server" id="api_server" size="50" placeholder="https://checkmyhttps.myserver.net/">
+        </div>
+        <div class="form-row">
+            <label for="api_sha1">Server SHA1</label>
+            <input type="text" name="api_sha1" id="api_sha1" size="50" placeholder="54797065207468652053484131207072696E7420">
+        </div>
+        <div class="form-row">
+            <label for="api_sha256">Server SHA256</label>
+            <input type="text" name="api_sha256" id="api_sha256" size="80" placeholder="416E6420746865205348413235362066696E677565727072696E742068657265">
+        </div>
+    </div>
+    <div class="buttons">
+        <button type="button" id="form-submit">Save</button>
+        <button type="button" id="restore-default">Default</button>
+        <button type="button" id="get-fingerprints">Get fingerprints</button>
+    </div>
+    <p class="message"></p>
+</body>
+</html>

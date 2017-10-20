@@ -69,7 +69,7 @@ const deleteTabStatus = function (tab) {
     if (typeof tabsStatus[tab.id] !== 'undefined') {
         delete tabsStatus[tab.id];
     }
-    if (tab.id === tabs.activeTab.id) {
+    if ((tabs.activeTab !== null) && (tab.id === tabs.activeTab.id)) {
         CMH.ui.button.setStatus(CMH.common.status.UNKNOWN);
     }
 };

@@ -31,8 +31,6 @@ exports.register = function () {
     actionButtonId = mainWindow.NativeWindow.menu.add({
         name: 'CheckMyHTTPS (' + _('l_'+CMH.common.statusCode[CMH.common.status.UNKNOWN]) + ')',
         callback: function (state) {
-            mainWindow.console.log('clicked');
-            console.log('clicked');
             CMH.certificatesChecker.checkTab(mainWindow.BrowserApp.selectedTab, true);
         }
     });

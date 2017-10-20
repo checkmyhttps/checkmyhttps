@@ -34,6 +34,20 @@ exports.statusCode = [
 ];
 
 /**
+ * @name getPlatform
+ * @function
+ * @returns {string} platform - Platform name
+ * Get the platform of the running add-on.
+ */
+const getPlatform = function () {
+    if (systemXulApp.is('Fennec')) {
+        return 'mobile';
+    } else {
+        return 'desktop';
+    }
+}
+
+/**
  * @name isPlatform
  * @function
  * @param {string} platform - Platform name
@@ -41,11 +55,7 @@ exports.statusCode = [
  * Check the platform of the running add-on.
  */
 const isPlatform = function (platform) {
-    if (platform === 'desktop') {
-        return (systemXulApp.isOneOf(['Firefox', 'Waterfox']));
-    } else if (platform === 'mobile') {
-        return (systemXulApp.is('Fennec'));
-    }
+    return (getPlatform() === platform);
 }
 
 /**
