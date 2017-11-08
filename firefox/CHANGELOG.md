@@ -2,6 +2,7 @@
 
 ## 4.3.0
 - Display an alert when check server API request fails.
+- Add a slash at the end of check server URL if it is missing in the settings.
 
 ## 4.2.0 - 2017-10-20
 - Add the ability to self-host the check server.

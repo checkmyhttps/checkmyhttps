@@ -16,6 +16,9 @@ let lastDomainSaved = '';
 btn_save.addEventListener('click', function onClick(event) {
     btn_save.disabled = true;
     lbl_message.textContent = '';
+    if (txt_server.value.slice(-1) !== '/') {
+        txt_server.value += '/';
+    }
     self.port.emit('save', {
         server: txt_server.value,
         sha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
@@ -35,6 +38,9 @@ btn_restoreDefault.addEventListener('click', function onClick(event) {
 btn_getFingerprints.addEventListener('click', function onClick(event) {
     btn_getFingerprints.disabled = true;
     lbl_message.textContent = '';
+    if (txt_server.value.slice(-1) !== '/') {
+        txt_server.value += '/';
+    }
     self.port.emit('getFingerprints', {
         server: txt_server.value
     });
