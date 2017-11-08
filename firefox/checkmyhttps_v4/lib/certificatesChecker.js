@@ -71,6 +71,11 @@ const checkTab = function (tab, showNotifications) {
         return;
     }
     CMH.api.requestFromUrl(urlTested, function (datas_api) {
+        if (datas_api.error) {
+            CMH.tabsManager.setTabStatus(tab, CMH.common.status.UNKNOWN);
+            CMH.ui.notification.show(_('l_serverUnreachable'));
+            return;
+        }
         verifyCertificate(cert, datas_api.cert, showNotifications, tab, urlTested);
     });
 };

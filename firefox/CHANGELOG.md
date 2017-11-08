@@ -1,5 +1,8 @@
 # CheckMyHTTPS Changelog
 
+## 4.3.0
+- Display an alert when check server API request fails.
+
 ## 4.2.0 - 2017-10-20
 - Add the ability to self-host the check server.
 - Fix a bug on Android.
