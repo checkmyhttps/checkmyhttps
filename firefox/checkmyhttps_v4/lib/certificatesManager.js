@@ -116,12 +116,18 @@ const formatCertificate = function (certificate) {
         return null;
     }
 
-    return {
+    const certificateFormatted = {
         fingerprints: {
             sha1:   certificate.sha1Fingerprint.replace(/:/g, '').toUpperCase(),
             sha256: certificate.sha256Fingerprint.replace(/:/g, '').toUpperCase()
         }
     };
+
+    if (certificate.issuer !== null) {
+        certificateFormatted.issuer = formatCertificate(certificate.issuer)
+    }
+
+    return certificateFormatted;
 };
 
 /**

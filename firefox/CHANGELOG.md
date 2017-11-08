@@ -1,6 +1,7 @@
 # CheckMyHTTPS Changelog
 
-## 4.3.0
+## 4.3.0 - 2017-11-09
+- Check issuer certificate if the first check fails.
 - Display an alert when check server API request fails.
 - Add a slash at the end of check server URL if it is missing in the settings.
 

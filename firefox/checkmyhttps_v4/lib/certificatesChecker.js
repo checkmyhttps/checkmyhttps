@@ -130,23 +130,28 @@ const verifyCertificate = function (userCertificate, CmhCertificate, showNotific
                 }
             }
         }
-    } else {
-        if (CmhCertificate.whitelisted) { // Certificate whitelisted
-            if (tab !== null) {
-                CMH.tabsManager.setTabStatus(tab, CMH.common.status.WARNING);
-            }
-            if (showNotifications) {
-                CMH.ui.notification.show(_('l_severalCertificats'));
-            }
-        } else {
-            if (tab !== null) {
-                CMH.tabsManager.setTabStatus(tab, CMH.common.status.INVALID);
-            }
-            CMH.ui.notification.show(_('l_danger'), _('l_view'), function (data) {
-                const { host, port } = CMH.common.parseURL(urlTested);
-                tabs.open('https://checkmyhttps.net/result.php?host='+encodeURIComponent(host)+'&port='+port+'&fingerprints[sha1]='+userCertificate.fingerprints.sha1+'&fingerprints[sha256]='+userCertificate.fingerprints.sha256);
-            });
+    } else if ((userCertificate.issuer) && (CmhCertificate.issuer) && (CMH.certificatesManager.compareCertificateFingerprints(userCertificate.issuer, CmhCertificate.issuer))) { // Compare issuer certificate
+        if (tab !== null) {
+            CMH.tabsManager.setTabStatus(tab, CMH.common.status.WARNING);
         }
+        if (showNotifications) {
+            CMH.ui.notification.show(_('l_severalCertificats'));
+        }
+    } else if (CmhCertificate.whitelisted) { // Check certificate whitelisted
+        if (tab !== null) {
+            CMH.tabsManager.setTabStatus(tab, CMH.common.status.WARNING);
+        }
+        if (showNotifications) {
+            CMH.ui.notification.show(_('l_severalCertificats'));
+        }
+    } else {
+        if (tab !== null) {
+            CMH.tabsManager.setTabStatus(tab, CMH.common.status.INVALID);
+        }
+        CMH.ui.notification.show(_('l_danger'), _('l_view'), function (data) {
+            const { host, port } = CMH.common.parseURL(urlTested);
+            tabs.open('https://checkmyhttps.net/result.php?host='+encodeURIComponent(host)+'&port='+port+'&fingerprints[sha1]='+userCertificate.fingerprints.sha1+'&fingerprints[sha256]='+userCertificate.fingerprints.sha256);
+        });
     }
 };
 
