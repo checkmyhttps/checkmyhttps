@@ -35,13 +35,13 @@ if (isset($_GET['url'])) {
     }
 } else {
     if (isset($_GET['host'])) {
-        if (preg_match('/^[a-zA-Z0-9-.]+$/', $_GET['host'])) {
+        if (preg_match('/^[a-z0-9-.]+$/i', $_GET['host'])) {
             $host = $_GET['host'];
         } else {
             // Convert IDNA 2008
             $_GET['host'] = (new \Mso\IdnaConvert\IdnaConvert)->encode($_GET['host']);
 
-            if (preg_match('/^[a-zA-Z0-9-.]+$/', $_GET['host'])) {
+            if (preg_match('/^[a-z0-9-.]+$/i', $_GET['host'])) {
                 $host = $_GET['host'];
             }
         }
@@ -54,11 +54,18 @@ if (isset($_GET['url'])) {
     }
 }
 
+$error_host_or_port = array();
+
 if (empty($host)) {
-    exit(json_encode(['error' => 'UNKNOWN_HOST']));
+    $error_host_or_port['host'] = 'UNKNOWN_HOST';
 }
+
 if (empty($port)) {
-    exit(json_encode(['error' => 'UNKNOWN_PORT']));
+    $error_host_or_port['port'] = 'UNKNOWN_PORT';
+}
+
+if ($error_host_or_port !== array()) {
+    exit(json_encode($error_host_or_port));
 }
 
 
