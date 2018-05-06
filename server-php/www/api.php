@@ -188,5 +188,11 @@ function checkHostWhitelisted($host) {
         return true;
     }
 
+    foreach ($whitelist['domains_re'] as $regex) {
+        if (preg_match("/$regex/", $host)) {
+            return true;
+        }
+    }
+
     return false;
 }
