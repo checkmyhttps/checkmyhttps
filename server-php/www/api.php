@@ -3,11 +3,22 @@
 include __DIR__ . '/vendor/autoload.php';
 
 define('INSTANCE_TITLE', '');
-define('VERSION', '1.1.0');
+define('VERSION', '1.2.0');
 define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
 define('CMH_DEBUG', false);
 
 header('Content-Type: application/json');
+
+// Allow check private IP
+$allowPrivateIp = false;
+
+// Do not send a dedicated message for private domains
+$privateDomainsHidden = false;
+
+// List of private domains
+$privateDomains = [
+    'localhost'
+];
 
 // Information page
 if (isset($_GET['info'])) {
@@ -59,6 +70,18 @@ if (empty($host)) {
 }
 if (empty($port)) {
     exit(json_encode(['error' => 'UNKNOWN_PORT']));
+}
+
+if ((!$allowPrivateIp) && (preg_match('/^(127\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(192\.168\.)+[0-9\.]+$/', $host))) {
+    exit(json_encode(['error' => 'PRIVATE_HOST']));
+}
+
+if (in_array($host, $privateDomains)) {
+    if (!$privateDomainsHidden) {
+        exit(json_encode(['error' => 'PRIVATE_HOST']));
+    } else {
+        exit(json_encode(['error' => 'HOST_UNREACHABLE']));
+    }
 }
 
 
