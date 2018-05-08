@@ -26,7 +26,7 @@ VERSION = '1.0.0'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
-    'chrome':  'chrome-extension://kloeailbbhkdfbaoaefkaajhgihpadke/',
+    'chrome':  'chrome-extension://jbnodnfpdcegpnflleanllmiihkinkio/',
     'opera':   'chrome-extension://fmbmhajicpidghmjmgkafenlmjeoogje/'
 }
 
