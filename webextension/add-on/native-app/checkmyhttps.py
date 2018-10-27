@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -245,41 +245,19 @@ def sendMessage(messageContent):
     stdout.write(encodedMessage['content'])
     stdout.flush()
 
-class SSLPinningException(Exception):
-    """ SSL Pinning exception (MITM SSL) """
-    pass
-
 def compareFingerprints(userCertificate, checkServerCertificate):
     """ Compare two SSL certificates """
     return ((userCertificate['sha1'] == checkServerCertificate['sha1']) and (userCertificate['sha256'] == checkServerCertificate['sha256']))
 
-def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
-    """ Get fingerprints from the check server (API) """
+class SSLPinningException(Exception):
+    """ SSL Pinning exception (MITM SSL) """
+    pass
+
+def openHTTPSRequest(url):
+    """ Open HTTPS request then return data body and fingerprints """
     global fingerprints
     fingerprints = None
     data = None
-
-    class CertValidatingHTTPSConnection(httplib.HTTPConnection):
-        default_port = httplib.HTTPS_PORT
-
-        if sys.version_info.major >= 3: # Python 3
-            def __init__(self, host, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None, **kwargs):
-                httplib.HTTPConnection.__init__(self, host, port, timeout, source_address, **kwargs)
-        else:                           # Python 2
-            def __init__(self, host, port=None, strict=None, **kwargs):
-                httplib.HTTPConnection.__init__(self, host, port, strict, **kwargs)
-
-
-        def connect(self):
-            s = socket.create_connection((self.host, self.port))
-            s.settimeout(timeout)
-            self.sock = ssl.SSLSocket(s, server_hostname=self.host.split(':', 0)[0])
-            certRaw = self.sock.getpeercert(True)
-            global fingerprints
-            fingerprints = {
-                'sha1':   hashlib.sha1(certRaw).hexdigest().upper(),
-                'sha256': hashlib.sha256(certRaw).hexdigest().upper()
-            }
 
     class VerifiedHTTPSHandler(urllib2.HTTPSHandler):
         def __init__(self, **kwargs):
@@ -290,43 +268,67 @@ def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
             def http_class_wrapper(host, **kwargs):
                 full_kwargs = dict(self._connection_args)
                 full_kwargs.update(kwargs)
+
+                class CertValidatingHTTPSConnection(httplib.HTTPSConnection):
+                    def connect(self):
+                        s = socket.create_connection((self.host, self.port), self.timeout, self.source_address)
+                        if self._tunnel_host:
+                            self.sock = s
+                            self._tunnel()
+                        self.sock = ssl.SSLSocket(s, server_hostname=self.host.split(':', 0)[0])
+                        certRaw = self.sock.getpeercert(True)
+                        global fingerprints
+                        fingerprints = {
+                            'sha1':   hashlib.sha1(certRaw).hexdigest().upper(),
+                            'sha256': hashlib.sha256(certRaw).hexdigest().upper()
+                        }
+
                 return CertValidatingHTTPSConnection(host, **full_kwargs)
 
             return self.do_open(http_class_wrapper, req)
 
         https_request = urllib2.HTTPSHandler.do_request_
 
-    req = urllib2.build_opener(VerifiedHTTPSHandler()).open(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port))
+    # To force proxy:
+    # proxy_handler = urllib2.ProxyHandler({'https' : 'http://127.0.0.1:3128'})
+    # req = urllib2.build_opener(proxy_handler, VerifiedHTTPSHandler()).open(url, timeout=timeout)
+    req = urllib2.build_opener(VerifiedHTTPSHandler()).open(url, timeout=timeout)
 
+    return {
+        'fingerprints': fingerprints,
+        'data': req.read()
+    }
+
+def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
+    """ Get fingerprints from the check server (API) """
+    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port))
+    
     # SSL pinning on check server
-    if ((fingerprints is not None) and (host == (urlparse(checkServer['url']).hostname)) and (port == (urlparse(checkServer['url']).port)) and (not compareFingerprints(fingerprints, checkServer['fingerprints']))):
+    if ((req['fingerprints'] is None) or (not compareFingerprints(req['fingerprints'], checkServer['fingerprints']))):
         raise SSLPinningException()
 
-    data =  {
-        'fingerprints': fingerprints,
-        'data': json.loads(req.read())
-    }
+    return json.loads(req['data'])
 
-    return data
+def getFingerprintsFromClient(host, port):
+    """ Get fingerprint from client """
+    if port == 443 or True: # TODO: support other protocols
+        return openHTTPSRequest('https://' + host + ':' + str(port))['fingerprints']
+    else:
+        # Old way with a raw socket (does not work with a proxy)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(timeout)
+        ssl_sock = ssl.SSLSocket(s, server_hostname=host)
 
-def getFingerprints(host, port):
-    """ Get fingerprint (from client) """
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(timeout)
-    ssl_sock = ssl.SSLSocket(s, server_hostname=host)
+        ssl_sock.connect((host, port))
 
-    ssl_sock.connect((host, port))
+        certRaw = ssl_sock.getpeercert(True)
 
-    certRaw = ssl_sock.getpeercert(True)
+        ssl_sock.close()
 
-    res = {
-        'sha1':   hashlib.sha1(certRaw).hexdigest().upper(),
-        'sha256': hashlib.sha256(certRaw).hexdigest().upper()
-    }
-
-    ssl_sock.close()
-
-    return res
+        return {
+            'sha1':   hashlib.sha1(certRaw).hexdigest().upper(),
+            'sha256': hashlib.sha256(certRaw).hexdigest().upper()
+        }
 
 def parseURL(url):
     """ Parse an URL """
@@ -361,7 +363,6 @@ def isCheckableUrl(url):
 
     return True
 
-
 def checkUrl(url):
     """ Check an URL """
     if not isCheckableUrl(url):
@@ -373,8 +374,8 @@ def checkUrl(url):
     checkServerCert = None
 
     try:
-        userCert        = getFingerprints(urlParsed['host'], urlParsed['port'])
-        checkServerCert = getFingerprintsFromCheckServer(urlParsed['host'], urlParsed['port'])['data']
+        userCert        = getFingerprintsFromClient(urlParsed['host'], urlParsed['port'])
+        checkServerCert = getFingerprintsFromCheckServer(urlParsed['host'], urlParsed['port'])
     except SSLPinningException as e:
         # print('SSL pinning failed')
         return 'SSLP'
@@ -425,7 +426,7 @@ def verifyCheckServerApi(checkServer):
 
     checkServerCert = None
     try:
-        checkServerCert = getFingerprintsFromCheckServer(urlParsed['host'], urlParsed['port'], checkServer=checkServer)
+        checkServerCert = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + urlParsed['host'] + '&port=' + str(urlParsed['port']))
     except SSLPinningException:
         # print('SSL pinning failed')
         return 'SSLP'
@@ -464,7 +465,7 @@ if __name__ == '__main__':
                     sendMessage({ 'action': 'check', 'result': res, 'tabId': receivedMessage['params']['tabId'], 'url': receivedMessage['params']['url'] })
                 elif receivedMessage['action'] == 'getFingerprints':
                     urlParsed = parseURL(receivedMessage['params']['url'])
-                    sendMessage({ 'action': 'resFingerprints', 'fingerprints': getFingerprints(urlParsed['host'], urlParsed['port']), 'url': receivedMessage['params']['url'] })
+                    sendMessage({ 'action': 'resFingerprints', 'fingerprints': getFingerprintsFromClient(urlParsed['host'], urlParsed['port']), 'url': receivedMessage['params']['url'] })
                 elif receivedMessage['action'] == 'setOptions':
                     if ('checkServerUrl' in receivedMessage['params']) and ('checkServerFingerprintsSha1' in receivedMessage['params']) and ('checkServerFingerprintsSha256' in receivedMessage['params']):
                         res = verifyCheckServerApi({ 'url': receivedMessage['params']['checkServerUrl'], 'fingerprints': { 'sha1': receivedMessage['params']['checkServerFingerprintsSha1'], 'sha256': receivedMessage['params']['checkServerFingerprintsSha256'] } })
