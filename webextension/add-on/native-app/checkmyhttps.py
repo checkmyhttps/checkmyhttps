@@ -257,11 +257,21 @@ def openHTTPSRequest(url):
     """ Open HTTPS request then return data body and fingerprints """
     global fingerprints
     fingerprints = None
-    data = None
+
+    class HeadRequest(urllib2.Request):
+        def get_method(self):
+            return 'HEAD'
+
+    class HTTPErrorProcessor(urllib2.HTTPErrorProcessor):
+        def http_response(self, request, response):
+            # Ignore error on HTTP code other than "2xx".
+            return response
+
+        https_response = http_response
 
     class VerifiedHTTPSHandler(urllib2.HTTPSHandler):
         def __init__(self, **kwargs):
-            urllib2.AbstractHTTPHandler.__init__(self)
+            urllib2.HTTPSHandler.__init__(self)
             self._connection_args = kwargs
 
         def https_open(self, req):
@@ -289,10 +299,14 @@ def openHTTPSRequest(url):
 
         https_request = urllib2.HTTPSHandler.do_request_
 
-    # To force proxy:
-    # proxy_handler = urllib2.ProxyHandler({'https' : 'http://127.0.0.1:3128'})
-    # req = urllib2.build_opener(proxy_handler, VerifiedHTTPSHandler()).open(url, timeout=timeout)
-    req = urllib2.build_opener(VerifiedHTTPSHandler()).open(url, timeout=timeout)
+    if not url.startswith(conf_checkServer['url']):
+        opener = urllib2.build_opener(VerifiedHTTPSHandler(), HTTPErrorProcessor())
+        urlReq = HeadRequest(url, headers={ 'User-Agent': 'CheckMyHTTPS-Python' }) # Use HEAD HTTP method from client side
+    else:
+        opener = urllib2.build_opener(VerifiedHTTPSHandler())
+        urlReq = urllib2.Request(url, headers={ 'User-Agent': 'CheckMyHTTPS-Python/{}'.format(VERSION) })
+    # opener.add_handler(urllib2.ProxyHandler({'https' : 'http://127.0.0.1:3128'})) # To force proxy
+    req = opener.open(urlReq, timeout=timeout)
 
     return {
         'fingerprints': fingerprints,
