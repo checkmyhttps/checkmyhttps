@@ -30,7 +30,7 @@ ADDON_IDS = {
     'opera':   'chrome-extension://fmbmhajicpidghmjmgkafenlmjeoogje/'
 }
 
-timeout = 3
+timeout = 10
 defaultCheckServer = {
     'url': 'https://checkmyhttps.net/',
     'fingerprints': {
