@@ -2,7 +2,7 @@
   "description": "__MSG_extensionDescription__",
   "manifest_version": 2,
   "name": "CheckMyHTTPS",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "default_locale": "en",
   "icons": {
     "64": "images/icon.png"
