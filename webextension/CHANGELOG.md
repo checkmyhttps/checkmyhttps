@@ -1,5 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.1.1 - 2018-11-09
+- Fix compatibility with Python 3.7 (migrate a depreciated function).
+
 ## 5.1.0 - 2018-11-08
 - Add proxy support in Python script.
 - Increase timeout to 10sec.

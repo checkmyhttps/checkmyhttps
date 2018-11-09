@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.1.0'
+VERSION = '1.1.1'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -285,7 +285,8 @@ def openHTTPSRequest(url):
                         if self._tunnel_host:
                             self.sock = s
                             self._tunnel()
-                        self.sock = ssl.SSLSocket(s, server_hostname=self.host.split(':', 0)[0])
+                        ssl_context = ssl.create_default_context()
+                        self.sock = ssl_context.wrap_socket(s, server_hostname=self.host.split(':', 0)[0])
                         certRaw = self.sock.getpeercert(True)
                         global fingerprints
                         fingerprints = {
@@ -331,7 +332,8 @@ def getFingerprintsFromClient(host, port):
         # Old way with a raw socket (does not work with a proxy)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(timeout)
-        ssl_sock = ssl.SSLSocket(s, server_hostname=host)
+        ssl_context = ssl.create_default_context()
+        ssl_sock = ssl_context.wrap_socket(s, server_hostname=host)
 
         ssl_sock.connect((host, port))
 
