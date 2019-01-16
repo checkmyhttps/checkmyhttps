@@ -1,3 +1,9 @@
+/**
+ * @file Options manager.
+ * @author CheckMyHTTPS's team
+ * @license GPL-3.0
+ */
+
 CMH.options = {}
 
 /**
@@ -28,10 +34,24 @@ CMH.options.defaultCheckServer = {
  * @name getCertUrl
  * @function
  * @param {string} url - URL to check
- * Get the certificate of an URL (send request to native app).
+ * @returns {object} - fingerprints
+ * Get the certificate fingerprints of an URL.
  */
-CMH.options.getCertUrl = (url) => {
-  CMH.native.port.postMessage({'action': 'getFingerprints', 'params': { 'url': url }})
+CMH.options.getCertUrl = async (url) => {
+  if (CMH.common.isWebExtTlsApiSupported()) {
+    const { cert } = await CMH.certificatesManager.getCertUrl(url, true)
+    return cert
+  } else {
+    try {
+      const data = await CMH.native.postMessageAndWaitResponse({ action: 'getFingerprints', params: { url: url }}, 'resFingerprints')
+      cert = {
+        fingerprints: data.fingerprints
+      }
+      return cert
+    } catch (e) {
+      return { fingerprints: null }
+    }
+  }
 }
 
 // Get settings values
@@ -41,7 +61,7 @@ browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'c
   for (let item of settingsItems) {
     CMH.options.settings[item] = settings[item]
   }
-}, (error) => { console.log(error) })
+}, (error) => { console.error(error) })
 
 // Listen for settings changes
 browser.storage.onChanged.addListener((changes, area) => {
@@ -55,8 +75,8 @@ browser.storage.onChanged.addListener((changes, area) => {
     }
   }
 
-  if (needRefreshNativeApp) {
-    CMH.native.port.postMessage({'action': 'setOptions', 'params': {
+  if (needRefreshNativeApp && (!CMH.common.isWebExtTlsApiSupported())) {
+    CMH.native.port.postMessage({ action: 'setOptions', params: {
       checkServerUrl:                CMH.options.settings.checkServerUrl,
       checkServerFingerprintsSha1:   CMH.options.settings.checkServerFingerprintsSha1,
       checkServerFingerprintsSha256: CMH.options.settings.checkServerFingerprintsSha256

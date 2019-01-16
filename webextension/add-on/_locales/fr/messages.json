@@ -4,7 +4,7 @@
   },
 
   "__clickToCheck__": {
-    "message": "Cliquez pour vérifier cette connexion HTTPS."
+    "message": "Cliquez pour vérifier cette connexion HTTPS"
   },
 
   "__noHttps__": {
@@ -121,5 +121,21 @@
 
   "__settingsSaved__": {
     "message": "Paramètres sauvegardés"
+  },
+
+  "__valid__": {
+    "message": "Valide"
+  },
+  "__invalid__": {
+    "message": "Invalide"
+  },
+  "__unknown__": {
+    "message": "Inconnu"
+  },
+  "__warning__": {
+    "message": "Attention"
+  },
+  "__working__": {
+    "message": "En cours"
   }
 }

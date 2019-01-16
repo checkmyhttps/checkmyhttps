@@ -1,7 +1,7 @@
 const page_title                 = document.querySelector('body > h1')
 const title_general              = document.querySelector('div.form > h2:nth-of-type(1)')
 const title_checkServer          = document.querySelector('div.form > h2:nth-of-type(2)')
-const title_nativeApp            = document.querySelector('body > h2:nth-of-type(1)')
+const title_nativeApp            = document.querySelector('.settings-nativeapp > h2')
 const box_pageLoad               = document.querySelector('input[name="checkOnPageLoad"]')
 const lbl_pageLoad               = document.querySelector('label[for="checkOnPageLoad"]')
 const box_alertIDNDomains        = document.querySelector('input[name="alertOnUnicodeIDNDomainNames"]')
@@ -17,6 +17,7 @@ const btn_restoreDefault         = document.getElementById('restore-default')
 const btn_getFingerprints        = document.getElementById('get-fingerprints')
 const btn_testNativeConnection   = document.getElementById('test-native-connection')
 const div_messageCheckServer     = document.querySelector('p.message-checkserver')
+const div_nativeApp              = document.querySelector('.settings-nativeapp')
 const div_nativeAppCon           = document.querySelector('div.native-app-connected')
 const div_nativeAppDiscon        = document.querySelector('div.native-app-disconnected')
 const div_messageNativeAppCon    = document.querySelector('p.message-nativeappcon')
@@ -26,58 +27,36 @@ const lbl_nativeAppInstallNote2  = document.querySelector('.native-app-disconnec
 const lbl_nativeAppInstallNote3  = document.querySelector('.native-app-disconnected > ol > li:nth-of-type(3)')
 const lbl_nativeAppInstallNote4  = document.querySelector('.native-app-disconnected > ol > li:nth-of-type(4)')
 
-let CMH = null
-
-let lastDomainSaved = ''
-
 browser.runtime.getBackgroundPage().then((backgroundPage) => {
-  CMH = backgroundPage.CMH
+  const CMH = backgroundPage.CMH
 
-  CMH.native.onMessage((response) => {
-    if (response.action === 'resFingerprints') {
-      btn_getFingerprints.disabled = false
+  let lastDomainSaved = ''
 
-      if (response.fingerprints !== null) {
-        txt_sha1.value   = response.fingerprints.sha1
-        txt_sha256.value = response.fingerprints.sha256
-        btn_getFingerprints.style.display = 'none'
+  if (!CMH.common.isWebExtTlsApiSupported()) {
+    div_nativeApp.style.display = ''
+
+    setTimeout(() => {
+      if (CMH.native.nativeAppInfo.connected) {
+        div_messageNativeAppCon.dataset.type = 'success'
+        div_messageNativeAppCon.textContent  = browser.i18n.getMessage('__nativeAppInstallAt__', [ CMH.native.nativeAppInfo.filepath, CMH.native.nativeAppInfo.version ])
+
+        div_nativeAppDiscon.style.display = 'none'
+        div_nativeAppCon.style.display    = ''
+      } else if ((CMH.native.nativeAppInfo.version !== null) && (CMH.common.compareVersion(CMH.native.nativeAppInfo.version, CMH.native.minimumAppVersion) < 0)) {
+        div_messageNativeAppDiscon.dataset.type = 'error'
+        div_messageNativeAppDiscon.innerHTML    = browser.i18n.getMessage('__nativeAppNeedToBeUpdated__')
+
+        div_nativeAppCon.style.display    = 'none'
+        div_nativeAppDiscon.style.display = ''
       } else {
-        div_messageCheckServer.dataset.type = 'error'
-        div_messageCheckServer.textContent  = 'Error!'
+        div_messageNativeAppDiscon.dataset.type = 'error'
+        div_messageNativeAppDiscon.innerHTML = browser.i18n.getMessage('__nativeAppNotFoundSeeInstall__')
+
+        div_nativeAppCon.style.display    = 'none'
+        div_nativeAppDiscon.style.display = ''
       }
-    }
-    else if (response.action === 'setOptionsRes') {
-      if (response.res === 'OK') {
-        div_messageCheckServer.dataset.type = 'success'
-        div_messageCheckServer.textContent  = browser.i18n.getMessage('__settingsSaved__')
-      } else {
-        div_messageCheckServer.dataset.type = 'error'
-        div_messageCheckServer.textContent  = 'Error (' + response.res + ')!'
-      }
-    }
-  })
-
-  setTimeout(() => {
-    if (CMH.native.nativeAppInfo.connected) {
-      div_messageNativeAppCon.dataset.type = 'success'
-      div_messageNativeAppCon.textContent  = browser.i18n.getMessage('__nativeAppInstallAt__', [ CMH.native.nativeAppInfo.filepath, CMH.native.nativeAppInfo.version ])
-
-      div_nativeAppDiscon.style.display = 'none'
-      div_nativeAppCon.style.display    = ''
-    } else if ((CMH.native.nativeAppInfo.version !== null) && (CMH.common.compareVersion(CMH.native.nativeAppInfo.version, CMH.native.minimumAppVersion) < 0)) {
-      div_messageNativeAppDiscon.dataset.type = 'error'
-      div_messageNativeAppDiscon.innerHTML    = browser.i18n.getMessage('__nativeAppNeedToBeUpdated__')
-
-      div_nativeAppCon.style.display    = 'none'
-      div_nativeAppDiscon.style.display = ''
-    } else {
-      div_messageNativeAppDiscon.dataset.type = 'error'
-      div_messageNativeAppDiscon.innerHTML = browser.i18n.getMessage('__nativeAppNotFoundSeeInstall__')
-
-      div_nativeAppCon.style.display    = 'none'
-      div_nativeAppDiscon.style.display = ''
-    }
-  }, 500)
+    }, 500)
+  }
 
   document.title                       = browser.i18n.getMessage('__checkMyHttpsSettings__')
   page_title.textContent               = browser.i18n.getMessage('__checkMyHttpsSettings__')
@@ -132,24 +111,54 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     })
   })
 
-  btn_save.addEventListener('click', (event) => {
+  btn_save.addEventListener('click', async (event) => {
     btn_save.disabled = true
     div_messageCheckServer.textContent = ''
     if (txt_server.value.slice(-1) !== '/') {
       txt_server.value += '/'
     }
 
-    browser.storage.local.set({
-      checkServerUrl:                txt_server.value,
-      checkServerFingerprintsSha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
-      checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
-    }).then(() => {
-      btn_save.disabled = false
-    }, (error) => {
-      btn_save.disabled = false
-      div_messageCheckServer.dataset.type = 'error'
-      div_messageCheckServer.textContent  = 'Error!'
-    })
+    const saveSettingsToBrowser = () => {
+      browser.storage.local.set({
+        checkServerUrl:                txt_server.value,
+        checkServerFingerprintsSha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
+        checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
+      }).then(() => {
+        btn_save.disabled = false
+        div_messageCheckServer.dataset.type = 'success'
+        div_messageCheckServer.textContent  = browser.i18n.getMessage('__settingsSaved__')
+      }, (error) => {
+        btn_save.disabled = false
+        div_messageCheckServer.dataset.type = 'error'
+        div_messageCheckServer.textContent  = 'Error!'
+      })
+    }
+
+    if (CMH.common.isWebExtTlsApiSupported()) {
+      isValidCheckServer = await CMH.api.checkCheckServerApi({
+        server: txt_server.value,
+        sha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
+        sha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
+      })
+      if (isValidCheckServer) {
+        saveSettingsToBrowser()
+      } else {
+        btn_save.disabled = false
+        div_messageCheckServer.dataset.type = 'error'
+        div_messageCheckServer.textContent  = 'Error!'
+      }
+    } else {
+      CMH.native.postMessageAndWaitResponse({ action: 'setOptions', params: {
+        checkServerUrl:                txt_server.value,
+        checkServerFingerprintsSha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
+        checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
+      }}, 'setOptionsRes').then((data) => {
+        saveSettingsToBrowser()
+      }, (error) => {
+        div_messageCheckServer.dataset.type = 'error'
+        div_messageCheckServer.textContent  = 'Error (' + error + ')!'
+      })
+    }
   }, true)
 
   btn_restoreDefault.addEventListener('click', (event) => {
@@ -168,7 +177,18 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     if (txt_server.value.slice(-1) !== '/') {
       txt_server.value += '/'
     }
-    CMH.options.getCertUrl(txt_server.value)
+
+    CMH.options.getCertUrl(txt_server.value).then((response) => {
+      btn_getFingerprints.disabled = false
+      if (response.fingerprints !== null) {
+        txt_sha1.value   = response.fingerprints.sha1
+        txt_sha256.value = response.fingerprints.sha256
+        btn_getFingerprints.style.display = 'none'
+      } else {
+        div_messageCheckServer.dataset.type = 'error'
+        div_messageCheckServer.textContent  = 'Error!'
+      }
+    })
   }, true)
 
   btn_testNativeConnection.addEventListener('click', (event) => {
@@ -213,7 +233,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   }, true)
   const onFingerprintChange = () => {
     if ((txt_sha1.value.length === 0) && (txt_sha256.value.length === 0)) {
-      btn_getFingerprints.style.display = null
+      btn_getFingerprints.style.display = ''
     } else {
       btn_getFingerprints.style.display = 'none'
     }
@@ -225,12 +245,12 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     if (domainMatch && (domainMatch[1] !== lastDomainSaved)) {
       txt_sha1.value   = ''
       txt_sha256.value = ''
-      btn_getFingerprints.style.display = null
+      btn_getFingerprints.style.display = ''
     }
   }, true)
 
   onFingerprintChange()
   btn_save.disabled = false
 
-  document.body.style.display = null
+  document.body.style.display = ''
 }, (error) => { console.error(`Error: ${error}`) })

@@ -1,5 +1,10 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.2.0 - 2019-01-16
+- Support the WebExtension TLS API (the Python script is now optional on Firefox > 62).
+- Back on Firefox Mobile!
+- Improved tab management.
+
 ## 5.1.1 - 2018-11-09
 - Fix compatibility with Python 3.7 (migrate a depreciated function).
 

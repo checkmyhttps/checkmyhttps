@@ -22,7 +22,7 @@
         color: red;
     }
     </style>
-    <script src="../vendors/webextension-polyfill-0.2.1/browser-polyfill.min.js" defer></script>
+    <script src="../vendors/webextension-polyfill-0.3.1/browser-polyfill.min.js" defer></script>
     <script src="options.js" defer></script>
 </head>
 <body style="display: none;">
@@ -60,8 +60,9 @@
     </div>
     <p class="message message-checkserver"></p>
 
-    <h2>__nativeAppSettings__</h2>
-    <div class="native-app">
+    <div class="settings-nativeapp" style="display: none;">
+      <h2>__nativeAppSettings__</h2>
+      <div class="native-app">
         <div class="native-app-connected" style="display: none;">
           <p class="message message-nativeappcon"></p>
         </div>
@@ -75,6 +76,7 @@
             <li>__nativeAppInstallReload__</li>
           </ol>
         </div>
+      </div>
     </div>
 </body>
 </html>

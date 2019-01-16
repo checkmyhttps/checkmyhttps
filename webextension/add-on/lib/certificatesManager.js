@@ -1,5 +1,5 @@
 /**
- * @file Common file.
+ * @file Certificates manager.
  * @author CheckMyHTTPS's team
  * @license GPL-3.0
  */
@@ -9,16 +9,46 @@ CMH.certificatesManager = {}
 /**
  * @name getCertUrl
  * @function
- * @param {string} urlTested - URL to check
+ * @param {string}  urlTested              - URL to check
+ * @param {boolean} [httpHeadMethod=false] - Use HTTP HEAD method
  * Get the certificate of an URL.
  */
-CMH.certificatesManager.getCertUrl = (urlTested) => {
-  if (!CMH.native.nativeAppInfo.connected) {
-    CMH.ui.setStatus(CMH.common.status.UNKNOWN)
-    CMH.ui.showNotification(browser.i18n.getMessage('__nativeAppNotConnected__'))
-    return
+CMH.certificatesManager.getCertUrl = async (urlTested, httpHeadMethod=false) => {
+  let response      = null
+  let response_data = null
+  let cert          = null
+
+  const listener = async (details) => {
+    browser.webRequest.onHeadersReceived.removeListener(listener)
+    const securityInfo = await browser.webRequest.getSecurityInfo(details.requestId, { certificateChain: true })
+    if (securityInfo.state === 'secure' || securityInfo.state === 'weak') {
+      cert = CMH.certificatesManager.formatCertificate(securityInfo.certificates)
+    }
   }
-  CMH.native.port.postMessage({'action': 'check', 'params': { 'url': urlTested }})
+  browser.webRequest.onHeadersReceived.addListener(listener,
+    { urls: [urlTested], types: ['xmlhttprequest'] },
+    ['blocking']
+  )
+
+  try {
+    if (httpHeadMethod) {
+      fetchInit = { method: 'HEAD' }
+    } else {
+      fetchInit = {}
+    }
+    response = await fetch(urlTested, fetchInit)
+
+    const contentType = response.headers.get('content-type')
+    if(contentType && contentType.includes('application/json')) {
+      response_data = await response.json()
+    } else {
+      response_data = await response.text()
+    }
+  } catch (e) {
+    // console.error(e)
+  }
+
+  return { data: response_data, cert: cert, response: response }
 }
 
 /**
@@ -27,51 +57,42 @@ CMH.certificatesManager.getCertUrl = (urlTested) => {
  * @param {object} tab - Tab to check
  * Get the certificate of a tab.
  */
-CMH.certificatesManager.getCertTab = (tab) => {
-  if (!CMH.native.nativeAppInfo.connected) {
-    CMH.tabsManager.setTabStatus(tab, CMH.common.status.UNKNOWN)
-    CMH.ui.showNotification(browser.i18n.getMessage('__nativeAppNotConnected__'))
-    return
+CMH.certificatesManager.getCertTab = async (tab) => {
+  let cert = CMH.tabsManager.getTabCertificate(tab.id)
+  if ((cert === null) && (true /* Allow check from an independant request */)) {
+    // Get certificate from a new request
+    const requestUrl = await CMH.certificatesManager.getCertUrl(tab.url, true)
+    cert = requestUrl.cert
   }
-  CMH.native.port.postMessage({'action': 'check', 'params': { 'url': tab.url, 'tabId': tab.id }})
+  return cert
 }
 
 /**
- * Listen native messages.
+ * @name formatCertificate
+ * @function
+ * @param {object} certificateChain - Certificate chain unformatted
+ * @param {number} [iteration]      - Certificate chain unformatted
+ * @returns {object} - certificate chain formatted
+ * Format a certificate.
  */
-CMH.native.onMessage((response) => {
-  if (response.action === 'check') {
-    if (response.result === 'OK') {
-      if (response.tabId !== null) {
-        CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.VALID)
-      }
-    } else if (response.result === 'IDN') {
-      if (response.tabId !== null) {
-        CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.VALID)
-      }
-      if (CMH.options.settings.alertOnUnicodeIDNDomainNames) {
-        CMH.ui.showNotification(browser.i18n.getMessage('__IDNwarning__', response.url))
-      }
-    } else if (response.result === 'WL') {
-      if (response.tabId !== null) {
-        CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.WARNING)
-        CMH.ui.showNotification(browser.i18n.getMessage('__severalCertificats__'))
-      }
-    } else if (response.result === 'ERR') {
-      CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.UNKNOWN)
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverUnreachable__'))
-    } else if (response.result === 'SSLP') {
-      CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.INVALID)
-      CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { 'priority': 2 })
-    } else if (response.result === 'KO') {
-      CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.INVALID)
-      CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { 'priority': 2 })
-    } else if (response.result === 'PRIVATE_HOST') {
-      CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.UNKNOWN)
-      CMH.ui.showNotification(browser.i18n.getMessage('__privateHost__'))
-    } else {
-      CMH.tabsManager.setTabStatus({ id: response.tabId, url: response.url }, CMH.common.status.UNKNOWN)
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverUnreachable__'))
+CMH.certificatesManager.formatCertificate = (certificateChain, iteration) => {
+  if (certificateChain.length === 0) {
+    return null
+  }
+  if (typeof iteration === 'undefined') {
+    iteration = 0
+  }
+
+  let certificateFormatted = {
+    fingerprints: {
+      sha1:   certificateChain[iteration].fingerprint.sha1.replace(/:/g, '').toUpperCase(),
+      sha256: certificateChain[iteration].fingerprint.sha256.replace(/:/g, '').toUpperCase()
     }
   }
-})
+
+  if ((certificateChain.length-1) > iteration) {
+    certificateFormatted.issuer = CMH.certificatesManager.formatCertificate(certificateChain, iteration+1)
+  }
+
+  return certificateFormatted
+}

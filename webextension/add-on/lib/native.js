@@ -1,3 +1,9 @@
+/**
+ * @file Native messaging manager.
+ * @author CheckMyHTTPS's team
+ * @license GPL-3.0
+ */
+
 CMH.native = {}
 
 /**
@@ -17,9 +23,9 @@ CMH.native.portTesting = null
  * Information about native application.
  */
 CMH.native.nativeAppInfo = {
-  'connected': false,
-  'version':   null,
-  'filepath':  null
+  connected: false,
+  version:   null,
+  filepath:  null
 }
 
 /**
@@ -51,7 +57,7 @@ CMH.native.connect = () => {
         return
       }
 
-      CMH.native.port.postMessage({'action': 'setOptions', 'params': {
+      CMH.native.port.postMessage({ action: 'setOptions', params: {
         checkServerUrl:                CMH.options.settings.checkServerUrl,
         checkServerFingerprintsSha1:   CMH.options.settings.checkServerFingerprintsSha1,
         checkServerFingerprintsSha256: CMH.options.settings.checkServerFingerprintsSha256
@@ -69,20 +75,6 @@ CMH.native.connect = () => {
     console.log('Native disconnected' + reason)
     CMH.native.port = null
   })
-}
-
-/**
- * @name onMessage
- * @function
- * @param {function} listener - Listener
- * Add a listener for native application messages.
- */
-CMH.native.onMessage = (listener) => {
-  if (CMH.native.port === null) {
-    return false
-  }
-
-  return CMH.native.port.onMessage.addListener(listener)
 }
 
 /**
@@ -129,7 +121,7 @@ CMH.native.testConnection = () => {
 
     CMH.native.portTesting.onMessage.addListener(listener)
 
-    CMH.native.portTesting.postMessage({'action': 'PING'})
+    CMH.native.portTesting.postMessage({ action: 'PING' })
 
     const timeout = setTimeout(() => {
       CMH.native.portTesting = null
@@ -138,4 +130,52 @@ CMH.native.testConnection = () => {
   })
 }
 
-CMH.native.connect()
+/**
+ * @name postMessageAndWaitResponse
+ * @function
+ * @param {object} request        - Request object
+ * @param {string} responseAction - Response action name
+ * @returns {Promise}
+ * .
+ */
+CMH.native.postMessageAndWaitResponse = (request, responseAction) => {
+  return new Promise((resolve, reject) => {
+    if (CMH.native.port === null) {
+      return reject(new Error('not_connected'))
+    }
+
+    const listener = (response) => {
+      if (response.action === responseAction) {
+        // Fix potential requests/responses not linked
+        // IDEA : add unique transaction ID to link request/result? (todo if native script need to be upgraded)
+        if (response.action === 'check') {
+          if (request.params.url !== response.url) {
+            return
+          } else if ((typeof request.params.tabId !== 'undefined') && (request.params.tabId !== response.tabId)) {
+            return
+          }
+        } else if (response.action === 'getFingerprints') {
+          if (request.params.url !== response.url) {
+            return
+          }
+        }
+
+        clearTimeout(timeout)
+        CMH.native.port.onMessage.removeListener(listener)
+
+        return resolve(response)
+      }
+    }
+    CMH.native.port.onMessage.addListener(listener)
+
+    CMH.native.port.postMessage(request)
+
+    const timeout = setTimeout(() => {
+      return reject(new Error('timeout'))
+    }, 10000)
+  })
+}
+
+if (!CMH.common.isWebExtTlsApiSupported()) {
+  CMH.native.connect()
+}

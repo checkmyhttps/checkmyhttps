@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.1.1'
+VERSION = '1.1.2'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -253,10 +253,11 @@ class SSLPinningException(Exception):
     """ SSL Pinning exception (MITM SSL) """
     pass
 
-def openHTTPSRequest(url):
+def openHTTPSRequest(url, checkServer=conf_checkServer):
     """ Open HTTPS request then return data body and fingerprints """
     global fingerprints
     fingerprints = None
+    body_data    = None
 
     class HeadRequest(urllib2.Request):
         def get_method(self):
@@ -285,7 +286,7 @@ def openHTTPSRequest(url):
                         if self._tunnel_host:
                             self.sock = s
                             self._tunnel()
-                        ssl_context = ssl.create_default_context()
+                        ssl_context = ssl._create_unverified_context()
                         self.sock = ssl_context.wrap_socket(s, server_hostname=self.host.split(':', 0)[0])
                         certRaw = self.sock.getpeercert(True)
                         global fingerprints
@@ -300,23 +301,29 @@ def openHTTPSRequest(url):
 
         https_request = urllib2.HTTPSHandler.do_request_
 
-    if not url.startswith(conf_checkServer['url']):
+    if not url.startswith(checkServer['url']):
         opener = urllib2.build_opener(VerifiedHTTPSHandler(), HTTPErrorProcessor())
         urlReq = HeadRequest(url, headers={ 'User-Agent': 'CheckMyHTTPS-Python' }) # Use HEAD HTTP method from client side
     else:
         opener = urllib2.build_opener(VerifiedHTTPSHandler())
         urlReq = urllib2.Request(url, headers={ 'User-Agent': 'CheckMyHTTPS-Python/{}'.format(VERSION) })
     # opener.add_handler(urllib2.ProxyHandler({'https' : 'http://127.0.0.1:3128'})) # To force proxy
-    req = opener.open(urlReq, timeout=timeout)
+    try:
+        req = opener.open(urlReq, timeout=timeout)
+        body_data = req.read()
+    except httplib.BadStatusLine as e:
+        # Fix an issue when the website closes the connection with a HEAD HTTP request.
+        if url.startswith(checkServer['url']):
+            raise e
 
     return {
         'fingerprints': fingerprints,
-        'data': req.read()
+        'data': body_data
     }
 
 def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
     """ Get fingerprints from the check server (API) """
-    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port))
+    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port), checkServer)
     
     # SSL pinning on check server
     if ((req['fingerprints'] is None) or (not compareFingerprints(req['fingerprints'], checkServer['fingerprints']))):
@@ -332,7 +339,7 @@ def getFingerprintsFromClient(host, port):
         # Old way with a raw socket (does not work with a proxy)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(timeout)
-        ssl_context = ssl.create_default_context()
+        ssl_context = ssl._create_unverified_context()
         ssl_sock = ssl_context.wrap_socket(s, server_hostname=host)
 
         ssl_sock.connect((host, port))
@@ -404,6 +411,9 @@ def checkUrl(url):
     except urllib2.URLError as e:
         # print('Connection error: %s' % e)
         return 'ERR'
+    except Exception as e:
+        # print('Connection error: %s' % e)
+        return 'ERR'
 
     try:
         if (checkServerCert['error']):
@@ -442,7 +452,8 @@ def verifyCheckServerApi(checkServer):
 
     checkServerCert = None
     try:
-        checkServerCert = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + urlParsed['host'] + '&port=' + str(urlParsed['port']))
+        checkServerCert = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + urlParsed['host'] + '&port=' + str(urlParsed['port']), checkServer=checkServer)
+        checkServerCert['data'] = json.loads(checkServerCert['data'])
     except SSLPinningException:
         # print('SSL pinning failed')
         return 'SSLP'
@@ -453,6 +464,9 @@ def verifyCheckServerApi(checkServer):
         # print('Connection error: %s' % e)
         return 'ERR'
     except urllib2.URLError as e:
+        # print('Connection error: %s' % e)
+        return 'ERR'
+    except Exception as e:
         # print('Connection error: %s' % e)
         return 'ERR'
 

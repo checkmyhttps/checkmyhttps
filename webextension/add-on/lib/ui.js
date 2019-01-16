@@ -24,15 +24,24 @@ CMH.ui.init = () => {
 /**
  * @name setStatus
  * @function
- * @param {number} status - Check status
+ * @param {number} status - Tab check status
+ * @param {number} tabId  - Tab ID
  * Set status of the action button.
  */
 CMH.ui.setStatus = (status, tabId) => {
-  let details = { path: './images/' + CMH.common.statusCode[status] + '.png' }
-  if ((typeof tabId !== 'undefined') && (tabId !== null)) {
-    details.tabId = tabId
+  if (CMH.common.isDesktopPlatform()) {
+    let details = { path: `./images/${CMH.common.statusCode[status]}.png` }
+    if ((typeof tabId !== 'undefined') && (tabId !== null)) {
+      details.tabId = tabId
+    }
+    browser.browserAction.setIcon(details)
+  } else {
+    let details = { title: 'CheckMyHTTPS (' + browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
+    if ((typeof tabId !== 'undefined') && (tabId !== null)) {
+      details.tabId = tabId
+    }
+    browser.browserAction.setTitle(details)
   }
-  browser.browserAction.setIcon(details)
 }
 
 /**
@@ -44,11 +53,11 @@ CMH.ui.setStatus = (status, tabId) => {
  */
 CMH.ui.showNotification = (message, options) => {
   let notificationOptions = {
-    'type':     'basic',
-    'iconUrl':  browser.extension.getURL('./images/icon.png'),
-    'title':    browser.i18n.getMessage('__alertTitle__'),
-    'message':  message,
-    'priority': 1
+    type:     'basic',
+    iconUrl:  browser.extension.getURL('./images/icon.png'),
+    title:    browser.i18n.getMessage('__alertTitle__'),
+    message:  message,
+    priority: 1
   }
   if (typeof options !== 'undefined') {
     for (option of ['title', 'message', 'priority']) {
@@ -60,4 +69,13 @@ CMH.ui.showNotification = (message, options) => {
   browser.notifications.create('cakeNotification', notificationOptions)
 }
 
-CMH.ui.init()
+// Initialize UI when the current platform is detected
+(() => {
+  interval = setInterval(() => {
+    if (typeof CMH.common.isDesktopPlatform() !== 'undefined') {
+      clearInterval(interval)
+
+      CMH.ui.init()
+    }
+  }, 10)
+})()
