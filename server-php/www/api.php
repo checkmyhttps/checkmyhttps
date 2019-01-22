@@ -119,8 +119,6 @@ function formatCertificateChain($certificateChain) {
         ]
     ];
 
-    $certData = openssl_x509_parse($cert);
-
     if (!empty($certificateChain)) {
         $certificate->issuer = formatCertificateChain($certificateChain);
     }
