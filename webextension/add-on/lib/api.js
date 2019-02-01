@@ -19,9 +19,9 @@ CMH.api.requestFromUrl = async (urlTested) => {
   const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+'api.php?host='+encodeURIComponent(host)+'&port='+port)
 
   // SSL Pinning
-  // if ((cert === null) || (!CMH.certificatesChecker.compareCertificateFingerprints(cert, { fingerprints: { sha1: CMH.options.settings.checkServerFingerprintsSha1, sha256: CMH.options.settings.checkServerFingerprintsSha256 } }))) {
-  //     return { error: 'SSL' }
-  // }
+  if ((cert === null) || (!CMH.certificatesChecker.compareCertificateFingerprints(cert, { fingerprints: { sha1: CMH.options.settings.checkServerFingerprintsSha1, sha256: CMH.options.settings.checkServerFingerprintsSha256 } }))) {
+      return { error: 'SSL' }
+  }
 
   if (!response.ok) {
     return { error: response_data }

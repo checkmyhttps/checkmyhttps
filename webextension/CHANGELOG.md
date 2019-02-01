@@ -1,6 +1,9 @@
 # CheckMyHTTPS WebExtension Changelog
 
-## 5.2.0 - 2019-01-16
+## 5.2.1 - 2019-02-01
+- Fix SSL Pinning on Check Server.
+
+## 5.2.0 - 2019-01-30
 - Support the WebExtension TLS API (the Python script is now optional on Firefox > 62).
 - Back on Firefox Mobile!
 - Improved tab management.
