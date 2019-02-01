@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'date' => '20180506',
+	'date' => '20190201',
 
 	'domains' => [
 		'twitter.com',
@@ -10,6 +10,7 @@ return [
 	],
 
 	'domains_re' => [
-		'(?:google|blogspot)\.[a-z]+(?:\.[a-z]+)?$'
+		'(?:google|blogspot)\.[a-z]+(?:\.[a-z]+)?$',
+		'(?:amazon)\.[a-z]+(?:\.[a-z]+)?$'
 	]
 ];
