@@ -130,7 +130,6 @@ CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
       return
     }
 
-    CMH.certificatesChecker.verifyCertificate(cert, datas_api.data, showNotifications, null)
     const verificationRes = CMH.certificatesChecker.verifyCertificate(cert, datas_api.data)
     CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
   } else {

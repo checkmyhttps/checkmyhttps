@@ -1,5 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## *UNRELEASED*
+- Fix potential false positives on unsecured pages blocked by Firefox.
+
 ## 5.2.1 - 2019-02-01
 - Fix SSL Pinning on Check Server.
 

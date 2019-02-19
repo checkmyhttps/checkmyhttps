@@ -159,18 +159,22 @@ if (CMH.common.isWebExtTlsApiSupported()) {
  * Event on tab update.
  */
 CMH.tabsManager.onTabUpdated = (tabId, changeInfo, tabInfo) => {
-  if ((typeof changeInfo.status !== 'undefined') && (changeInfo.status === 'loading')) {
-
+  if (typeof changeInfo.url !== 'undefined') {
     CMH.tabsManager.setTabUrl(tabId, tabInfo.url)
-
-    // Fix browser action icon reset to default
-    CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId)
 
     if (CMH.options.settings.checkOnPageLoad) {
       if ((CMH.tabsManager.tabsStatus[tabId].status === CMH.common.status.UNKNOWN) && CMH.certificatesChecker.isCheckableUrl(tabInfo.url, false)) {
         // Check on page load
         CMH.certificatesChecker.checkTab(tabInfo, true)
       }
+    }
+  }
+  if ((typeof changeInfo.status !== 'undefined') && (changeInfo.status === 'loading')) {
+    // Fix browser action icon reset to default
+    if (typeof CMH.tabsManager.tabsStatus[tabId] !== 'undefined') {
+      CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId)
+    } else {
+      CMH.ui.setStatus(CMH.common.status.UNKNOWN, tabId)
     }
   }
 }
