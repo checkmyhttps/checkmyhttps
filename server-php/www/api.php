@@ -3,7 +3,7 @@
 include __DIR__ . '/vendor/autoload.php';
 
 define('INSTANCE_TITLE', '');
-define('VERSION', '1.2.0');
+define('VERSION', '1.2.1');
 define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
 define('CMH_DEBUG', false);
 
@@ -32,7 +32,7 @@ if (isset($_GET['info'])) {
 
 // Get host:port to check
 if (isset($_GET['url'])) {
-    if (!filter_var($_GET['url'], FILTER_VALIDATE_URL, ['flags' => (FILTER_FLAG_HOST_REQUIRED)])) {
+    if (!filter_var($_GET['url'], FILTER_VALIDATE_URL)) {
         echo json_encode(['error' => 'INVALID_URL']);
         exit();
     } else {
