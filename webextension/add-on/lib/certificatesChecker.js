@@ -246,5 +246,5 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
  * Compare fingerprints of two certificates.
  */
 CMH.certificatesChecker.compareCertificateFingerprints = (userCertificate, cmhCertificate) => {
-  return ((userCertificate.fingerprints.sha1 === cmhCertificate.fingerprints.sha1) && (userCertificate.fingerprints.sha256 === cmhCertificate.fingerprints.sha256))
+  return (userCertificate.fingerprints.sha256 === cmhCertificate.fingerprints.sha256)
 }

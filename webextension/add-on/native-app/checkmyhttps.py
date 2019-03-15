@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.1.2'
+VERSION = '1.1.3'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -34,7 +34,6 @@ timeout = 10
 defaultCheckServer = {
     'url': 'https://checkmyhttps.net/',
     'fingerprints': {
-        'sha1':   'FF33641253DAA21E6C5CADEBF15430B2B7E498E6',
         'sha256': '889F63E8E7F98F67E35750591CD66BC32A17A4B4FA2A44763DBEF8D756156165'
     }
 }
@@ -247,7 +246,7 @@ def sendMessage(messageContent):
 
 def compareFingerprints(userCertificate, checkServerCertificate):
     """ Compare two SSL certificates """
-    return ((userCertificate['sha1'] == checkServerCertificate['sha1']) and (userCertificate['sha256'] == checkServerCertificate['sha256']))
+    return (userCertificate['sha256'] == checkServerCertificate['sha256'])
 
 class SSLPinningException(Exception):
     """ SSL Pinning exception (MITM SSL) """
@@ -291,7 +290,6 @@ def openHTTPSRequest(url, checkServer=conf_checkServer):
                         certRaw = self.sock.getpeercert(True)
                         global fingerprints
                         fingerprints = {
-                            'sha1':   hashlib.sha1(certRaw).hexdigest().upper(),
                             'sha256': hashlib.sha256(certRaw).hexdigest().upper()
                         }
 
@@ -324,7 +322,7 @@ def openHTTPSRequest(url, checkServer=conf_checkServer):
 def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
     """ Get fingerprints from the check server (API) """
     req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port), checkServer)
-    
+
     # SSL pinning on check server
     if ((req['fingerprints'] is None) or (not compareFingerprints(req['fingerprints'], checkServer['fingerprints']))):
         raise SSLPinningException()
@@ -349,7 +347,6 @@ def getFingerprintsFromClient(host, port):
         ssl_sock.close()
 
         return {
-            'sha1':   hashlib.sha1(certRaw).hexdigest().upper(),
             'sha256': hashlib.sha256(certRaw).hexdigest().upper()
         }
 
@@ -497,11 +494,10 @@ if __name__ == '__main__':
                     urlParsed = parseURL(receivedMessage['params']['url'])
                     sendMessage({ 'action': 'resFingerprints', 'fingerprints': getFingerprintsFromClient(urlParsed['host'], urlParsed['port']), 'url': receivedMessage['params']['url'] })
                 elif receivedMessage['action'] == 'setOptions':
-                    if ('checkServerUrl' in receivedMessage['params']) and ('checkServerFingerprintsSha1' in receivedMessage['params']) and ('checkServerFingerprintsSha256' in receivedMessage['params']):
-                        res = verifyCheckServerApi({ 'url': receivedMessage['params']['checkServerUrl'], 'fingerprints': { 'sha1': receivedMessage['params']['checkServerFingerprintsSha1'], 'sha256': receivedMessage['params']['checkServerFingerprintsSha256'] } })
+                    if ('checkServerUrl' in receivedMessage['params']) and ('checkServerFingerprintsSha256' in receivedMessage['params']):
+                        res = verifyCheckServerApi({ 'url': receivedMessage['params']['checkServerUrl'], 'fingerprints': { 'sha256': receivedMessage['params']['checkServerFingerprintsSha256'] } })
                         if res == 'OK':
                             conf_checkServer['url']                    = receivedMessage['params']['checkServerUrl']
-                            conf_checkServer['fingerprints']['sha1']   = receivedMessage['params']['checkServerFingerprintsSha1']
                             conf_checkServer['fingerprints']['sha256'] = receivedMessage['params']['checkServerFingerprintsSha256']
                         sendMessage({ 'action': 'setOptionsRes', 'res': res })
                     else:

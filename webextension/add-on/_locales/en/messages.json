@@ -63,10 +63,6 @@
     "message": "Server address"
   },
 
-  "__checkServerSha1__": {
-    "message": "Server SHA1"
-  },
-
   "__checkServerSha256__": {
     "message": "Server SHA256"
   },

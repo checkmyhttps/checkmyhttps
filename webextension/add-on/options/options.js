@@ -8,8 +8,6 @@ const box_alertIDNDomains        = document.querySelector('input[name="alertOnUn
 const lbl_alertIDNDomains        = document.querySelector('label[for="alertOnUnicodeIDNDomainNames"]')
 const txt_server                 = document.querySelector('input[name="api_server"]')
 const lbl_server                 = document.querySelector('label[for="api_server"]')
-const txt_sha1                   = document.querySelector('input[name="api_sha1"]')
-const lbl_sha1                   = document.querySelector('label[for="api_sha1"]')
 const txt_sha256                 = document.querySelector('input[name="api_sha256"]')
 const lbl_sha256                 = document.querySelector('label[for="api_sha256"]')
 const btn_save                   = document.getElementById('form-submit')
@@ -66,7 +64,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   lbl_pageLoad.textContent             = browser.i18n.getMessage('__checkOnPageLoad__')
   lbl_alertIDNDomains.textContent      = browser.i18n.getMessage('__alertOnUnicodeIDNDomainNames__')
   lbl_server.textContent               = browser.i18n.getMessage('__checkServerAddress__')
-  lbl_sha1.textContent                 = browser.i18n.getMessage('__checkServerSha1__')
   lbl_sha256.textContent               = browser.i18n.getMessage('__checkServerSha256__')
   btn_save.textContent                 = browser.i18n.getMessage('__save__')
   btn_restoreDefault.textContent       = browser.i18n.getMessage('__restoreDefault__')
@@ -84,7 +81,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   box_alertIDNDomains.checked = CMH.options.settings.alertOnUnicodeIDNDomainNames
   lastDomainSaved  = CMH.options.settings.checkServerUrl.match(/^https:\/\/([^:\/\s]+)/)[1]
   txt_server.value = CMH.options.settings.checkServerUrl
-  txt_sha1.value   = CMH.options.settings.checkServerFingerprintsSha1
   txt_sha256.value = CMH.options.settings.checkServerFingerprintsSha256
 
   box_pageLoad.addEventListener('input', (e) => {
@@ -121,7 +117,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     const saveSettingsToBrowser = () => {
       browser.storage.local.set({
         checkServerUrl:                txt_server.value,
-        checkServerFingerprintsSha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
         checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
       }).then(() => {
         btn_save.disabled = false
@@ -137,7 +132,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     if (CMH.common.isWebExtTlsApiSupported()) {
       isValidCheckServer = await CMH.api.checkCheckServerApi({
         server: txt_server.value,
-        sha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
         sha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
       })
       if (isValidCheckServer) {
@@ -150,7 +144,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     } else {
       CMH.native.postMessageAndWaitResponse({ action: 'setOptions', params: {
         checkServerUrl:                txt_server.value,
-        checkServerFingerprintsSha1:   txt_sha1.value.replace(/:/g, '').toUpperCase(),
         checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
       }}, 'setOptionsRes').then((data) => {
         saveSettingsToBrowser()
@@ -165,7 +158,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     const defaultCheckServer = CMH.options.defaultCheckServer
     if (defaultCheckServer !== null) {
       txt_server.value = defaultCheckServer.url
-      txt_sha1.value   = defaultCheckServer.fingerprints.sha1
       txt_sha256.value = defaultCheckServer.fingerprints.sha256
       btn_getFingerprints.style.display = 'none'
     }
@@ -181,7 +173,6 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     CMH.options.getCertUrl(txt_server.value).then((response) => {
       btn_getFingerprints.disabled = false
       if (response.fingerprints !== null) {
-        txt_sha1.value   = response.fingerprints.sha1
         txt_sha256.value = response.fingerprints.sha256
         btn_getFingerprints.style.display = 'none'
       } else {
@@ -225,25 +216,20 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     event.preventDefault()
   }, true)
 
-  txt_sha1.addEventListener('blur', () => {
-    txt_sha1.value   = txt_sha1.value.replace(/:/g, '').toUpperCase()
-  }, true)
   txt_sha256.addEventListener('blur', () => {
     txt_sha256.value = txt_sha256.value.replace(/:/g, '').toUpperCase()
   }, true)
   const onFingerprintChange = () => {
-    if ((txt_sha1.value.length === 0) && (txt_sha256.value.length === 0)) {
+    if (txt_sha256.value.length === 0) {
       btn_getFingerprints.style.display = ''
     } else {
       btn_getFingerprints.style.display = 'none'
     }
   }
-  txt_sha1.addEventListener('keyup', onFingerprintChange, true)
   txt_sha256.addEventListener('keyup', onFingerprintChange, true)
   txt_server.addEventListener('keyup', () => {
     const domainMatch = txt_server.value.match(/^https:\/\/([^:\/\s]+)/)
     if (domainMatch && (domainMatch[1] !== lastDomainSaved)) {
-      txt_sha1.value   = ''
       txt_sha256.value = ''
       btn_getFingerprints.style.display = ''
     }

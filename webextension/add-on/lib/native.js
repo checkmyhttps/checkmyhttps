@@ -59,7 +59,6 @@ CMH.native.connect = () => {
 
       CMH.native.port.postMessage({ action: 'setOptions', params: {
         checkServerUrl:                CMH.options.settings.checkServerUrl,
-        checkServerFingerprintsSha1:   CMH.options.settings.checkServerFingerprintsSha1,
         checkServerFingerprintsSha256: CMH.options.settings.checkServerFingerprintsSha256
       }})
     }

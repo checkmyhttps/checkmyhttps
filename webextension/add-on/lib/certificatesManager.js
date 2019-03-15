@@ -85,7 +85,6 @@ CMH.certificatesManager.formatCertificate = (certificateChain, iteration) => {
 
   let certificateFormatted = {
     fingerprints: {
-      sha1:   certificateChain[iteration].fingerprint.sha1.replace(/:/g, '').toUpperCase(),
       sha256: certificateChain[iteration].fingerprint.sha256.replace(/:/g, '').toUpperCase()
     }
   }

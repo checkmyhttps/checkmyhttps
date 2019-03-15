@@ -14,7 +14,6 @@ CMH.options.settings = {
   checkOnPageLoad:               false,
   alertOnUnicodeIDNDomainNames:  true,
   checkServerUrl:                'https://checkmyhttps.net/',
-  checkServerFingerprintsSha1:   'FF33641253DAA21E6C5CADEBF15430B2B7E498E6',
   checkServerFingerprintsSha256: '889F63E8E7F98F67E35750591CD66BC32A17A4B4FA2A44763DBEF8D756156165'
 }
 
@@ -25,7 +24,6 @@ CMH.options.settings = {
 CMH.options.defaultCheckServer = {
   url: 'https://checkmyhttps.net/',
   fingerprints: {
-    sha1:   'FF33641253DAA21E6C5CADEBF15430B2B7E498E6',
     sha256: '889F63E8E7F98F67E35750591CD66BC32A17A4B4FA2A44763DBEF8D756156165'
   }
 }
@@ -55,7 +53,7 @@ CMH.options.getCertUrl = async (url) => {
 }
 
 // Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'checkServerUrl', 'checkServerFingerprintsSha1', 'checkServerFingerprintsSha256']).then((settings) => {
+browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'checkServerUrl', 'checkServerFingerprintsSha256']).then((settings) => {
   const settingsItems = Object.keys(settings)
 
   for (let item of settingsItems) {
@@ -70,7 +68,7 @@ browser.storage.onChanged.addListener((changes, area) => {
 
   for (let item of changedItems) {
     CMH.options.settings[item] = changes[item].newValue
-    if ((!needRefreshNativeApp) && (['checkServerUrl', 'checkServerFingerprintsSha1', 'checkServerFingerprintsSha256'].includes(item))) {
+    if ((!needRefreshNativeApp) && (['checkServerUrl', 'checkServerFingerprintsSha256'].includes(item))) {
       needRefreshNativeApp = true
     }
   }
@@ -78,7 +76,6 @@ browser.storage.onChanged.addListener((changes, area) => {
   if (needRefreshNativeApp && (!CMH.common.isWebExtTlsApiSupported())) {
     CMH.native.port.postMessage({ action: 'setOptions', params: {
       checkServerUrl:                CMH.options.settings.checkServerUrl,
-      checkServerFingerprintsSha1:   CMH.options.settings.checkServerFingerprintsSha1,
       checkServerFingerprintsSha256: CMH.options.settings.checkServerFingerprintsSha256
     }})
   }
