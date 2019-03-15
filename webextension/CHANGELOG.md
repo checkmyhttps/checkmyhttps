@@ -1,8 +1,9 @@
 # CheckMyHTTPS WebExtension Changelog
 
-## *UNRELEASED*
+## 5.3.0 - 2019-03-15
 - Fix potential false positives on unsecured pages blocked by Firefox.
 - Remove SHA1 fingerprints comparison.
+- Replace the icons
 
 ## 5.2.1 - 2019-02-01
 - Fix SSL Pinning on Check Server.
