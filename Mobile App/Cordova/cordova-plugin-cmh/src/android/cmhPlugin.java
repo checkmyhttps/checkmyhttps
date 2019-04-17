@@ -38,7 +38,6 @@ public class cmhPlugin extends CordovaPlugin {
                 Certificate[] certificateChain = httpsConnection.getServerCertificates();
                 int sizeCertificateChain = certificateChain.length;
 
-                MessageDigest mdSHA1 = MessageDigest.getInstance("SHA1");
                 MessageDigest mdSHA256 = MessageDigest.getInstance("SHA256");
 
                 //store fingerprints of certificate chain
@@ -46,15 +45,11 @@ public class cmhPlugin extends CordovaPlugin {
 
                 int i;
                 for(i = 0; i<sizeCertificateChain; i++){
-                    
-                    mdSHA1.update(certificateChain[i].getEncoded());
                     mdSHA256.update(certificateChain[i].getEncoded());
 
-                    String sha1 = dumpHex(mdSHA1.digest());
                     String sha256 = dumpHex(mdSHA256.digest());
 
                     JSONObject fingerprintsJSON = new JSONObject();
-                    fingerprintsJSON.put("sha1", sha1);
                     fingerprintsJSON.put("sha256", sha256);
 
                     fingerprintsCertificateChainJSON.put("cert"+i, fingerprintsJSON);
@@ -85,22 +80,17 @@ public class cmhPlugin extends CordovaPlugin {
                 Certificate[] certificateChain = httpsConnection.getServerCertificates();
                 int sizeCertificateChain = certificateChain.length;
 
-                MessageDigest mdSHA1 = MessageDigest.getInstance("SHA1");
                 MessageDigest mdSHA256 = MessageDigest.getInstance("SHA256");
 
                 JSONObject fingerprintsCertificateChainJSON = new JSONObject();
 
                 int i;
                 for(i = 0; i<sizeCertificateChain; i++){
-                    
-                    mdSHA1.update(certificateChain[i].getEncoded());
                     mdSHA256.update(certificateChain[i].getEncoded());
 
-                    String sha1 = dumpHex(mdSHA1.digest());
                     String sha256 = dumpHex(mdSHA256.digest());
 
                     JSONObject serverFingerprintsJSON = new JSONObject();
-                    serverFingerprintsJSON.put("sha1", sha1);
                     serverFingerprintsJSON.put("sha256", sha256);
 
                     fingerprintsCertificateChainJSON.put("cert"+i, serverFingerprintsJSON);
