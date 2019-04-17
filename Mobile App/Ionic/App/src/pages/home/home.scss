@@ -1,0 +1,48 @@
+.page-home {
+  background-color: #ffffff;
+}
+
+.home{
+  height:100%;
+  text-align: center;
+  overflow: auto; 
+}
+
+.toolbar-title{
+  text-align: center;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+#ESIEA{
+  width:75%;
+  margin-top: 3%;
+}
+
+#CVO{
+  width:45%;
+}
+
+
+#icon{
+  height: 90px;
+  width: 90px;
+  margin: 40px auto 30px;
+}
+
+#url{
+  width: 100%;
+  height:40px;
+  margin-bottom:20px;
+}
+
+#btnDefaultURL{
+  background-color: white;
+  color: #488aff;
+}

@@ -1,0 +1,20 @@
+# Files #
+###################
+www/index.html
+www/manifest.json
+www/service-worker.js
+.editorconfig
+
+
+# Folders #
+###################
+node_modules/
+platforms/
+plugins/
+www/assets/fonts/
+www/assets/icon/
+www/assets/imgs/
+www/build/
+.sourcemaps/
+.idea/
+.vscode/
