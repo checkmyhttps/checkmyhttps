@@ -1,7 +1,10 @@
-modal-wrapper {
+.modal-wrapper {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  border-radius: 0 !important;
 }
 
 
@@ -48,12 +51,12 @@ modal-wrapper {
   background: linear-gradient(to bottom, #fff 0%, #e8e8e8 100%);
 
 
-  .modal_header{
+  .modal_header {
     background-color: rgb(200, 200, 200);
-    box-shadow: 0 3px 7px rgba(0,0,0,0.4); 
+    box-shadow: 0 3px 7px rgba(0,0,0,0.4);
   }
 
-  .modal_content{
+  .modal_content {
     top: 0;
     bottom: 0;
     left: 0;
@@ -61,21 +64,24 @@ modal-wrapper {
     margin: auto;
   }
 
-  p{
+  p {
     font-weight: bold;
     text-align: center;
   }
 
-  ion-navbar{
+  ion-navbar {
     background-color: #ffffff;
   }
 
-  ion-title{
+  ion-title {
     font-weight: bold;
-    padding-left: 5%;
+
+    platform-android {
+      padding-left: 5%;
+    }
   }
 
-  #alertIcon{
+  #alertIcon {
     width: 75px;
     height: 75px;
     margin: 0 auto;
@@ -84,5 +90,3 @@ modal-wrapper {
   }
 
 }
-
-

@@ -1,38 +1,46 @@
 {
-    "name": "cordova-plugin-cmhplugin",
-    "version": "1.0.0",
-    "description": "Cordova CMH Plugin",
-    "cordova": {
-      "id": "cordova-plugin-cmhplugin",
-      "platforms": [
-        "android"
-      ]
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/checkmyhttps/checkmyhttps/"
-    },
-    "keywords": [
-        "Certificate",
-        "SSL",
-        "Pinning",
-        "HTTPS",
-        "Man in the Middle",
-        "MitM",
-        "SHA256",
-      "ecosystem:cordova",
-      "cordova-android"
-    ],
-    "engines": {
-        "cordovaDependencies": {
-            "1.0.0": { "cordova-android": ">=3.0.0"}
-        }
-    },
-   
-    "author": "Catarina De Faria Cristas <defariacristas@et.esiea.fr>",
-    "license": "GPLv3",
-    "bugs": {
-      "url": "https://github.com/checkmyhttps/checkmyhttps/issues"
-    },
-    "homepage": "https://github.com/checkmyhttps/checkmyhttps/"
-  }
+  "name": "cordova-plugin-cmhplugin",
+  "version": "1.1.0",
+  "description": "Cordova CheckMyHTTPS Plugin",
+  "cordova": {
+    "id": "cordova-plugin-cmhplugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/checkmyhttps/checkmyhttps/"
+  },
+  "keywords": [
+    "Certificate",
+    "SSL",
+    "Pinning",
+    "HTTPS",
+    "Man in the Middle",
+    "MitM",
+    "SHA256",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": {
+    "cordovaDependencies": {
+      "1.0.0": { 
+        "cordova-android": ">=3.0.0",
+        "cordova-ios": ">=3.0.0"
+      }
+    }
+  },
+  "author": "ESIEA CNS-CVO <info@checkmyhttps.net>",
+  "contributors": [
+    "Catarina De Faria Cristas <defariacristas@et.esiea.fr>",
+    "Tom Houdayer"
+  ],
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/checkmyhttps/checkmyhttps/issues"
+  },
+  "homepage": "https://github.com/checkmyhttps/checkmyhttps/"
+}

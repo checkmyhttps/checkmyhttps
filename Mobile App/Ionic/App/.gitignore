@@ -1,8 +1,5 @@
 # Files #
 ###################
-www/index.html
-www/manifest.json
-www/service-worker.js
 .editorconfig
 
 
@@ -11,10 +8,7 @@ www/service-worker.js
 node_modules/
 platforms/
 plugins/
-www/assets/fonts/
-www/assets/icon/
-www/assets/imgs/
-www/build/
+www/
 .sourcemaps/
 .idea/
 .vscode/

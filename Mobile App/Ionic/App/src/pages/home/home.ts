@@ -13,7 +13,7 @@ import { Keyboard } from '@ionic-native/keyboard';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  
+
   url:any = "https://www."
   punycode:any = require("punycode");
 
@@ -27,57 +27,61 @@ export class HomePage {
     let counter = 0;
 
     this.platform.ready().then(() => {
-      //Chrome - creates new App Window
-      if(counter !== 1){
-        window['plugins'].intent.getCordovaIntent(function (Intent) {
-        // console.log(Intent);
-          // console.log("chrome")
+      // Android "Share To ..." handle
+      if (this.platform.is('android')) {
+        //Chrome - creates new App Window
+        if(counter !== 1){
+          window['plugins'].intent.getCordovaIntent(function (Intent) {
           // console.log(Intent);
-          if(Intent.extras !== undefined ){
+            // console.log("chrome")
+            // console.log(Intent);
+            if(Intent.extras !== undefined ){
+              HomePage.url = Intent.extras["android.intent.extra.TEXT"];
+              //Avoid check when app is launched by the user (logo)
+              if (HomePage.url !== undefined){
+                HomePage.presentLoadingDefault();
+                counter++;
+              }
+            }
+          }, function () {
+            // console.log('Error');
+          });
+        }
+
+        //Firefox - keeps the same App Window
+        window['plugins'].intent.setNewIntentHandler(function (Intent) {
+          // console.log("firefox");
+          if (Intent.extras != undefined){
             HomePage.url = Intent.extras["android.intent.extra.TEXT"];
             //Avoid check when app is launched by the user (logo)
             if (HomePage.url !== undefined){
               HomePage.presentLoadingDefault();
-              counter++; 
             }
           }
         }, function () {
           // console.log('Error');
         });
       }
-
-      //Firefox - keeps the same App Window
-      window['plugins'].intent.setNewIntentHandler(function (Intent) {
-        // console.log("firefox");
-        if (Intent.extras != undefined){
-          HomePage.url = Intent.extras["android.intent.extra.TEXT"];
-          //Avoid check when app is launched by the user (logo)
-          if (HomePage.url !== undefined){
-            HomePage.presentLoadingDefault();
-          }
-        }
-      }, function () {
-        // console.log('Error');
-      });
     });
   }
 
 
+
   isCheckableUrl(urlTested){
-    //Check if an URL is valid 
+    //Check if an URL is valid
     const [ , scheme, host, ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/)
     if (scheme !== 'https') {
       this.global.CMHAlert(this.global.getTranslatedJSON('noHttps'));
       return true;
     }
-    
+
     // Check private IP
     if (host.match(/^((127\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(192\.168\.))+[0-9\.]+/)) {
       this.global.CMHAlert(this.global.getTranslatedJSON('privateIp'));
 
       return true;
     }
-  
+
     return true;
   }
 
@@ -131,7 +135,7 @@ export class HomePage {
         if (typeof APIServerData.issuer !== "undefined") {
           //Get the issuer of the certificate (user side)
           secondKey = Object.keys(userFingerprints)[1];
-          
+
           if(!this.compareFingerprints(userFingerprints[secondKey], APIServerData.issuer.fingerprints)){
             res = "KO";
           }
@@ -178,7 +182,7 @@ export class HomePage {
     }
     catch (err){
       // console.log(err);
-      
+
       if (err.includes("SSLHandshakeException")){
         if(err.includes("SSL handshake aborted")){
           return "UnknownHostException";
@@ -200,7 +204,7 @@ export class HomePage {
       }
     }
   }
-  
+
   async setDefaultURL(){
     //set URL in input
     this.url = await this.global.getDefaultURL();
@@ -213,8 +217,8 @@ export class HomePage {
       content: this.global.getTranslatedJSON('onGoingCheck'),
       cssClass: 'loadingCtrlCustomCss'
     });
-  
-     loading.present();
+
+    loading.present();
 
     if(this.checkURL()){
       loading.dismiss();
@@ -226,7 +230,7 @@ export class HomePage {
     //Check an URL
     const urlTested = this.url;
     // console.log("url", urlTested);
-    
+
     const pattern = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@\-\/]))?/;
 
     //get registered check server
@@ -235,7 +239,7 @@ export class HomePage {
     const checkServerFingerprints = {
       "sha256": checkServer.sha256
     };
-    
+
     if (pattern.test(urlTested)){
       if (!this.isCheckableUrl(urlTested)) {
         return true;
@@ -297,9 +301,9 @@ export class HomePage {
         this.global.presentProfileModal('invalid','sslPinning');
         return true;
       }
-    
+
       const res = this.verifyCertificate(this.punycode.toASCII(urlHost),userFingerprints, APIServerData);
-      
+
       switch (res){
         case 'OK':
           this.global.presentProfileModal('valid','secureConnection');
@@ -327,4 +331,3 @@ export class HomePage {
     }
   }
 }
-
