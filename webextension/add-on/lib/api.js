@@ -50,7 +50,6 @@ CMH.api.checkCheckServerApi = async (checkServer) => {
   const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(checkServer.server+'api.php?host='+encodeURIComponent(defaultCheckServerHost)+'&port='+defaultCheckServerPort)
 
   if (!response.ok) {
-    CMH.ui.notification.show(_('l_serverUnreachable'))
     return false
   }
 
