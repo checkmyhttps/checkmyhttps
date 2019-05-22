@@ -83,5 +83,6 @@
     <plugin name="com.napolitano.cordova.plugin.intent" spec="https://github.com/napolitano/cordova-plugin-intent" />
     <plugin name="cordova-sqlite-storage" spec="2.6.0" />
     <plugin name="cordova-plugin-cmhplugin" spec="../../Cordova/cordova-plugin-cmh" />
+    <engine name="ios" />
     <engine name="android" spec="7.1.4" />
 </widget>
