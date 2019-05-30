@@ -1,5 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.3.2 - 2019-05-30
+- Fix the error message when the check server is down.
+
 ## 5.3.1 - 2019-05-06
 - Fix a bug preventing the error message when checking the check server.
 
