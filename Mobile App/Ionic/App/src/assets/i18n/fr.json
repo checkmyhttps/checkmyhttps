@@ -43,7 +43,7 @@
 	"legendImage": "Voici ce que fait CheckMyHTTPS si vous effectuez un test sur un site HTTPS (https://facebook.com)",
 	"ownServer": "*ce serveur est par défaut « checkmyhttps.net ». Vous pouvez installer votre propre serveur (cf. documentation sur le GitHub).",
 	"skip": "Passer",
-	"creditsIcons": "Icônes faits par Daniel Bruce et Freepik sur www.flaticon.com",
+	"creditsIcons": "Icônes réalisés par Daniel Bruce et Freepik sur www.flaticon.com",
 	"TitreIntro1": "Présentation",
 	"Intro1": "Cette application vérifie que votre connexion est sécurisée si vous rentrez le lien (URL) d'un site web",
 	"TitreIntro2": "Partager",
@@ -54,5 +54,8 @@
 	"Theme":"Thème",
 	"titleDarkTheme": "Thème foncé",
 	"darkTheme1":"Le thème foncé permet d'assombrir les surfaces claires de la page.",
-	"titleDefaultURL": "Modifier l'URL par défaut"
+	"titleDefaultURL": "Modifier l'URL par défaut",
+	"version": "Version",
+	"versionApp": "Version de l'application"
+
 }

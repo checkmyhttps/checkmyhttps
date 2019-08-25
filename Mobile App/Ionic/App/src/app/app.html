@@ -8,10 +8,14 @@
   <ion-content>
     <ion-list>
       <button id="pages" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+        {{ p.title }}
       </button>
     </ion-list>
   </ion-content>
+
+  <ion-footer>
+    <p>{{ 'version' | translate }}: {{version}}</p>
+  </ion-footer>
 
 </ion-menu>
 
