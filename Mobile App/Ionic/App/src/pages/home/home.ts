@@ -32,9 +32,6 @@ export class HomePage {
         //Chrome - creates new App Window
         if(counter !== 1){
           window['plugins'].intent.getCordovaIntent(function (Intent) {
-          // console.log(Intent);
-            // console.log("chrome")
-            // console.log(Intent);
             if(Intent.extras !== undefined ){
               HomePage.url = Intent.extras["android.intent.extra.TEXT"];
               //Avoid check when app is launched by the user (logo)
@@ -44,13 +41,11 @@ export class HomePage {
               }
             }
           }, function () {
-            // console.log('Error');
           });
         }
 
         //Firefox - keeps the same App Window
         window['plugins'].intent.setNewIntentHandler(function (Intent) {
-          // console.log("firefox");
           if (Intent.extras != undefined){
             HomePage.url = Intent.extras["android.intent.extra.TEXT"];
             //Avoid check when app is launched by the user (logo)
@@ -59,7 +54,6 @@ export class HomePage {
             }
           }
         }, function () {
-          // console.log('Error');
         });
       }
     });
@@ -67,17 +61,18 @@ export class HomePage {
 
 
 
-  isCheckableUrl(urlTested){
+  async isCheckableUrl(urlTested){
     //Check if an URL is valid
     const [ , scheme, host, ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/)
     if (scheme !== 'https') {
-      this.global.CMHAlert(this.global.getTranslatedJSON('noHttps'));
+      this.global.CMHAlert(await this.global.getTranslation('noHttps'));
+      // this.global.CMHAlert(this.global.getTranslatedJSON('noHttps'));
       return true;
     }
 
     // Check private IP
     if (host.match(/^((127\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(192\.168\.))+[0-9\.]+/)) {
-      this.global.CMHAlert(this.global.getTranslatedJSON('privateIp'));
+      this.global.CMHAlert(await this.global.getTranslation('privateIp'));
 
       return true;
     }
@@ -86,17 +81,11 @@ export class HomePage {
   }
 
 
-  compareFingerprints(userCert, checkServerFingerprints){
-    // console.log("compare SSL Pinning");
-    // console.log("userCert",userCert);
-    // console.log("checkServerFingerprints",checkServerFingerprints);
-
+  compareFingerprints(userCert:any, checkServerFingerprints:any){
     return (userCert.sha256 === checkServerFingerprints.sha256);
-
   }
 
-  isUnicode(hostTested, nbCertificates){
-    // console.log("isUnicode");
+  isUnicode(hostTested:any, nbCertificates:any){
     let res;
     const names = hostTested.split(".");
     for (const i in names) {
@@ -117,10 +106,9 @@ export class HomePage {
   }
 
 
-  verifyCertificate(hostTested, userFingerprints, APIServerData){
+  verifyCertificate(hostTested:any, userFingerprints:any, APIServerData:any){
     // Checks the client's certificate with the one received by the check server
-    // console.log("Verify Certificate")
-    let res, firstKey, secondKey;
+    let res:any, firstKey:any, secondKey:any;
     let counter = 0
 
     firstKey= Object.keys(userFingerprints)[0];
@@ -140,7 +128,6 @@ export class HomePage {
             res = "KO";
           }
           else{
-            //TODO Watch out several certificates
             counter++;
             res = this.isUnicode(hostTested, counter);
           }
@@ -158,31 +145,24 @@ export class HomePage {
 
 
 
-  async getCertFromCheckServer(urlTested, urlHost, urlPort){
-    // console.log("getFingerprintsServer");
-    // console.log(urlTested, urlHost, urlPort);
+  async getCertFromCheckServer(urlTested:any, urlHost:any, urlPort:any){
 
     try{
       const data = await window['plugins'].cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, urlPort);
       return data;
     }
     catch (err){
-      // console.log(err);
     }
   }
 
 
   async getFingerprintsUrl(urlTested){
-    //""" Get fingerprints (from client) """
-    // console.log("getFingerprintsUrl");
-
+    // Get fingerprints (from client)
     try{
       const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);
       return data;
     }
     catch (err){
-      // console.log(err);
-
       if (err.includes("SSLHandshakeException")){
         if(err.includes("SSL handshake aborted")){
           return "UnknownHostException";
@@ -208,13 +188,13 @@ export class HomePage {
   async setDefaultURL(){
     //set URL in input
     this.url = await this.global.getDefaultURL();
-    // console.log(this.url);
   }
 
   async presentLoadingDefault() {
     this.keyboard.hide();
+    let contentValue:any = await this.global.getTranslation('onGoingCheck');
     let loading = this.loadingCtrl.create({
-      content: this.global.getTranslatedJSON('onGoingCheck'),
+      content: contentValue,
       cssClass: 'loadingCtrlCustomCss'
     });
 
@@ -229,7 +209,6 @@ export class HomePage {
   async checkURL(){
     //Check an URL
     const urlTested = this.url;
-    // console.log("url", urlTested);
 
     const pattern = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@\-\/]))?/;
 
@@ -241,7 +220,7 @@ export class HomePage {
     };
 
     if (pattern.test(urlTested)){
-      if (!this.isCheckableUrl(urlTested)) {
+      if (await !this.isCheckableUrl(urlTested)) {
         return true;
       }
 
@@ -251,16 +230,12 @@ export class HomePage {
       const userFingerprints = await this.getFingerprintsUrl(urlTested);
       const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
 
-      // console.log("userFingerprints", userFingerprints);
-      // console.log("checkServerData", checkServerData);
-
 
       //########### Handling Java Exceptions from cmhplugin #################
 
       if (userFingerprints === "SSLHandshakeException"){
         if(checkServerData.APIInfo.error === "HOST_UNREACHABLE"){
-          // console.log("UnknownHostException");
-          this.global.CMHAlert(this.global.getTranslatedJSON('serverUnreachable'));
+          this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));
           return true;
         }
         else{
@@ -269,32 +244,24 @@ export class HomePage {
         }
       }
       else if (userFingerprints === "Punycode"){
-        // console.log('alertPunycode');
         this.global.presentProfileModal('warning','alertOnUnicodeIDNDomainNames');
         return true;
       }
       else if(userFingerprints == undefined && checkServerData.APIInfo.error === "HOST_UNREACHABLE"){
-        // console.log("UnknownHostException");
-        this.global.CMHAlert(this.global.getTranslatedJSON('serverUnreachable'));
+        this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));
         return true;
       }
-      //checkServerData.APIInfo.error === "HOST_UNREACHABLE"
       else if (userFingerprints === "UnknownHostException" || checkServerData === undefined){
-        // console.log("UnknownHostException");
-        this.global.CMHAlert(this.global.getTranslatedJSON('serverUnreachable'));
+        this.global.CMHAlert((await this.global.getTranslation('serverUnreachable')));
         return true;
       }
       else if (userFingerprints === "SSLPeerUnverifiedException"){
-        // console.log("SSLPeerUnverifiedException");
         this.global.presentProfileModal('unknown','SSLPeerUnverified');
         return true;
       }
 
       const serverCert = checkServerData.fingerprints;
       const APIServerData = checkServerData.APIInfo;
-
-      // console.log("serverCert", serverCert);
-      // console.log("checkServerData.APIInfo", checkServerData.APIInfo);
 
       //SSL Pinning
       if ((serverCert !== null) && (!this.compareFingerprints(serverCert.cert0, checkServerFingerprints))){
@@ -326,7 +293,7 @@ export class HomePage {
 
     }
     else {
-      this.global.CMHAlert(this.global.getTranslatedJSON('notURL'));
+      this.global.CMHAlert((await this.global.getTranslation('notURL')));
       return true;
     }
   }
