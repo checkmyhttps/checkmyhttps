@@ -1,5 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.4.0 - 2019-08-25
+- Add the option to disable notifications.
+
 ## 5.3.2 - 2019-05-30
 - Fix the error message when the check server is down.
 

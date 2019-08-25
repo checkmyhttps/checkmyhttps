@@ -38,6 +38,10 @@
             <label for="alertOnUnicodeIDNDomainNames">__alertOnUnicodeIDNDomainNames__</label>
             <input type="checkbox" name="alertOnUnicodeIDNDomainNames" id="alertOnUnicodeIDNDomainNames">
         </div>
+        <div class="form-row">
+            <label for="disableNotifications">__disableNotifications__</label>
+            <input type="checkbox" name="disableNotifications" id="disableNotifications">
+        </div>
 
         <h2>__checkServerSettings__</h2>
         <div class="form-row">
@@ -48,6 +52,7 @@
             <label for="api_sha256">__checkServerSha256__</label>
             <input type="text" name="api_sha256" id="api_sha256" size="80" placeholder="416E6420746865205348413235362066696E6765727072696E74206865726520">
         </div>
+        <br>
     </div>
     <div class="buttons">
         <button type="button" id="form-submit">__save__</button>
@@ -55,7 +60,7 @@
         <button type="button" id="get-fingerprints">__getFingerprints__</button>
     </div>
     <p class="message message-checkserver"></p>
-
+    <br>
     <div class="settings-nativeapp" style="display: none;">
       <h2>__nativeAppSettings__</h2>
       <div class="native-app">

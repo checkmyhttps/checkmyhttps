@@ -6,6 +6,8 @@ const box_pageLoad               = document.querySelector('input[name="checkOnPa
 const lbl_pageLoad               = document.querySelector('label[for="checkOnPageLoad"]')
 const box_alertIDNDomains        = document.querySelector('input[name="alertOnUnicodeIDNDomainNames"]')
 const lbl_alertIDNDomains        = document.querySelector('label[for="alertOnUnicodeIDNDomainNames"]')
+const box_notifications          = document.querySelector('input[name="disableNotifications"]')
+const lbl_notifications          = document.querySelector('label[for="disableNotifications"]')
 const txt_server                 = document.querySelector('input[name="api_server"]')
 const lbl_server                 = document.querySelector('label[for="api_server"]')
 const txt_sha256                 = document.querySelector('input[name="api_sha256"]')
@@ -63,6 +65,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   title_nativeApp.textContent          = browser.i18n.getMessage('__nativeAppSettings__')
   lbl_pageLoad.textContent             = browser.i18n.getMessage('__checkOnPageLoad__')
   lbl_alertIDNDomains.textContent      = browser.i18n.getMessage('__alertOnUnicodeIDNDomainNames__')
+  lbl_notifications.textContent        = browser.i18n.getMessage('__disableNotifications__')
   lbl_server.textContent               = browser.i18n.getMessage('__checkServerAddress__')
   lbl_sha256.textContent               = browser.i18n.getMessage('__checkServerSha256__')
   btn_save.textContent                 = browser.i18n.getMessage('__save__')
@@ -79,6 +82,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
 
   box_pageLoad.checked = CMH.options.settings.checkOnPageLoad
   box_alertIDNDomains.checked = CMH.options.settings.alertOnUnicodeIDNDomainNames
+  box_notifications.checked = CMH.options.settings.disableNotifications
   lastDomainSaved  = CMH.options.settings.checkServerUrl.match(/^https:\/\/([^:\/\s]+)/)[1]
   txt_server.value = CMH.options.settings.checkServerUrl
   txt_sha256.value = CMH.options.settings.checkServerFingerprintsSha256
@@ -98,6 +102,18 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   box_alertIDNDomains.addEventListener('input', (e) => {
     browser.storage.local.set({
       alertOnUnicodeIDNDomainNames: box_alertIDNDomains.checked,
+    }).then(() => {
+      div_messageCheckServer.dataset.type = 'success'
+      div_messageCheckServer.textContent  = browser.i18n.getMessage('__settingsSaved__')
+    }, (error) => {
+      div_messageCheckServer.dataset.type = 'error'
+      div_messageCheckServer.textContent  = 'Error!'
+    })
+  })
+
+  box_notifications.addEventListener('input', (e) => {
+    browser.storage.local.set({
+      disableNotifications: box_notifications.checked,
     }).then(() => {
       div_messageCheckServer.dataset.type = 'success'
       div_messageCheckServer.textContent  = browser.i18n.getMessage('__settingsSaved__')

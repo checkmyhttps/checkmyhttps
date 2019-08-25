@@ -13,6 +13,7 @@ CMH.options = {}
 CMH.options.settings = {
   checkOnPageLoad:               false,
   alertOnUnicodeIDNDomainNames:  true,
+  disableNotifications:          false, 
   checkServerUrl:                'https://checkmyhttps.net/',
   checkServerFingerprintsSha256: '889F63E8E7F98F67E35750591CD66BC32A17A4B4FA2A44763DBEF8D756156165'
 }
@@ -53,7 +54,7 @@ CMH.options.getCertUrl = async (url) => {
 }
 
 // Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'checkServerUrl', 'checkServerFingerprintsSha256']).then((settings) => {
+browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'checkServerFingerprintsSha256']).then((settings) => {
   const settingsItems = Object.keys(settings)
 
   for (let item of settingsItems) {

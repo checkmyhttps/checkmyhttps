@@ -55,6 +55,10 @@
     "message": "Alerte sur les IDN en Unicode"
   },
 
+  "__disableNotifications__": {
+    "message": "Désactiver les notifications"
+  },
+
   "__checkServerSettings__": {
     "message": "Paramètres du serveur de vérification"
   },
