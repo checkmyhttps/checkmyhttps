@@ -3,7 +3,7 @@
 include __DIR__ . '/vendor/autoload.php';
 
 define('INSTANCE_TITLE', '');
-define('VERSION', '1.2.1');
+define('VERSION', '1.3.0');
 define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
 define('CMH_DEBUG', false);
 
@@ -17,7 +17,7 @@ $privateDomainsHidden = false;
 
 // List of private domains
 $privateDomains = [
-    'localhost'
+    // 'localhost'
 ];
 
 // Information page
@@ -30,69 +30,110 @@ if (isset($_GET['info'])) {
     exit();
 }
 
-// Get host:port to check
-if (isset($_GET['url'])) {
-    if (!filter_var($_GET['url'], FILTER_VALIDATE_URL)) {
+// User inputs
+if (isset($_GET['url']))  $request_url  = $_GET['url'];
+if (isset($_GET['host'])) $request_host = $_GET['host'];
+if (isset($_GET['port'])) $request_port = $_GET['port'];
+
+// Service requested by the user
+$service = (object) [
+    'host' => null,
+    'port' => null,
+    'ip'   => null
+];
+
+// Parse host:port from URL
+if ((isset($request_url)) && (!isset($request_host) && !isset($request_port))) {
+    if ((!filter_var($request_url, FILTER_VALIDATE_URL)) && (!filter_var((new \Mso\IdnaConvert\IdnaConvert)->encode($request_url), FILTER_VALIDATE_URL))) {
         echo json_encode(['error' => 'INVALID_URL']);
         exit();
     } else {
-        $url = parse_url($_GET['url']);
-        $host = isset($url['host']) ? $url['host'] : null;
-        $port = isset($url['port']) ? $url['port'] : null;
+        $url = parse_url($request_url);
+        $request_host = isset($url['host']) ? $url['host'] : null;
+        $request_port = isset($url['port']) ? $url['port'] : null;
 
-        if (($port === null) && (isset($url['scheme']))) {
-            $port = getPortFromScheme($url['scheme']);
+        if (($request_port === null) && (isset($url['scheme']))) {
+            $request_port = getPortFromScheme($url['scheme']);
         }
     }
-} else {
-    if (isset($_GET['host'])) {
-        if (preg_match('/^[a-zA-Z0-9-.]+$/', $_GET['host'])) {
-            $host = $_GET['host'];
-        } else {
-            // Convert IDNA 2008
-            $_GET['host'] = (new \Mso\IdnaConvert\IdnaConvert)->encode($_GET['host']);
+}
 
-            if (preg_match('/^[a-zA-Z0-9-.]+$/', $_GET['host'])) {
-                $host = $_GET['host'];
+// Check hostname
+if (isset($request_host)) {
+    if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
+        $service->host = $request_host;
+    } else {
+        // Convert IDNA 2008
+        $request_host = (new \Mso\IdnaConvert\IdnaConvert)->encode($request_host);
+
+        if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
+            $service->host = $request_host;
+        }
+    }
+
+    // Get IP address
+    if (!$allowPrivateIp && !empty($service->host)) {
+        if (filter_var($service->host, FILTER_VALIDATE_IP)) {
+            $service->ip = $service->host;
+        } else {
+            $host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
+            // Request IPv4 of the domain name
+            $ip = gethostbyname($host_fqdn);
+            if ($ip !== $host_fqdn) {
+                $service->ip = $ip;
+            } else {
+                // Try with IPv6
+                $ip = dns_get_record($host_fqdn, DNS_AAAA);
+                if (($ip !== false) && (!empty($ip)) && isset($ip[0]['ipv6'])) {
+                    $service->ip = $ip[0]['ipv6'];
+                }
             }
         }
     }
+}
 
-    if (isset($_GET['port'])) {
-        if (is_numeric($_GET['port']) && (0 <= intval($_GET['port']) && intval($_GET['port']) <= 65535)) {
-            $port = intval($_GET['port']);
-        }
+// Check port
+if (isset($request_port)) {
+    if (is_numeric($request_port) && (0 <= intval($request_port) && intval($request_port) <= 65535)) {
+        $service->port = intval($request_port);
     }
 }
 
-if (empty($host)) {
+
+if (empty($service->host) || empty($service->ip)) {
     exit(json_encode(['error' => 'UNKNOWN_HOST']));
 }
-if (empty($port)) {
+if (empty($service->port)) {
     exit(json_encode(['error' => 'UNKNOWN_PORT']));
 }
 
-if ((!$allowPrivateIp) && (preg_match('/^(127\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(192\.168\.)+[0-9\.]+$/', $host))) {
-    exit(json_encode(['error' => 'PRIVATE_HOST']));
+if ((!$allowPrivateIp) && (!filter_var($service->ip, FILTER_VALIDATE_IP, ['flags' => (FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)]))) {
+    if (($privateDomainsHidden) && ($service->ip !== $service->host)) {
+        exit(json_encode(['error' => 'HOST_UNREACHABLE']));
+    } else {
+        exit(json_encode(['error' => 'PRIVATE_HOST']));
+    }
 }
 
-if (in_array($host, $privateDomains)) {
-    if (!$privateDomainsHidden) {
-        exit(json_encode(['error' => 'PRIVATE_HOST']));
-    } else {
+if (in_array($service->host, $privateDomains)) {
+    if ($privateDomainsHidden) {
         exit(json_encode(['error' => 'HOST_UNREACHABLE']));
+    } else {
+        exit(json_encode(['error' => 'PRIVATE_HOST']));
     }
 }
 
 
-$certificate = getCertificate($host, $port);
+$certificate = getCertificate($service);
 if ($certificate === null) {
     echo json_encode(['error' => 'HOST_UNREACHABLE']);
     exit();
 }
 
-$certificate->host = $host.':'.$port;
-$certificate->whitelisted = checkHostWhitelisted($host);
+$ip_formated = (strpos($service->ip, ':') !== false) ? '['.$service->ip.']' : $service->ip;
+$certificate->host     = $service->host.':'.$service->port;
+$certificate->host_raw = $ip_formated  .':'.$service->port;
+$certificate->whitelisted = checkHostWhitelisted($service->host);
 
 echo json_encode($certificate);
 exit();
@@ -127,17 +168,17 @@ function formatCertificateChain($certificateChain) {
 }
 
 /**
- * Get certificate of a host and port.
+ * Get certificate of a service.
  *
- * @param string $host host of service
- * @param int    $port port of service
+ * @param object $service service to test
  * @return object Returns certificate or null if not found
  */
-function getCertificate($host, $port) {
+function getCertificate($service) {
     $certificate = null;
 
-    $context = stream_context_create(['ssl' => ['capture_peer_cert_chain' => true, 'verify_peer' => false, 'verify_peer_name' => false, 'SNI_enabled' => true]]);
-    $socketClient = @stream_socket_client("ssl://$host:$port", $errno, $errstr, SOCKET_TIMEOUT, STREAM_CLIENT_CONNECT, $context);
+    $context = stream_context_create(['ssl' => ['capture_peer_cert_chain' => true, 'verify_peer' => false, 'verify_peer_name' => false, 'SNI_enabled' => true, 'peer_name' => $service->host]]);
+    $ip_formated = (strpos($service->ip, ':') !== false) ? '['.$service->ip.']' : $service->ip;
+    $socketClient = @stream_socket_client("ssl://$ip_formated:{$service->port}", $errno, $errstr, SOCKET_TIMEOUT, STREAM_CLIENT_CONNECT, $context);
     if (!$socketClient) {
         if (CMH_DEBUG) {
             echo json_encode(['error' => true, 'errno' => $errno, 'errstr' => utf8_encode($errstr)], JSON_UNESCAPED_UNICODE);

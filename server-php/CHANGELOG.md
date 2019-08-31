@@ -1,5 +1,8 @@
 # CheckMyHTTPS API server Changelog
 
+## 1.3.0 - 2019-08-31
+- New private IP/host protection.
+
 ## 1.2.1 - 2019-03-04
 - Fix a deprecated flag in PHP 7.3.
 
