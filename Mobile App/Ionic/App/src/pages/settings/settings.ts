@@ -33,7 +33,6 @@ export class SettingsPage {
 
 
   async displayCHECKSERVER() {
-    // console.log("displayCHECKSERVER");
     this.checkServerAddress = await this.global.getServerURL();
     this.checkServerSha256 = await this.global.getSHA256();
     
@@ -69,9 +68,12 @@ export class SettingsPage {
 
 
   //################################################################################
+
   async presentLoadingDefault() {
+    this.keyboard.hide();
+    let contentValue:any = await this.global.getTranslation('onGoingCheck');
     let loading = this.loadingCtrl.create({
-      content: this.global.getTranslatedJSON('pleaseWait'),
+      content: contentValue,
       cssClass: 'loadingCtrlCustomCss'
     });
 
@@ -83,15 +85,13 @@ export class SettingsPage {
   }
 
   async getFingerprintsUrl(urlTested){
-    //""" Get fingerprints (from client) """
-    // console.log("getFingerprintsUrl");
+    // Get fingerprints (from client)
 
     try{
       const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);
       return data;
     }
     catch (err){
-      // console.log(err);
 
       if (err.includes("SSLHandshakeException")){
         if(err.includes("SSL handshake aborted")){
@@ -117,24 +117,20 @@ export class SettingsPage {
 
   async findFingerprints(){
     const fingerprints = await this.getFingerprintsUrl(this.checkServerAddress);
-    // console.log(fingerprints);
     if (fingerprints === "SSLHandshakeException"){
       this.global.presentProfileModal('invalid','danger');
       return true;
     }
     //First verify if it's punycode because of the Java exception
     else if (fingerprints === "Punycode"){
-      // console.log('alertPunycode');
       this.global.presentProfileModal('warning','alertOnUnicodeIDNDomainNames');
       return true;
     }
     else if (fingerprints === "UnknownHostException"){
-      // console.log("UnknownHostException");
-      this.global.CMHAlert(this.global.getTranslatedJSON('serverUnreachable'));
+      this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));
       return true;
     }
     else if (fingerprints === "SSLPeerUnverifiedException"){
-      // console.log("SSLPeerUnverifiedException");
       this.global.presentProfileModal('unknown','SSLPeerUnverified');
       return true;
     }
@@ -150,7 +146,6 @@ export class SettingsPage {
   //##################################################################
 
   changeTheme(){
-    // console.log("changeTheme");
     this.event.publish('theme:toogle');
   }
 

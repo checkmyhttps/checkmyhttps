@@ -165,7 +165,7 @@ CMH.tabsManager.onTabUpdated = (tabId, changeInfo, tabInfo) => {
     if (CMH.options.settings.checkOnPageLoad) {
       if ((CMH.tabsManager.tabsStatus[tabId].status === CMH.common.status.UNKNOWN) && CMH.certificatesChecker.isCheckableUrl(tabInfo.url, false)) {
         // Check on page load
-        CMH.certificatesChecker.checkTab(tabInfo, true)
+        CMH.certificatesChecker.checkTab(tabInfo, !CMH.options.settings.disableNotifications)
       }
     }
   }

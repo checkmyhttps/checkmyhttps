@@ -14,21 +14,16 @@ import {GlobalProvider} from "../../providers/global/global";
 })
 export class ModalPage {
   image:string;
-  message:string;
-  alert:string;
+  message:any;
+  alert:any;
 
   constructor(public navCtrl: NavController, public viewCtrl : ViewController, public navParams: NavParams, public translate: TranslateService, public global: GlobalProvider) {
   }
 
-  ionViewDidLoad() {
-    // console.log('ionViewDidLoad ModalPage');
+  async ionViewDidLoad() {
     this.image = this.navParams.get('image');
-    this.message = this.global.getTranslatedJSON(this.navParams.get('message'));
-    this.alert = this.global.getTranslatedJSON('alert');
-  }
-
-  tapScreen(){
-    // console.log("touch");
+    this.message = await this.global.getTranslation(this.navParams.get('message'));
+    this.alert = await this.global.getTranslation('alert');
   }
 
   public closeModal(){

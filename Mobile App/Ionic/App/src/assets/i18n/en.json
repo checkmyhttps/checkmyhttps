@@ -54,5 +54,8 @@
 	"Theme":"Theme",
 	"titleDarkTheme":"Dark Theme",
 	"darkTheme1":"Dark theme turns the light surfaces of the page dark.",
-	"titleDefaultURL": "Change the default URL"
+	"titleDefaultURL": "Change the default URL",
+	"version": "Version",
+	"versionApp": "Version of the app"
+
 }

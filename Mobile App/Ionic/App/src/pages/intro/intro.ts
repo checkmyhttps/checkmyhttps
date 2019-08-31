@@ -13,29 +13,42 @@ import {GlobalProvider} from "../../providers/global/global";
 })
 export class IntroPage {
 
-  slides = [
-    {
-      title: this.global.getTranslatedJSON('TitreIntro1'),
-      description: this.global.getTranslatedJSON('Intro1'),
-      image: "../../assets/imgs/home.png",
-    },
-    {
-      title: this.global.getTranslatedJSON('TitreIntro2'),
-      description: this.global.getTranslatedJSON('Intro2'),
-      image: "../../assets/imgs/share.png",
-    },
-    {
-      title: this.global.getTranslatedJSON('TitreIntro3'),
-      description: this.global.getTranslatedJSON('Intro3'),
-      image: "../../assets/imgs/parameters.png",
-    }
-  ];
+  slides: Array<{title: string, description: string; image: string}>;
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public translate: TranslateService, public global:GlobalProvider) {
+    this.loadSlides();
   }
 
   goToHome(){
-    this.navCtrl.setRoot(HomePage).then();
+    this.navCtrl.setRoot(HomePage);
   }
 
+  async loadSlides(){
+
+    let title1:any = await this.global.getTranslation('TitreIntro1');
+    let description1:any = await this.global.getTranslation('Intro1');
+    let title2:any = await this.global.getTranslation('TitreIntro2');
+    let description2:any = await this.global.getTranslation('Intro2');
+    let title3:any = await this.global.getTranslation('TitreIntro3');
+    let description3:any = await this.global.getTranslation('Intro3');
+
+    this.slides = [
+      {
+        title: title1,
+        description: description1,
+        image: "../../assets/imgs/home.png",
+      },
+      {
+        title: title2,
+        description: description2,
+        image: "../../assets/imgs/share.png",
+      },
+      {
+        title: title3,
+        description: description3,
+        image: "../../assets/imgs/parameters.png",
+      }
+    ];
+  }
 }

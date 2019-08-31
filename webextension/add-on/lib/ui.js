@@ -17,7 +17,7 @@ CMH.ui.init = () => {
   CMH.ui.setStatus(CMH.common.status.UNKNOWN)
 
   browser.browserAction.onClicked.addListener((tab) => {
-    CMH.certificatesChecker.checkTab(tab, true)
+    CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications)
   })
 }
 
