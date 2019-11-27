@@ -68,7 +68,7 @@
   },
 
   "__checkServerSha256__": {
-    "message": "Server SHA256"
+    "message": "Server certificate SHA256"
   },
 
   "__save__": {
@@ -80,7 +80,7 @@
   },
 
   "__getFingerprints__": {
-    "message": "Get the fingerprints"
+    "message": "Get its certificate fingerprint"
   },
 
   "__nativeAppSettings__": {
