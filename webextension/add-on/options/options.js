@@ -1,3 +1,9 @@
+/**
+ * @file Common file.
+ * @author CheckMyHTTPS's team
+ * @license GPL-3.0
+ */
+
 const page_title                 = document.querySelector('body > h1')
 const title_general              = document.querySelector('div.form > h2:nth-of-type(1)')
 const title_checkServer          = document.querySelector('div.form > h2:nth-of-type(2)')
