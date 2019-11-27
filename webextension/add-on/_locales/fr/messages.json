@@ -68,7 +68,7 @@
   },
 
   "__checkServerSha256__": {
-    "message": "SHA256 du serveur"
+    "message": "Empreinte SHA256 de son certificat"
   },
 
   "__save__": {
@@ -80,7 +80,7 @@
   },
 
   "__getFingerprints__": {
-    "message": "Récupérer les empreintes"
+    "message": "Récupérer l'empreinte de son certificat"
   },
 
   "__nativeAppSettings__": {
