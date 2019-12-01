@@ -1,4 +1,6 @@
 # CheckMyHTTPS WebExtension Changelog
+## 5.4.1 - 2019-27-11
+- Update the SHA256 fingerprint of the default check server (certificate renewal)
 
 ## 5.4.0 - 2019-08-25
 - Add the option to disable notifications.
