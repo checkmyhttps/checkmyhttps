@@ -11,10 +11,6 @@
     "message": "Ce n'est pas un site HTTPS. Veuillez vérifier l'URL."
   },
 
-  "__nativeAppNotConnected__": {
-    "message": "L'application native n'est pas installée. Veuillez regarder la page options."
-  },
-
   "__privateHost__": {
     "message": "Nous ne pouvons pas joindre cet hôte via notre serveur de test (il s'agit d'un hôte privé)."
   },
@@ -81,42 +77,6 @@
 
   "__getFingerprints__": {
     "message": "Récupérer l'empreinte de son certificat"
-  },
-
-  "__nativeAppSettings__": {
-    "message": "Application native"
-  },
-
-  "__nativeAppInstallAt__": {
-    "message": "Installé dans \"$1\" (version $2)."
-  },
-
-  "__nativeAppNotFoundSeeInstall__": {
-    "message": "La connexion avec l'application native n'est pas établie.<br>Veuillez regarder les instructions d'installation ci-dessous :"
-  },
-
-  "__nativeAppNeedToBeUpdated__": {
-    "message": "L'application native doit être mise à jour.<br>Voir les instructions d'installation ci-dessous :"
-  },
-
-  "__nativeAppInstallPython__": {
-    "message": "Vérifier que <a href=\"https://www.python.org/downloads/\" target=\"_blank\">Python</a> est installé. (version d'OpenSSL > 1.0.1)."
-  },
-
-  "__nativeAppInstallDownloadScript__": {
-    "message": "Télécharger le <a href=\"../native-app/checkmyhttps.py\" data-download>native-app</a>."
-  },
-
-  "__nativeAppInstallInstallScript__": {
-    "message": "Installer l'application native avec"
-  },
-
-  "__nativeAppInstallReload__": {
-    "message": "<a href=\"#\" id=\"extension-reload\">Recharger</a> l'extension."
-  },
-
-  "__testNativeConnection__": {
-    "message": "Tester la connexion avec l'application native:"
   },
 
   "__settingsSaved__": {
