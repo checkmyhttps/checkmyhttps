@@ -143,12 +143,10 @@ CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
     CMH.tabsManager.setTabCertificates(requestDetails.tabId, certificateFormatted, requestDetails.url)
   }
 }
-if (CMH.common.isWebExtTlsApiSupported()) {
   browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
     { urls: ['https://*/*'], types: ['main_frame'] },
     ['blocking']
   )
-}
 
 /**
  * @name onTabUpdated
