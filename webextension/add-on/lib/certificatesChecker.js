@@ -82,23 +82,9 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
 
     const verificationRes = CMH.certificatesChecker.verifyCertificate(cert, datas_api.data)
     CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
-  } else {
-    if (!CMH.native.nativeAppInfo.connected) {
-      CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
-      CMH.ui.showNotification(browser.i18n.getMessage('__nativeAppNotConnected__'))
-      return
-    }
-    try {
-      const responseData = await CMH.native.postMessageAndWaitResponse({ action: 'check', params: { url: tab.url, tabId: tab.id }}, 'check')
-      CMH.certificatesChecker.handleVerificationResult(responseData.result, responseData.url, responseData.tabId, showNotifications)
-    } catch (e) {
-      CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
-      if (showNotifications) {
-        CMH.ui.showNotification(browser.i18n.getMessage('__serverUnreachable__'))
-      }
-      return
-    }
   }
+  else
+    return
 }
 
 /**
@@ -132,17 +118,6 @@ CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
 
     const verificationRes = CMH.certificatesChecker.verifyCertificate(cert, datas_api.data)
     CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
-  } else {
-    if (!CMH.native.nativeAppInfo.connected) {
-      CMH.ui.showNotification(browser.i18n.getMessage('__nativeAppNotConnected__'))
-      return
-    }
-    try {
-      const responseData = await CMH.native.postMessageAndWaitResponse({ action: 'check', params: { url: urlTested }}, 'check')
-      CMH.certificatesChecker.handleVerificationResult(responseData.result, responseData.url, null, showNotifications)
-    } catch (e) {
-      return
-    }
   }
 }
 
