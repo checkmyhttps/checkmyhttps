@@ -1,8 +1,8 @@
 {
   "description": "__MSG_extensionDescription__",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "CheckMyHTTPS",
-  "version": "5.4.1",
+  "version": "5.5",
   "default_locale": "en",
   "icons": {
     "128": "images/icon.png"
@@ -28,8 +28,6 @@
     "page": "options/options.html"
   },
   "permissions": [
-    "downloads",
-    "nativeMessaging",
     "notifications",
     "storage",
     "tabs",
