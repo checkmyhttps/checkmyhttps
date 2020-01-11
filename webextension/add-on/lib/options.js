@@ -7,6 +7,18 @@
 CMH.options = {}
 
 /**
+ * @name getCertUrl
+ * @function
+ * @param {string} url - URL to check
+ * @returns {object} - fingerprints
+ * Get the certificate fingerprints of an URL.
+ */
+CMH.options.getCertUrl = async (url) => {
+    const { cert } = await CMH.certificatesManager.getCertUrl(url, true);
+    return cert;
+}
+
+/**
  * @type {object}
  * Cache of extension options.
  */
@@ -29,30 +41,6 @@ CMH.options.defaultCheckServer = {
   }
 }
 
-/**
- * @name getCertUrl
- * @function
- * @param {string} url - URL to check
- * @returns {object} - fingerprints
- * Get the certificate fingerprints of an URL.
- */
-CMH.options.getCertUrl = async (url) => {
-  if (CMH.common.isWebExtTlsApiSupported()) {
-    const { cert } = await CMH.certificatesManager.getCertUrl(url, true)
-    return cert
-  } else {
-    try {
-      const data = await CMH.native.postMessageAndWaitResponse({ action: 'getFingerprints', params: { url: url }}, 'resFingerprints')
-      cert = {
-        fingerprints: data.fingerprints
-      }
-      return cert
-    } catch (e) {
-      return { fingerprints: null }
-    }
-  }
-}
-
 // Get settings values
 browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'checkServerFingerprintsSha256']).then((settings) => {
   const settingsItems = Object.keys(settings)
@@ -65,19 +53,7 @@ browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'd
 // Listen for settings changes
 browser.storage.onChanged.addListener((changes, area) => {
   const changedItems = Object.keys(changes)
-  let needRefreshNativeApp = false
 
-  for (let item of changedItems) {
+  for (let item of changedItems)
     CMH.options.settings[item] = changes[item].newValue
-    if ((!needRefreshNativeApp) && (['checkServerUrl', 'checkServerFingerprintsSha256'].includes(item))) {
-      needRefreshNativeApp = true
-    }
-  }
-
-  if (needRefreshNativeApp && (!CMH.common.isWebExtTlsApiSupported())) {
-    CMH.native.port.postMessage({ action: 'setOptions', params: {
-      checkServerUrl:                CMH.options.settings.checkServerUrl,
-      checkServerFingerprintsSha256: CMH.options.settings.checkServerFingerprintsSha256
-    }})
-  }
 })
