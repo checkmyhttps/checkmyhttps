@@ -1,4 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
+## 5.5.0 - 2020-01-16
+- Remove the native App (needed with FF < V62)
+- Remove two useless permissions ("downloads" & "nativeMessaging")--> improving your privacy
+
 ## 5.4.1 - 2019-27-11
 - Update the SHA256 fingerprint of the default check server (certificate renewal)
 
