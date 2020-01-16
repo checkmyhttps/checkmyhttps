@@ -47,9 +47,9 @@ ________________________________________________________________________________
 
 # Author
 
-Original idea & Supervision: Richard REY (aka Rexy)
+Original idea & project management: Richard REY (aka Rexy)
 
-Design & development: Raphaël PION, Hugo MEZIANI, Tom HOUDAYER & Catarina DE FARIA
+Design & development: Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA & Quentin COLLART
 
 Logo: Clément SICCARDI
 
