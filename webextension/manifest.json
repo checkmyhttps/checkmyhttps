@@ -5,7 +5,7 @@
   "version": "5.5",
   "default_locale": "en",
   "icons": {
-    "128": "images/icon.png"
+    "128": "icons/icon.png"
   },
   "applications": {
     "gecko": {
@@ -19,7 +19,7 @@
   "browser_action": {
     "browser_style": false,
     "default_icon": {
-      "128": "images/icon.png"
+      "128": "iconss/icon.png"
     }
   },
   "options_ui": {
