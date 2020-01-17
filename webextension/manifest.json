@@ -1,0 +1,38 @@
+{
+  "description": "__MSG_extensionDescription__",
+  "manifest_version": 2,
+  "name": "CheckMyHTTPS",
+  "version": "5.5",
+  "default_locale": "en",
+  "icons": {
+    "128": "images/icon.png"
+  },
+  "applications": {
+    "gecko": {
+      "id": "info@checkmyhttps.net",
+      "strict_min_version": "57.0"
+    }
+  },
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "browser_style": false,
+    "default_icon": {
+      "128": "images/icon.png"
+    }
+  },
+  "options_ui": {
+    "browser_style": true,
+    "open_in_tab": false,
+    "page": "options/options.html"
+  },
+  "permissions": [
+    "notifications",
+    "storage",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "https://*/*"
+  ]
+}
