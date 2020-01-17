@@ -30,7 +30,7 @@ CMH.ui.init = () => {
  */
 CMH.ui.setStatus = (status, tabId) => {
   if (CMH.common.isDesktopPlatform()) {
-    let details = { path: `./images/${CMH.common.statusCode[status]}.png` }
+    let details = { path: `./icons/${CMH.common.statusCode[status]}.png` }
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
       details.tabId = tabId
     }
@@ -54,7 +54,7 @@ CMH.ui.setStatus = (status, tabId) => {
 CMH.ui.showNotification = (message, options) => {
   let notificationOptions = {
     type:     'basic',
-    iconUrl:  browser.extension.getURL('./images/icon.png'),
+    iconUrl:  browser.extension.getURL('./icons/icon.png'),
     title:    browser.i18n.getMessage('__alertTitle__'),
     message:  message,
     priority: 1
