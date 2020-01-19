@@ -8,7 +8,7 @@
     "128": "icons/icon.png"
   },
   "author": "CheckMyHttps Team",
-  "homepage_url": "http://checkmyhttps.net",
+  "homepage_url": "https://checkmyhttps.net",
   "applications": {
     "gecko": {
       "id": "info@checkmyhttps.net",
