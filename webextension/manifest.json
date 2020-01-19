@@ -7,6 +7,8 @@
   "icons": {
     "128": "icons/icon.png"
   },
+  "author": "CheckMyHttps Team",
+  "homepage_url": "http://checkmyhttps.net",
   "applications": {
     "gecko": {
       "id": "info@checkmyhttps.net",
@@ -19,7 +21,7 @@
   "browser_action": {
     "browser_style": false,
     "default_icon": {
-      "128": "iconss/icon.png"
+      "128": "icons/icon.png"
     }
   },
   "options_ui": {
