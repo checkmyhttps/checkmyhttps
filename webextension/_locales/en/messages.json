@@ -6,6 +6,14 @@
   "__clickToCheck__": {
     "message": "Click to Check the HTTPS connection"
   },
+  
+  "__availableUpdates__": {
+    "message": "Available updates. Check the default fingerprint."
+  },
+
+  "__defaultServerUnreachable__": {
+    "message": "Default check server unreachable !"
+  },
 
   "__noHttps__": {
     "message": "It is not an HTTPS website. Please check the URL."
