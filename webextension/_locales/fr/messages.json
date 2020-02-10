@@ -2,6 +2,14 @@
   "extensionDescription": {
     "message": "CheckMyHTTPS s'assure que vos connexions WEB sécurisée (protocole 'HTTPS') ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées)."
   },
+  
+  "__availableUpdates__": {
+    "message": "Mise à jour disponible. Vérifier l'empreinte par défaut."
+  },
+
+  "__defaultServerUnreachable__": {
+    "message": "Serveur de vérification par défaut injoignable !"
+  },
 
   "__clickToCheck__": {
     "message": "Cliquez pour vérifier cette connexion HTTPS"
