@@ -1,4 +1,9 @@
 # CheckMyHTTPS WebExtension Changelog
+
+## 5.5.1 - 2020-02-09
+- Remove polyfill to save data
+- Verify the default check server's fingerprint while starting a new browser window
+
 ## 5.5.0 - 2020-01-16
 - Remove the native App (needed with FF < V62)
 - Remove two useless permissions ("downloads" & "nativeMessaging")--> improving your privacy
