@@ -18,6 +18,18 @@ CMH.options.getCertUrl = async (url) => {
     return cert;
 }
 
+//Get the default checkserver's fingerprints
+CMH.options.getCertUrl('https://checkmyhttps.net/').then((response) => {
+  if(response != null){
+        if(CMH.options.defaultCheckServer.fingerprints.sha256 != response.fingerprints.sha256){
+          CMH.ui.showNotification(browser.i18n.getMessage('__availableUpdates__'));
+        }
+  }
+  else{
+    CMH.ui.showNotification(browser.i18n.getMessage('__defaultServerUnreachable__'));
+  }
+});
+
 /**
  * @type {object}
  * Cache of extension options.
