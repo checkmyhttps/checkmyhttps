@@ -3,6 +3,7 @@
 ## 5.5.1 - 2020-04-04
 - Remove polyfill to save data
 - Verify the default check server's fingerprint while starting a new browser window
+- Display the "warning padlock" when an IDN attack is detected
 
 ## 5.5.0 - 2020-01-16
 - Remove the native App (needed with FF < V62)
