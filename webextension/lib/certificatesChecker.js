@@ -167,7 +167,7 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
     }
   } else if (result === 'IDN') {
     if (tabId !== null) {
-      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.VALID)
+      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.WARNING)
     }
     if (CMH.options.settings.alertOnUnicodeIDNDomainNames) {
       if (showNotifications) {
