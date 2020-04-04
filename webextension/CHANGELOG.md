@@ -1,6 +1,6 @@
 # CheckMyHTTPS WebExtension Changelog
 
-## 5.5.1 - 2020-02-09
+## 5.5.1 - 2020-04-04
 - Remove polyfill to save data
 - Verify the default check server's fingerprint while starting a new browser window
 
