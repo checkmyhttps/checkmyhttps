@@ -32,7 +32,7 @@
   "permissions": [
     "notifications",
     "storage",
-    "tabs",
+    "activeTab",
     "webRequest",
     "webRequestBlocking",
     "https://*/*"
