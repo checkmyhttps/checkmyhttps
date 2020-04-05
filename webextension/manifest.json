@@ -9,7 +9,7 @@
   },
   "author": "CheckMyHttps Team",
   "homepage_url": "https://checkmyhttps.net",
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "info@checkmyhttps.net",
       "strict_min_version": "57.0"
