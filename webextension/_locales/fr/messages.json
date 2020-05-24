@@ -92,18 +92,18 @@
   },
 
   "__valid__": {
-    "message": "Valide"
+    "message": "La connexion n'est pas interceptée"
   },
   "__invalid__": {
-    "message": "Invalide"
+    "message": "La connexion est interceptée"
   },
   "__unknown__": {
-    "message": "Inconnu"
+    "message": "Cliquez pour vérifier cette connexion HTTPS"
   },
   "__warning__": {
-    "message": "Attention"
+    "message": "Le serveur de vérification est injoignable"
   },
   "__working__": {
-    "message": "En cours"
+    "message": "Le test de vérification est en cours"
   }
 }
