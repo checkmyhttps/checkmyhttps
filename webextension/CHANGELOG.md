@@ -5,6 +5,7 @@
 - Verify the default check server's fingerprint while starting a new browser window
 - Display the "warning padlock" when an IDN attack is detected
 - Reduce permissions ("Tabs" to "activeTab")
+- The browser icon is now entitled
 
 ## 5.5.0 - 2020-01-16
 - Remove the native App (needed with FF < V62)
