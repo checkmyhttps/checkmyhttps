@@ -92,18 +92,18 @@
   },
 
   "__valid__": {
-    "message": "Valid"
+    "message": "Connection is not intercepted"
   },
   "__invalid__": {
-    "message": "Invalid"
+    "message": "Connection is intercepted"
   },
   "__unknown__": {
-    "message": "Unknown"
+    "message": "Click to verify this HTTPS connection"
   },
   "__warning__": {
-    "message": "Warning"
+    "message": "The external verification server cannot be reached"
   },
   "__working__": {
-    "message": "Working"
+    "message": "The verification test is in progress"
   }
 }
