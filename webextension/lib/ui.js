@@ -35,6 +35,7 @@ CMH.ui.setStatus = (status, tabId) => {
       details.tabId = tabId
     }
     browser.browserAction.setIcon(details)
+    browser.browserAction.setTitle({title: browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`)})
   } else {
     let details = { title: 'CheckMyHTTPS (' + browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
