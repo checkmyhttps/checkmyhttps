@@ -1,6 +1,6 @@
 # CheckMyHTTPS WebExtension Changelog
 
-## 5.5.1 - 2020-25-05
+## 5.5.1 - 2020-05-25
 - Remove polyfill to save data
 - Verify the default check server's fingerprint while starting a new browser window
 - Display the "warning padlock" when an IDN attack is detected
@@ -12,7 +12,7 @@
 - Remove two useless permissions ("downloads" & "nativeMessaging")--> improving your privacy
 - webextension-polyfill 0.6.0
 
-## 5.4.1 - 2019-27-11
+## 5.4.1 - 2019-11-27
 - Update the SHA256 fingerprint of the default check server (certificate renewal)
 
 ## 5.4.0 - 2019-08-25
