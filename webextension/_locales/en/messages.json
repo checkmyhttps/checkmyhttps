@@ -8,7 +8,7 @@
   },
   
   "__availableUpdates__": {
-    "message": "Available updates. Check the default fingerprint."
+    "message": "Available updates ? Please, check the default fingerprint."
   },
 
   "__defaultServerUnreachable__": {
