@@ -4,7 +4,7 @@
   },
   
   "__availableUpdates__": {
-    "message": "Mise à jour disponible. Vérifier l'empreinte par défaut."
+    "message": "Mise à jour disponible ? Veuillez vérifier l'empreinte par défaut."
   },
 
   "__defaultServerUnreachable__": {
