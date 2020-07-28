@@ -2,6 +2,7 @@
 
 ## 5.5.2 - 2020-07-28
 - Set the "Tabs" permission again (in order to check HTTPS on all tabs)
+- Change the minimum Firefox version compatibility to 62 (due to the function "webRequest.getSecurityInfo")
 
 ## 5.5.1 - 2020-05-25
 - Remove polyfill to save data
