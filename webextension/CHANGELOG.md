@@ -1,5 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.5.2 - 2020-07-28
+- Set the "Tabs" permission again (in order to check HTTPS on all tabs)
+
 ## 5.5.1 - 2020-05-25
 - Remove polyfill to save data
 - Verify the default check server's fingerprint while starting a new browser window
