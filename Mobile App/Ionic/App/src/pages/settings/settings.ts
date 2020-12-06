@@ -53,7 +53,7 @@ export class SettingsPage {
   }
 
   defaultCheckServer(){
-    this.setCHECKSERVER("https://checkmyhttps.net","C8F129A6D02194583A6B205B27AB7A246651A9915857E8DB24C1909D6F54F324");
+    this.setCHECKSERVER("https://checkmyhttps.net","8B944DBC442DA0892C307DEF6C971B671267BF033E8479C567E173973F970B9F");
     this.displayCHECKSERVER();
     this.global.presentProfileModal("server", "newCheckServer");
   }
