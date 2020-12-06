@@ -39,7 +39,7 @@ CMH.options.settings = {
   alertOnUnicodeIDNDomainNames:  true,
   disableNotifications:          false, 
   checkServerUrl:                'https://checkmyhttps.net/',
-  checkServerFingerprintsSha256: 'C8F129A6D02194583A6B205B27AB7A246651A9915857E8DB24C1909D6F54F324'
+  checkServerFingerprintsSha256: '8B944DBC442DA0892C307DEF6C971B671267BF033E8479C567E173973F970B9F'
 }
 
 /**
@@ -49,7 +49,7 @@ CMH.options.settings = {
 CMH.options.defaultCheckServer = {
   url: 'https://checkmyhttps.net/',
   fingerprints: {
-    sha256: 'C8F129A6D02194583A6B205B27AB7A246651A9915857E8DB24C1909D6F54F324'
+    sha256: '8B944DBC442DA0892C307DEF6C971B671267BF033E8479C567E173973F970B9F'
   }
 }
 
