@@ -1,7 +1,7 @@
 {
   "name": "CheckMyHTTPS",
   "version": "1.1.5",
-  "author": "ESIEA CNS CVO",
+  "author": "ESIEA CNS",
   "homepage": "https://checkmyhttps.net/",
   "private": true,
   "scripts": {
@@ -29,7 +29,7 @@
     "@ngx-translate/core": "^9.1.1",
     "@ngx-translate/http-loader": "^3.0.1",
     "com.napolitano.cordova.plugin.intent": "https://github.com/napolitano/cordova-plugin-intent",
-    "cordova-android": "7.1.4",
+    "cordova-android": "^7.1.4",
     "cordova-plugin-cmhplugin": "file:../../Cordova/cordova-plugin-cmh",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.1.2",
@@ -51,6 +51,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "^3.2.3",
     "@types/node": "^11.9.4",
+    "cordova-plugin-intent": "git+https://github.com/napolitano/cordova-plugin-intent.git",
     "typescript": "~2.6.2"
   },
   "description": "CheckMyHTTPS verifies if your secure web connections (HTTPS) are intercepted.",
@@ -60,15 +61,17 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
       "cordova-plugin-ionic-keyboard": {},
       "com.napolitano.cordova.plugin.intent": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-cmhplugin": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
