@@ -49,7 +49,7 @@ export class MyApp {
     this.translate.setDefaultLang(this.lang);
     this.translate.use(this.lang);
 
-    this.version = "1.1.5";
+    this.version = "1.1.6";
 
     this.event.subscribe('theme:toogle', () => {
       this.toggleTheme();
