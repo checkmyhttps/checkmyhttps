@@ -45,11 +45,11 @@ Un site web sécurisé (HTTPS) justifie son identité auprès de votre navigateu
 
 ________________________________________________________________________________
 
-# Author
+# Authors
 
 Original idea & project management: Richard REY (aka Rexy)
 
-Design & development: Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA & Quentin COLLART
+Development: Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA, Quentin COLLART, Mathis Cadio & Sylvain Bouteiller
 
 Logo: Clément SICCARDI
 
