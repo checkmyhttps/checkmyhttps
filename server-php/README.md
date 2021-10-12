@@ -1,6 +1,6 @@
 # CheckMyHTTPS API server installation
 
-*Requirements: You just need an HTTPS server*
+*Requirements: You just need an HTTPS server with PHP & php-filter module*
 
 1. Copy the content of the `www` folder to your webroot.
 2. Install dependencies with composer: `composer install` inside your webroot (else you can extract `vendor-static.tar.gz`).
