@@ -1,0 +1,12 @@
+create database cmh;
+use cmh
+create table cache (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+cache_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ip VARCHAR(15),
+domain_name VARCHAR(253),
+port INT,
+sha1_fingerprint CHAR(40),
+sha256_fingerprint CHAR(64),
+sha1_issuers_fingerprints_chain VARCHAR(240),
+sha256_issuers_fingerprints_chain VARCHAR(384) );
