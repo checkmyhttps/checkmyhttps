@@ -34,6 +34,7 @@ if (isset($_GET['info'])) {
 if (isset($_GET['url']))  $request_url  = $_GET['url'];
 if (isset($_GET['host'])) $request_host = $_GET['host'];
 if (isset($_GET['port'])) $request_port = $_GET['port'];
+if (isset($_GET['ip'])) $request_ip = $_GET['ip'];
 
 // Service requested by the user
 $service = (object) [
@@ -58,6 +59,10 @@ if ((isset($request_url)) && (!isset($request_host) && !isset($request_port))) {
     }
 }
 
+if (isset($request_ip)) {
+    $service->ip = $request_ip;
+}
+
 // Check hostname
 if (isset($request_host)) {
     if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
@@ -72,7 +77,7 @@ if (isset($request_host)) {
     }
 
     // Get IP address
-    if (!$allowPrivateIp && !empty($service->host)) {
+    if (!$allowPrivateIp && !empty($service->host) && empty($service->ip)) {
         if (filter_var($service->host, FILTER_VALIDATE_IP)) {
             $service->ip = $service->host;
         } else {

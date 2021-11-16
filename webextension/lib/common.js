@@ -41,10 +41,23 @@ CMH.common.statusCode = [
  * @returns {object} - Host and port
  * Parse an URL.
  */
-CMH.common.parseURL = (urlStr) => {
+CMH.common.parseURL = async (urlStr) => {
   const url = new URL(urlStr)
   const host = url.hostname
   let   port = url.port
+  let ip = undefined
+
+  browser.webRequest.onResponseStarted.addListener(
+    function(details){console.log("test: " + details.ip); ip = details.ip},
+    {urls: [url.href]},
+    ["responseHeaders"]
+  )
+  console.log("debut while")
+
+  var monHeader = new Headers();
+  console.log(monHeader)
+  console.log(ip)
+  console.log("fin while")
 
   if (port == '') {
     const protocol = url.protocol.slice(0, -1)
@@ -57,7 +70,7 @@ CMH.common.parseURL = (urlStr) => {
     }
   }
 
-  return { host: host, port: port }
+  return { host: host, port: port, ip: ip }
 }
 
 
