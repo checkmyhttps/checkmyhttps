@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CheckMyHTTPS</string>
+    <string name="title_activity_main">CheckMyHTTPS</string>
+    <string name="package_name">fr.esiea.checkmyhttps</string>
+    <string name="custom_url_scheme">fr.esiea.checkmyhttps</string>
+</resources>
