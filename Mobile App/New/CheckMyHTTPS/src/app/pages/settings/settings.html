@@ -1,0 +1,50 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon id="menu" name="menu"></ion-icon>
+    </button>
+    <ion-title style="padding-right: 12%;">{{ 'settings' | translate }}</ion-title>
+  </ion-navbar>
+  
+</ion-header>
+
+
+<ion-content padding class="page-settings">
+  <div style="margin-bottom: 15%">
+
+    <h4> {{ 'Theme' | translate }} </h4>
+    <p> {{ 'darkTheme1' | translate }} </p>
+    <ion-list>
+      <ion-item style="padding: 0% 15% 0% 15%">
+        <ion-label>{{ 'titleDarkTheme' | translate }}</ion-label>
+        <ion-toggle [(ngModel)]="toogle" (ionChange)="changeTheme()"></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <h4> {{ 'titleDefaultURL' | translate }} </h4>
+  <label class="item item-input">
+    <input id="url" padding type="url" placeholder="https://www.example.com"  requires [(ngModel)]="defaultURL" (keyup.enter)="changeDefaultURL()"  />
+  </label>
+  <div id="btDefaultURL">
+    <button ion-button size="large" (click)="changeDefaultURL()">OK</button>
+  </div>
+
+
+  <h4> {{ 'checkServerSettings' | translate }} </h4>
+  <ion-item>
+    <ion-label stacked >{{'checkServerAddress' | translate}}</ion-label>
+    <ion-input type="url" requires (change)="onChange();" (keyup.enter)="onChange();" [(ngModel)]="checkServerAddress"> </ion-input>
+  </ion-item>
+  <ion-item style="padding-bottom: 5%">
+    <ion-label stacked >{{'checkServerSha256' | translate}}</ion-label>
+    <ion-input requires [(ngModel)]="checkServerSha256"> </ion-input>
+  </ion-item>
+
+  <div style="text-align:center; margin-bottom: 20%">
+    <button ion-button id=fingerprints style="margin-top:4%;" (click)="presentLoadingDefault()" (keyup.enter)="presentLoadingDefault()">{{ 'getFingerprints' | translate }}</button>
+    <button ion-button style="margin-top:4%;" (click)="defaultCheckServer()">{{ 'restoreDefault' | translate }}</button>
+  </div>
+
+</ion-content>

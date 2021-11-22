@@ -1,0 +1,21 @@
+<ion-content class="page-modal">
+  <div class="overlay" (click)="closeModal()"></div>
+  <div class="modal">
+
+    <div class="modal_header">
+      <ion-navbar>
+        <ion-title>{{alert}}</ion-title>
+          <ion-buttons end>
+            <button ion-button (click)="closeModal()">x</button>
+          </ion-buttons>
+      </ion-navbar>
+    </div>
+
+    <div class="modal_content">
+      <img id=alertIcon src="../../assets/imgs/{{image}}.png" alt="checkmyhttps">
+      <p padding-left padding-right>{{message}}</p>
+    </div>
+  </div>
+</ion-content>
+
+
