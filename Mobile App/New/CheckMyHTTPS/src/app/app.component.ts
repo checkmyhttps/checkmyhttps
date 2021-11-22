@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Platform, NavController } from '@ionic/angular';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 
 import { HomePage } from './pages/home/home';
@@ -23,13 +24,18 @@ import { GlobalProvider } from '../app/providers/global/global';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  //Init storage
+  async ngOnInit() {
+    await this.storage.create();
+  }
+
   //TODO
   //@ViewChild(Nav) nav: Nav;
 
   rootPage: any;
   lang:any;
 
-  theme: any = this.storage.get('theme'); //keep default theme
+  theme: any; //keep default theme
 
   pages: Array<{title: string, component: any}>;
 
@@ -37,6 +43,7 @@ export class AppComponent {
   
 
   constructor(public platform: Platform, private translate: TranslateService, private storage: Storage, public global: GlobalProvider, private navCtrl: NavController) {
+    this.ngOnInit()
     this.initializeApp();
 
     this.lang = window.navigator.language;
@@ -81,7 +88,9 @@ export class AppComponent {
       });
 
       this.getTheme();
-      StatusBar.setStyle({ style: Style.Light });
+      if (Capacitor.isPluginAvailable('StatusBar')) { 
+        StatusBar.setStyle({ style: Style.Light });
+      }
 
     });
   }
