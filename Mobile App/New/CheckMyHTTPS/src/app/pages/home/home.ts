@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LoadingController, NavController, Platform } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
 
 import { GlobalProvider } from "../../providers/global/global";
 
@@ -190,7 +191,10 @@ export class HomePage {
   }
 
   async presentLoadingDefault() {
-    Keyboard.hide();
+    if (Capacitor.isPluginAvailable('Keyboard')) { 
+      Keyboard.hide();
+    }
+
     let contentValue:any = await this.global.getTranslation('onGoingCheck');
     let loading = this.loadingCtrl.create({
       message: contentValue,

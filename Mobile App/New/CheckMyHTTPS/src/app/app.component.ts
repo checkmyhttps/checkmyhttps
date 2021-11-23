@@ -16,8 +16,6 @@ import { Storage } from '@ionic/storage-angular';
 
 import { GlobalProvider } from '../app/providers/global/global';
 
-
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
