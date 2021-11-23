@@ -6,7 +6,7 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
   selector: 'page-how',
   templateUrl: 'how.html',
   styleUrls: ['how.scss'],
-  providers: [NavParams]
+  providers: [NavParams, PhotoViewer]
 })
 export class HowPage {
   _imageViewerCtrl: PhotoViewer;
