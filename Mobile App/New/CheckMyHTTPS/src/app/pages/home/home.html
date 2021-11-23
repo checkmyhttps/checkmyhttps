@@ -23,8 +23,8 @@
       <input id="url" padding type="url" placeholder="https://www.example.com"  requires [(ngModel)]="url" (keyup.enter)="presentLoadingDefault()"  />
     </label>
     <div style="margin-bottom:10%">
-      <!--<button ion-button id=btnDefaultURL (click)="setDefaultURL()">{{ 'defaultURL' | translate }}</button>
-      <button ion-button (click)="presentLoadingDefault()" >{{ 'check' | translate }}</button>-->
+      <button ion-button id=btnDefaultURL (click)="setDefaultURL()">{{ 'defaultURL' | translate }}</button>
+      <button ion-button (click)="presentLoadingDefault()" >{{ 'check' | translate }}</button>
     </div>
   </div>
 </ion-content>
