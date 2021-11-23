@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { HowPage } from './how';
 
-const routes: Routes = [
-  {
-    path: '',
-    component: HowPage,
-    outlet: 'how'
-  }
-];
+import { HowPageRoutingModule } from './how-routing.module';
+
 
 @NgModule({
-  declarations: [HowPage],
-  entryComponents: [HowPage],
-  imports: [IonicModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    HowPageRoutingModule
+  ],
+  declarations: [HowPage]
 })
 export class HowPageModule {}
