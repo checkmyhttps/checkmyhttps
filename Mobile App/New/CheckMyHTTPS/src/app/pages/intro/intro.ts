@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { GlobalProvider } from "../../providers/global/global";
@@ -16,12 +17,12 @@ export class IntroPage {
   slides: Array<{title: string, description: string; image: string}>;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public translate: TranslateService, public global:GlobalProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public translate: TranslateService, public global:GlobalProvider, private router: Router) {
     this.loadSlides();
   }
 
   goToHome(){
-    this.navCtrl.navigateRoot('/home');
+    this.router.navigateByUrl('/HomePage');
   }
 
   async loadSlides(){
