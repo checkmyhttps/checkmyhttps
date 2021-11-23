@@ -11,6 +11,7 @@ import { Keyboard } from '@capacitor/keyboard';
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
+  styleUrls: ['home.scss'],
   providers: [NavParams]
 })
 export class HomePage {

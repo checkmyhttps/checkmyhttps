@@ -9,6 +9,7 @@ import { Keyboard } from '@capacitor/keyboard';
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html',
+  styleUrls: ['settings.scss'],
   providers: [NavParams]
 })
 
