@@ -24,3 +24,43 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+img{
+  width: auto;
+  margin: auto;
+  display: block;
+}
+
+ion-footer{
+  text-align: center;
+  font-size: medium;
+}
+
+p{
+  color:dimgrey;
+  font-size: medium;
+}
+
+.alertCustomCss {
+  // text color for basic alerts
+  color: #3081f1;
+
+  button {
+    color: #3081f1 !important; // button text color
+  }
+
+  .alert-message {
+    color: black !important; // text color for confirm alerts
+    font-size: larger;
+  }
+
+  .alert-wrapper {
+    background-color: white;
+  }
+
+}
+
+.loadingCtrlCustomCss{
+    font-size: larger;
+}

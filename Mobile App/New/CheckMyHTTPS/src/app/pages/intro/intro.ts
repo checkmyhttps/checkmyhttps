@@ -8,6 +8,7 @@ import { GlobalProvider } from "../../providers/global/global";
 @Component({
   selector: 'page-intro',
   templateUrl: 'intro.html',
+  providers: [NavParams]
 })
 export class IntroPage {
 

@@ -1,15 +1,31 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+    path: 'HomePage',
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule)
+  },
+  {
+    path: 'IntroPage',
+    loadChildren: () => import('./pages/intro/intro.module').then(m => m.IntroPageModule)
+  },
+  {
+    path: 'HowPage',
+    loadChildren: () => import('./pages/how/how.module').then(m => m.HowPageModule)
+  },
+  {
+    path: 'AboutPage',
+    loadChildren: () => import('./pages/about/about.module').then(m => m.AboutPageModule)
+  },
+  {
+    path: 'SettingsPage',
+    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'HomePage',
     pathMatch: 'full'
   },
 ];
@@ -18,6 +34,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
-  exports: [RouterModule, TranslateModule]
+  exports: [RouterModule, TranslateService]
 })
 export class AppRoutingModule { }

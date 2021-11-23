@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Platform, NavController } from '@ionic/angular';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
@@ -35,12 +36,13 @@ export class AppComponent {
 
   theme: any; //keep default theme
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, url: any}>;
 
   version: any;
   
+  currentPageTitle = 'Home';
 
-  constructor(public platform: Platform, private translate: TranslateService, private storage: Storage, public global: GlobalProvider, private navCtrl: NavController) {
+  constructor(public platform: Platform, public translate: TranslateService, private storage: Storage, public global: GlobalProvider, private navCtrl: NavController, private router: Router) {
     this.ngOnInit()
     this.initializeApp();
 
@@ -75,7 +77,7 @@ export class AppComponent {
       // Here you can do any higher level native things you might need.
 
       SplashScreen.hide();
-
+      //TODO
       this.storage.get('introShown').then((result) =>{
         if(result){
           this.rootPage = HomePage;
@@ -105,18 +107,12 @@ export class AppComponent {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: homeTitle, component: HomePage },
-      { title: introTitle, component: IntroPage },
-      { title: howTitle, component: HowPage },
-      { title: aboutTitle, component: AboutPage },
-      { title: settingsTitle, component: SettingsPage }
+      { title: homeTitle, url: '/HomePage' },
+      { title: introTitle, url: '/IntroPage' },
+      { title: howTitle, url: '/HowPage' },
+      { title: aboutTitle, url: '/AboutPage' },
+      { title: settingsTitle, url: '/SettingsPage' }
     ];
-  }
-  
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.navCtrl.navigateRoot(page.component);
   }
 
 

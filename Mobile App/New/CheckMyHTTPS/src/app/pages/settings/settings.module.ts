@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { IntroPage } from './intro';
+import { SettingsPage } from './settings';
 
-import { IntroPageRoutingModule } from './intro-routing.module';
+import { SettingsPageRoutingModule } from './settings-routing.module';
 
 
 @NgModule({
@@ -12,8 +12,8 @@ import { IntroPageRoutingModule } from './intro-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    IntroPageRoutingModule
+    SettingsPageRoutingModule
   ],
-  declarations: [IntroPage]
+  declarations: [SettingsPage]
 })
-export class IntroPageModule {}
+export class SettingsPageModule {}

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingController, NavController, Platform } from '@ionic/angular';
+import { LoadingController, NavController, NavParams, Platform } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 
 import { GlobalProvider } from "../../providers/global/global";
@@ -10,7 +10,8 @@ import { Keyboard } from '@capacitor/keyboard';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  providers: [NavParams]
 })
 export class HomePage {
 
@@ -159,6 +160,8 @@ export class HomePage {
   async getFingerprintsUrl(urlTested){
     // Get fingerprints (from client)
     try{
+      console.log(window)
+      console.log(window['plugins'])
       const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);
       return data;
     }

@@ -6,7 +6,6 @@ import { GlobalProvider } from "../../providers/global/global";
 
 
 
-@IonicPage()
 @Component({
   selector: 'page-modal',
   templateUrl: 'modal.html',
