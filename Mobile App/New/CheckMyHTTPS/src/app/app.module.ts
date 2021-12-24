@@ -14,6 +14,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { GlobalProvider } from './providers/global/global';
 
+import { CMHPlugin } from '@ionic-native/cmh-plugin/ngx';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -36,7 +38,7 @@ export function createTranslateLoader(http: HttpClient) {
       defaultLanguage: 'en',
     })
   ],
-  providers: [GlobalProvider, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [GlobalProvider, CMHPlugin, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -8,6 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { Keyboard } from '@capacitor/keyboard';
 
+import { CMHPlugin } from '@ionic-native/cmh-plugin/ngx';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
@@ -19,7 +21,7 @@ export class HomePage {
   url:any = "https://www."
   punycode:any = require("punycode");
 
-  constructor(public platform: Platform, public navCtrl: NavController, public translate: TranslateService, public global: GlobalProvider, public loadingCtrl: LoadingController) {
+  constructor(public platform: Platform, public navCtrl: NavController, public translate: TranslateService, public global: GlobalProvider, public loadingCtrl: LoadingController, private cmhPlugin: CMHPlugin) {
     this.initializePage();
   }
 
@@ -157,16 +159,32 @@ export class HomePage {
     }
   }
 
-
   async getFingerprintsUrl(urlTested){
-    // Get fingerprints (from client)
     try{
-      console.log(window)
-      console.log(window['plugins'])
-      const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);
-      return data;
+      //console.log(this.cmhPlugin.getFingerprints(urlTested))
+      console.log("debut test")
+      console.log(urlTested)
+      console.log("debut test1")
+      console.log(this.cmhPlugin)
+      console.log("debut test2")
+      console.log(this.cmhPlugin.getFingerprints(urlTested))
+      console.log("debut test3")
+      console.log(this.cmhPlugin.getFingerprints(urlTested).then(result => console.log(result)).catch(err => console.log("ERROR: " + err)))
+      console.log("debut test4")
+      //console.log(await this.cmhPlugin.getFingerprints(urlTested))
+      console.log("debut test5")
+      //const data = await this.cmhPlugin.getFingerprints(urlTested);
+      console.log("milieu test6")
+      //console.log(data)
+      this.cmhPlugin.getFingerprints(urlTested).then(result => console.log(result)).catch(err => console.log("ERROR: " + err));
+      console.log("fin test")
+      /*console.log(window['plugins'])
+      const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);*/
+      //return data;
     }
     catch (err){
+      console.log("erreur")
+      console.log(err)
       if (err.includes("SSLHandshakeException")){
         if(err.includes("SSL handshake aborted")){
           return "UnknownHostException";
@@ -235,7 +253,8 @@ export class HomePage {
       const [ , , urlHost, urlPort ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
 
       const userFingerprints = await this.getFingerprintsUrl(urlTested);
-      const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
+      console.log(userFingerprints)
+      /*const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
 
 
       //########### Handling Java Exceptions from cmhplugin #################
@@ -294,7 +313,7 @@ export class HomePage {
         case 'Whitelisted':
           this.global.presentProfileModal('warning','whitelisted');
           break;
-      }
+      }*/
 
       return true;
 

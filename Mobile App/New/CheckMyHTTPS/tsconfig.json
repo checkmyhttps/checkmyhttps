@@ -13,7 +13,7 @@
     "target": "es2015",
     "module": "es2020",
     "lib": ["es2018", "dom"],
-    "types": ["node"]
+    "types": ["node", "cordova"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
