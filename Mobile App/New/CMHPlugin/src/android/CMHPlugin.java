@@ -38,7 +38,7 @@ public class CMHPlugin extends CordovaPlugin {
     public boolean getFingerprints(JSONArray args, CallbackContext callbackContext){
         try {
             //https connection with the requested URL
-            String httpsURL = args.getString(0);
+            String httpsURL = args.getJSONObject(0).getString("param1");
             HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(httpsURL).openConnection();
             //Only need to recover the certificate, HEAD instead of GET
             httpsConnection.setRequestMethod("HEAD");
@@ -78,9 +78,10 @@ public class CMHPlugin extends CordovaPlugin {
 
     public boolean getFingerprintsFromCheckServer(JSONArray args, CallbackContext callbackContext){
         try {
-            String host = args.getString(1);
-            String port = args.getString(2);
-            String urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + port;
+            String host = args.getJSONObject(1).getString("param2");
+            String port = args.getJSONObject(2).getString("param3");
+
+            String urlTested = args.getJSONObject(0).getString("param1") + "/api.php?host=" + host + "&port=" + port;
 
             //https connection to the check server with the requested URL
             HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(urlTested).openConnection();
