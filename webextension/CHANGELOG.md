@@ -1,5 +1,11 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.5.4 - 2022-01-05
+- Update the fingerprint of the check server certificate
+
+## 5.5.3 - 2021-01-07
+- Update the fingerprint of the check server certificate
+
 ## 5.5.2 - 2020-07-28
 - Set the "Tabs" permission again (in order to check HTTPS on all tabs)
 - Change the minimum Firefox version compatibility to 62 (due to the function "webRequest.getSecurityInfo")
