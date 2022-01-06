@@ -149,23 +149,28 @@ export class HomePage {
 
 
 
-  async getCertFromCheckServer(urlTested:any, urlHost:any, urlPort:any){
+  async getCertFromCheckServer(urlTested, urlHost, urlPort){
     try{
-      console.log("debut test")
-      console.log(this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, urlPort).then(function(result){console.log("res2" + result); return result;}).catch(err => console.log("ERROR: " + err)))
-      console.log("fin test")
-      return;
+      let port = "443"
+      if (urlPort != undefined)
+          port = urlPort;
+      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port).then(result => {return result}).catch(err => console.log("ERROR: " + err))
+      console.log("dataCert")
+      console.log(JSON.stringify(dataCertFromCheckServer))
+      return dataCertFromCheckServer;
     }
     catch (err){
+      console.log("erreur")
+      console.log(err)
     }
   }
 
   async getFingerprintsUrl(urlTested){
     try{
-      console.log("debut test")
-      await this.cmhPlugin.getFingerprints(urlTested).then(function(result){console.log("res1" + result); return result;}).catch(err => console.log("ERROR: " + err))
-      console.log("fin test")
-      return;
+      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR: " + err));
+      console.log("dataFinger")
+      console.log(JSON.stringify(dataFingerprints))
+      return dataFingerprints;
     }
     catch (err){
       console.log("erreur")
@@ -239,9 +244,13 @@ export class HomePage {
 
       console.log("Appel getFingerprintsUrl")
       const userFingerprints = await this.getFingerprintsUrl(urlTested);
-      //console.log(userFingerprints)
+      console.log("userFingerprints")
+      console.log(JSON.stringify(userFingerprints))
+
       console.log("Appel getCertFromCheckServer")
       const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
+      console.log("checkServerData")
+      console.log(JSON.stringify(checkServerData))
 
 
       //########### Handling Java Exceptions from cmhplugin #################

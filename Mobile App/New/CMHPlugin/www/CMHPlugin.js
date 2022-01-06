@@ -1,16 +1,11 @@
 var exec = require('cordova/exec');
-/*
-module.exports.getFingerprints = function (urlTested) {
-    exec(function() {}, function() {}, 'CMHPlugin', 'getFingerprints', [urlTested]);
-};*/
 
-module.exports.getFingerprints = async function (fingerprintsJSON, success , errorUser) {
+module.exports.getFingerprints = async function (urlTested, fingerprintsJSON, errorUser) {
     exec(fingerprintsJSON, errorUser, "CMHPlugin", "getFingerprints", [urlTested]);
 };
 
 
-module.exports.getFingerprintsFromCheckServer = async function (urlTested, urlHost, urlPort) {
+module.exports.getFingerprintsFromCheckServer = async function (checkServerURL, host, port, CmhServerCert, errorUser) {
     console.log("export getFingerprintsFromCheckServer")
-    let test = await exec((fingerprintsJSON) => {return fingerprintsJSON}, (errorUser) => {return errorUser}, 'CMHPlugin', 'getFingerprintsFromCheckServer', [urlTested, urlHost, urlPort]);
-    console.log(test)
+    exec(CmhServerCert, errorUser, "CMHPlugin", "getFingerprintsFromCheckServer", [checkServerURL, host, port]);
 };
