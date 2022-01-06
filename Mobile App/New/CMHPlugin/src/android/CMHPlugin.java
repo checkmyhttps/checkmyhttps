@@ -79,12 +79,8 @@ public class CMHPlugin extends CordovaPlugin {
 
     public boolean getFingerprintsFromCheckServer(JSONArray args, CallbackContext callbackContext){
         try {
-            String host = args.getJSONObject(0).getString("param2");
-            String urlTested = args.getJSONObject(0).getString("param1") + "/api.php?host=" + host;
-            if (args.getJSONObject(0).has("param3")) {
-                String port = args.getJSONObject(0).getString("param3");
-                urlTested += "&port=" + port;
-            }
+            String host = args.getString(1);
+            String urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2);
 
             //https connection to the check server with the requested URL
             HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(urlTested).openConnection();

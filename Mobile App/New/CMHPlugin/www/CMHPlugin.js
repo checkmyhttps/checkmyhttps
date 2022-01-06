@@ -5,7 +5,6 @@ module.exports.getFingerprints = async function (urlTested, fingerprintsJSON, er
 };
 
 
-module.exports.getFingerprintsFromCheckServer = async function (checkServerURL, host, port, CmhServerCert, errorUser) {
-    console.log("export getFingerprintsFromCheckServer")
-    exec(CmhServerCert, errorUser, "CMHPlugin", "getFingerprintsFromCheckServer", [checkServerURL, host, port]);
+module.exports.getFingerprintsFromCheckServer = async function (params, CmhServerCert, errorUser) {
+    exec(CmhServerCert, errorUser, "CMHPlugin", "getFingerprintsFromCheckServer", [params.param1, params.param2, params.param3]);
 };

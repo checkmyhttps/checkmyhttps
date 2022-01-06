@@ -154,9 +154,7 @@ export class HomePage {
       let port = "443"
       if (urlPort != undefined)
           port = urlPort;
-      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port).then(result => {return result}).catch(err => console.log("ERROR: " + err))
-      console.log("dataCert")
-      console.log(JSON.stringify(dataCertFromCheckServer))
+      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port).then(result => {return result}).catch(err => console.log("ERROR getCertFromCheckServer: " + err))
       return dataCertFromCheckServer;
     }
     catch (err){
@@ -167,9 +165,7 @@ export class HomePage {
 
   async getFingerprintsUrl(urlTested){
     try{
-      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR: " + err));
-      console.log("dataFinger")
-      console.log(JSON.stringify(dataFingerprints))
+      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
       return dataFingerprints;
     }
     catch (err){
@@ -242,19 +238,12 @@ export class HomePage {
       //Regex to get the host and port of the tested URL
       const [ , , urlHost, urlPort ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
 
-      console.log("Appel getFingerprintsUrl")
       const userFingerprints = await this.getFingerprintsUrl(urlTested);
-      console.log("userFingerprints")
-      console.log(JSON.stringify(userFingerprints))
-
-      console.log("Appel getCertFromCheckServer")
       const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
-      console.log("checkServerData")
-      console.log(JSON.stringify(checkServerData))
-
 
       //########### Handling Java Exceptions from cmhplugin #################
-      /*
+      console.log(JSON.stringify(userFingerprints))
+      console.log(JSON.stringify(checkServerData))
       if (userFingerprints === "SSLHandshakeException"){
         if(checkServerData.APIInfo.error === "HOST_UNREACHABLE"){
           this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));
@@ -309,7 +298,7 @@ export class HomePage {
         case 'Whitelisted':
           this.global.presentProfileModal('warning','whitelisted');
           break;
-      }*/
+      }
 
       return true;
 
