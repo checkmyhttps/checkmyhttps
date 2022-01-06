@@ -18,3 +18,6 @@ Build l'application Ionic:
 dans le dossier \CheckMyHTTPS\
 Build android: ionic capacitor build android
 Run android: ionic capacitor run android
+
+JavaScript bridge :
+CMHPlugin\www\CMHPlugin.js

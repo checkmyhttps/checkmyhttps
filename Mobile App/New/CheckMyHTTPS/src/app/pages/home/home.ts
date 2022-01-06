@@ -150,10 +150,11 @@ export class HomePage {
 
 
   async getCertFromCheckServer(urlTested:any, urlHost:any, urlPort:any){
-
     try{
-      const data = await window['plugins'].cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, urlPort);
-      return data;
+      console.log("debut test")
+      console.log(this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, urlPort).then(function(result){console.log("res2" + result); return result;}).catch(err => console.log("ERROR: " + err)))
+      console.log("fin test")
+      return;
     }
     catch (err){
     }
@@ -161,26 +162,10 @@ export class HomePage {
 
   async getFingerprintsUrl(urlTested){
     try{
-      //console.log(this.cmhPlugin.getFingerprints(urlTested))
       console.log("debut test")
-      console.log(urlTested)
-      console.log("debut test1")
-      console.log(this.cmhPlugin)
-      console.log("debut test2")
-      console.log(this.cmhPlugin.getFingerprints(urlTested))
-      console.log("debut test3")
-      console.log(this.cmhPlugin.getFingerprints(urlTested).then(result => console.log(result)).catch(err => console.log("ERROR: " + err)))
-      console.log("debut test4")
-      //console.log(await this.cmhPlugin.getFingerprints(urlTested))
-      console.log("debut test5")
-      //const data = await this.cmhPlugin.getFingerprints(urlTested);
-      console.log("milieu test6")
-      //console.log(data)
-      this.cmhPlugin.getFingerprints(urlTested).then(result => console.log(result)).catch(err => console.log("ERROR: " + err));
+      await this.cmhPlugin.getFingerprints(urlTested).then(function(result){console.log("res1" + result); return result;}).catch(err => console.log("ERROR: " + err))
       console.log("fin test")
-      /*console.log(window['plugins'])
-      const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);*/
-      //return data;
+      return;
     }
     catch (err){
       console.log("erreur")
@@ -252,13 +237,15 @@ export class HomePage {
       //Regex to get the host and port of the tested URL
       const [ , , urlHost, urlPort ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
 
+      console.log("Appel getFingerprintsUrl")
       const userFingerprints = await this.getFingerprintsUrl(urlTested);
-      console.log(userFingerprints)
-      /*const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
+      //console.log(userFingerprints)
+      console.log("Appel getCertFromCheckServer")
+      const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
 
 
       //########### Handling Java Exceptions from cmhplugin #################
-
+      /*
       if (userFingerprints === "SSLHandshakeException"){
         if(checkServerData.APIInfo.error === "HOST_UNREACHABLE"){
           this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));

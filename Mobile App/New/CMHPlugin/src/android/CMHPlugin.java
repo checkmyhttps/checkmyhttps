@@ -67,6 +67,7 @@ public class CMHPlugin extends CordovaPlugin {
             }
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, fingerprintsCertificateChainJSON);
+            pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
             return true;
 
