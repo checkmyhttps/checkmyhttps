@@ -242,8 +242,6 @@ export class HomePage {
       const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
 
       //########### Handling Java Exceptions from cmhplugin #################
-      console.log(JSON.stringify(userFingerprints))
-      console.log(JSON.stringify(checkServerData))
       if (userFingerprints === "SSLHandshakeException"){
         if(checkServerData.APIInfo.error === "HOST_UNREACHABLE"){
           this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));
@@ -273,7 +271,6 @@ export class HomePage {
 
       const serverCert = checkServerData.fingerprints;
       const APIServerData = checkServerData.APIInfo;
-
       //SSL Pinning
       if ((serverCert !== null) && (!this.compareFingerprints(serverCert.cert0, checkServerFingerprints))){
         this.global.presentProfileModal('invalid','sslPinning');

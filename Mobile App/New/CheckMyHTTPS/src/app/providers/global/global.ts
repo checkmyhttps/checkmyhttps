@@ -1,9 +1,10 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
-import {Storage} from '@ionic/storage';
-
+import { Storage } from '@ionic/storage';
 import { AlertController, ModalController } from '@ionic/angular';
+
+import { ModalPage } from '../../pages/modal/modal';
 
 import {TranslateService} from '@ngx-translate/core';
 
@@ -80,7 +81,7 @@ export class GlobalProvider {
 
 
   async presentProfileModal(image:any, message:any) {
-    const modalPage = await this.modalCtrl.create({component:'ModalPage', componentProps:{ image: image, message: message }});
+    const modalPage = await this.modalCtrl.create({component: ModalPage, componentProps:{ image: image, message: message }});
     await modalPage.present();
   }
 
