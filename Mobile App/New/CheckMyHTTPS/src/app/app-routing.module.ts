@@ -24,6 +24,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
   },
   {
+    path: 'ModalPage',
+    loadChildren: () => import('./pages/modal/modal.module').then(m => m.ModalPageModule)
+  },
+  {
     path: '',
     redirectTo: 'HomePage',
     pathMatch: 'full'
@@ -36,4 +40,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule, TranslateService]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
