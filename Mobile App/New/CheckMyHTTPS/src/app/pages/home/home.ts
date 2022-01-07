@@ -12,8 +12,8 @@ import { CMHPlugin } from '@ionic-native/cmh-plugin/ngx';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
-  styleUrls: ['home.scss'],
+  templateUrl: './home.html',
+  styleUrls: ['./home.scss'],
   providers: [NavParams]
 })
 export class HomePage {

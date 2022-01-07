@@ -10,8 +10,8 @@ import { CMHPlugin } from '@ionic-native/cmh-plugin/ngx';
 
 @Component({
   selector: 'page-settings',
-  templateUrl: 'settings.html',
-  styleUrls: ['settings.scss'],
+  templateUrl: './settings.html',
+  styleUrls: ['./settings.scss'],
   providers: [NavParams]
 })
 

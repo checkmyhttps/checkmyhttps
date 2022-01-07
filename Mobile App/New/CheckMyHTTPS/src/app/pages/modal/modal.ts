@@ -7,8 +7,8 @@ import { GlobalProvider } from "../../providers/global/global";
 
 @Component({
   selector: 'page-modal',
-  templateUrl: 'modal.html',
-  styleUrls: ['modal.scss'],
+  templateUrl: './modal.html',
+  styleUrls: ['./modal.scss'],
 })
 export class ModalPage {
   image:string;
