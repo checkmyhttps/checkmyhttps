@@ -32,7 +32,7 @@ CMH.native.nativeAppInfo = {
  * @type {string}
  * Minimum required version of native application.
  */
-CMH.native.minimumAppVersion = '1.0.0'
+CMH.native.minimumAppVersion = '1.1.5'
 
  /**
   * @name connect

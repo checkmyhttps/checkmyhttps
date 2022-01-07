@@ -13,9 +13,9 @@ CMH.options = {}
 CMH.options.settings = {
   checkOnPageLoad:               false,
   alertOnUnicodeIDNDomainNames:  true,
-  disableNotifications:          false, 
+  disableNotifications:          false,
   checkServerUrl:                'https://checkmyhttps.net/',
-  checkServerFingerprintsSha256: 'C8F129A6D02194583A6B205B27AB7A246651A9915857E8DB24C1909D6F54F324'
+  checkServerFingerprintsSha256: '6D9BBB554CE7CD4420C26F60DD0831D40C34BB07F93E874CF631C24AB9F08F57'
 }
 
 /**
@@ -25,7 +25,7 @@ CMH.options.settings = {
 CMH.options.defaultCheckServer = {
   url: 'https://checkmyhttps.net/',
   fingerprints: {
-    sha256: 'C8F129A6D02194583A6B205B27AB7A246651A9915857E8DB24C1909D6F54F324'
+    sha256: '6D9BBB554CE7CD4420C26F60DD0831D40C34BB07F93E874CF631C24AB9F08F57'
   }
 }
 
