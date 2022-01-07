@@ -6,6 +6,8 @@ import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Keyboard } from '@capacitor/keyboard';
 
+import { CMHPlugin } from '@ionic-native/cmh-plugin/ngx';
+
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html',
@@ -21,7 +23,7 @@ export class SettingsPage {
 
   defaultURL:any;
 
-  constructor(public navCtrl: NavController, private storage: Storage, public navParams: NavParams, public global: GlobalProvider, public translate: TranslateService, public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, private storage: Storage, public navParams: NavParams, public global: GlobalProvider, public translate: TranslateService, public loadingCtrl: LoadingController, private cmhPlugin: CMHPlugin) {
     this.displayCHECKSERVER();
 
     this.displayDefaultURL();
@@ -87,9 +89,8 @@ export class SettingsPage {
 
   async getFingerprintsUrl(urlTested){
     // Get fingerprints (from client)
-
     try{
-      const data = await window['plugins'].cmhPlugin.getFingerprints(urlTested);
+      const data = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
       return data;
     }
     catch (err){
