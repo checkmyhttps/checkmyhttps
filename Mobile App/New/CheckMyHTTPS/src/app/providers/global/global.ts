@@ -14,7 +14,7 @@ export class GlobalProvider {
 
   private CHECKSERVER = {
     url : "https://checkmyhttps.net",
-    sha256: "8B944DBC442DA0892C307DEF6C971B671267BF033E8479C567E173973F970B9F"
+    sha256: "6D9BBB554CE7CD4420C26F60DD0831D40C34BB07F93E874CF631C24AB9F08F57"
   };
 
   defaultURL:string = "https://www.esiea.fr";
