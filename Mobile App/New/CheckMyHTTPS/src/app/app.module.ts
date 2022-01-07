@@ -22,11 +22,10 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [
     HttpClientModule,
-    BrowserModule, 
-    IonicModule.forRoot(), 
+    BrowserModule,
+    IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule,
     TranslateModule.forRoot({
@@ -39,6 +38,6 @@ export function createTranslateLoader(http: HttpClient) {
     })
   ],
   providers: [GlobalProvider, CMHPlugin, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
