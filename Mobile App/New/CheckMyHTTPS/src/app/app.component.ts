@@ -56,7 +56,7 @@ export class AppComponent {
     this.translate.setDefaultLang(this.lang);
     this.translate.use(this.lang);
 
-    this.version = "1.6";
+    this.version = "1.2";
 
     //TO-DO
     /*this.event.subscribe('theme:toogle', () => {
