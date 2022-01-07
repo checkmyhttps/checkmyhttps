@@ -1,40 +1,27 @@
 {
-  "description": "__MSG_extensionDescription__",
-  "manifest_version": 2,
-  "name": "CheckMyHTTPS",
-  "version": "5.4.1",
-  "default_locale": "en",
-  "icons": {
-    "128": "images/icon.png"
-  },
-  "applications": {
-    "gecko": {
-      "id": "info@checkmyhttps.net",
-      "strict_min_version": "57.0"
-    }
-  },
-  "background": {
-    "page": "background.html"
-  },
-  "browser_action": {
-    "browser_style": false,
-    "default_icon": {
+   "background": {
+      "page": "background.html"
+   },
+   "browser_action": {
+      "browser_style": false,
+      "default_icon": {
+         "128": "images/icon.png"
+      }
+   },
+   "default_locale": "en",
+   "description": "__MSG_extensionDescription__",
+   "icons": {
       "128": "images/icon.png"
-    }
-  },
-  "options_ui": {
-    "browser_style": true,
-    "open_in_tab": false,
-    "page": "options/options.html"
-  },
-  "permissions": [
-    "downloads",
-    "nativeMessaging",
-    "notifications",
-    "storage",
-    "tabs",
-    "webRequest",
-    "webRequestBlocking",
-    "https://*/*"
-  ]
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnaqK/LcMIdkzflE6LlaKskw1tESqq3NhJhyQr923GMzn7dXeF3f1cXTHdqfG/eOVsd+dLc3YB3GBKBsRnWi4tqX09ZAejgBoL5YJfQyR9ZAORZsCRN7cViL/Gp9hNz8kPWipjhf90pwaDeTsk9ClJHOjwShC2R1VVog67QMelKtuRQgsi9IDTbU+pL27HCflBgsVN9rI0On/4cezzFh6wvB0/N2EEdywQXTbGvSH1bXssHVcJvjtNLtDfE56kzsNjAb6DpHXOEoTHpmkTqibMuqTh/wpFvQ1G225+CJIn7OG1yiGnfxzhaZwjLs4U0ElBdFHUuDSkcltvMqFs0IkGwIDAQAB",
+   "manifest_version": 2,
+   "name": "CheckMyHTTPS",
+   "options_ui": {
+      "browser_style": true,
+      "open_in_tab": false,
+      "page": "options/options.html"
+   },
+   "permissions": [ "downloads", "nativeMessaging", "notifications", "storage", "tabs" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "5.5.4"
 }
