@@ -6,9 +6,6 @@ import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 
 import { HomePage } from './pages/home/home';
-import { AboutPage } from './pages/about/about';
-import { HowPage } from './pages/how/how';
-import { SettingsPage } from './pages/settings/settings';
 import { IntroPage } from "./pages/intro/intro";
 
 import { TranslateService } from '@ngx-translate/core';
@@ -59,7 +56,7 @@ export class AppComponent {
     this.translate.setDefaultLang(this.lang);
     this.translate.use(this.lang);
 
-    this.version = "1.1.6";
+    this.version = "1.6";
 
     //TO-DO
     /*this.event.subscribe('theme:toogle', () => {
