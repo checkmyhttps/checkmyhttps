@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { HowPage } from './how';
+
+import { IonicModule } from '@ionic/angular';
 
 import { HowPageRoutingModule } from './how-routing.module';
 
+import { HowPage } from './how';
 
 @NgModule({
   imports: [
