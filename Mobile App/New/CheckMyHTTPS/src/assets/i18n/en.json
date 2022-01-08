@@ -10,6 +10,7 @@
 	"danger": "Your connection might be listened to...",
 	"SSLPeerUnverified": "The requested domain name does not match the server’s certificate.",
 	"serverUnreachable": "Server unreachable...",
+	"serverUnknown": "Server unknown...",
 	"privateIp": "We couldn't reach this IP from our check server (this is a private IP).",
 	"severalCertificates": "This website has several server certificates. We can not guarantee that your HTTPS connection is secure.",
 	"whitelisted": "Your HTTPS connection is secure (Whitelisted Domain).",

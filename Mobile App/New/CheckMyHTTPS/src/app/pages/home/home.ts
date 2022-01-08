@@ -260,6 +260,10 @@ export class HomePage {
         this.global.CMHAlert(await this.global.getTranslation('serverUnreachable'));
         return true;
       }
+      else if (userFingerprints == undefined && checkServerData.APIInfo.error === "UNKNOWN_HOST") {
+        this.global.CMHAlert(await this.global.getTranslation('serverUnknown'));
+        return true;
+      }
       else if (userFingerprints === "UnknownHostException" || checkServerData === undefined){
         this.global.CMHAlert((await this.global.getTranslation('serverUnreachable')));
         return true;
