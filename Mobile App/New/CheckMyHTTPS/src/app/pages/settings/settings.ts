@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from '@ionic/angular';
-
-import { GlobalProvider } from "../../providers/global/global";
+import { NavController, NavParams, LoadingController, } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { Keyboard } from '@capacitor/keyboard';
 
 import { CMHPlugin } from '@ionic-native/cmh-plugin/ngx';
+
+import { GlobalProvider } from "../../providers/global/global";
+import { EventsService } from '../../app.service';
 
 @Component({
   selector: 'page-settings',
@@ -19,18 +20,18 @@ export class SettingsPage {
   checkServerAddress:any;
   checkServerSha256:any;
 
-  toogle:boolean;
+  toggle:boolean;
 
   defaultURL:any;
 
-  constructor(public navCtrl: NavController, private storage: Storage, public navParams: NavParams, public global: GlobalProvider, public translate: TranslateService, public loadingCtrl: LoadingController, private cmhPlugin: CMHPlugin) {
+  constructor(public navCtrl: NavController, private storage: Storage, public navParams: NavParams, public global: GlobalProvider, public translate: TranslateService, public loadingCtrl: LoadingController, private cmhPlugin: CMHPlugin, public events: EventsService) {
     this.displayCHECKSERVER();
 
     this.displayDefaultURL();
 
-    //Toogle position changes according to the theme
-    this.storage.get("toogle").then((result) =>{
-      this.toogle = result;
+    //Toggle position changes according to the theme
+    this.storage.get("toggle").then((result) =>{
+      this.toggle = result;
     });
   }
 
@@ -148,7 +149,9 @@ export class SettingsPage {
   //##################################################################
 
   changeTheme(){
-    //this.event.publish('theme:toogle');
+    this.events.publishToggle({
+      theme: !this.toggle
+    });
   }
 
   async changeDefaultURL(){

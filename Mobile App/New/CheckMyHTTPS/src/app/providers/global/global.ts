@@ -113,12 +113,12 @@ export class GlobalProvider {
     (await alert).present();
   }
 
-  setToogle(themeApp:any){
+  setToggle(themeApp:any){
     if (themeApp === "dark-theme") {
-      this.storage.set("toogle", true);
+      this.storage.set("toggle", true);
     }
     else{
-      this.storage.set("toogle", false);
+      this.storage.set("toggle", false);
     }
   }
 

@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Platform, NavController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
-
-import { HomePage } from './pages/home/home';
-import { IntroPage } from "./pages/intro/intro";
-
 import { TranslateService } from '@ngx-translate/core';
 
-import { Storage } from '@ionic/storage-angular';
-
-import { GlobalProvider } from '../app/providers/global/global';
+import { HomePage } from './pages/home/home';
+import { IntroPage } from './pages/intro/intro';
+import { GlobalProvider } from './providers/global/global';
+import { EventsService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +37,7 @@ export class AppComponent {
   
   currentPageTitle = 'Home';
 
-  constructor(public platform: Platform, public translate: TranslateService, private storage: Storage, public global: GlobalProvider, private navCtrl: NavController, private router: Router) {
+  constructor(public platform: Platform, public translate: TranslateService, private storage: Storage, public global: GlobalProvider, private navCtrl: NavController, private router: Router, private events: EventsService) {
     this.ngOnInit()
     this.initializeApp();
 
@@ -58,10 +56,9 @@ export class AppComponent {
 
     this.version = "1.2";
 
-    //TO-DO
-    /*this.event.subscribe('theme:toogle', () => {
+    this.events.getObservable().subscribe(() => {
       this.toggleTheme();
-    })*/
+    })
 
     this.loadMenu();
 
@@ -112,13 +109,12 @@ export class AppComponent {
     ];
   }
 
-
   setTheme(appliedTheme){
+    document.body.classList.toggle('dark', appliedTheme === 'dark-theme')
     this.theme = appliedTheme;
     this.storage.set("theme", appliedTheme);
-    this.global.setToogle(this.theme);
+    this.global.setToggle(this.theme);
   }
-
 
   getTheme(){
     this.storage.get('theme').then((result) =>{
@@ -132,7 +128,6 @@ export class AppComponent {
     });
   }
 
-
   toggleTheme() {
     this.storage.get('theme').then((result) =>{
       if(result === 'dark-theme'){
@@ -143,5 +138,4 @@ export class AppComponent {
       }
     });
   }
-
 }
