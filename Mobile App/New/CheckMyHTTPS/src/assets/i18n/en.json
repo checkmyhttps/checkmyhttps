@@ -57,6 +57,6 @@
 	"darkTheme1":"Dark theme turns the light surfaces of the page dark.",
 	"titleDefaultURL": "Change the default URL",
 	"version": "Version",
-	"versionApp": "Version of the app"
-
+	"versionApp": "Version of the app",
+	"checkURL": "URL of a HTTPS site"
 }

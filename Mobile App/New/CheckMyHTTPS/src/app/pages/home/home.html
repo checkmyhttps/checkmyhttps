@@ -18,7 +18,7 @@
     </div>
     <img id=icon src="../../assets/imgs/icon.png" alt="checkmyhttps">
     <ion-item class="url">
-      <ion-label position="stacked">site à tester:</ion-label>
+      <ion-label position="stacked">{{ 'checkURL' | translate }}</ion-label>
       <ion-input placeholder="https://www.example.com" type="url" requires [(ngModel)]="url" (keyup.enter)="presentLoadingDefault()"></ion-input>
     </ion-item>
     <div>

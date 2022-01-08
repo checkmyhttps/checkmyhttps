@@ -57,6 +57,6 @@
 	"darkTheme1":"Le thème foncé permet d'assombrir les surfaces claires de la page.",
 	"titleDefaultURL": "Modifier l'URL par défaut",
 	"version": "Version",
-	"versionApp": "Version de l'application"
-
+	"versionApp": "Version de l'application",
+	"checkURL": "URL d’un site HTTPS"
 }
