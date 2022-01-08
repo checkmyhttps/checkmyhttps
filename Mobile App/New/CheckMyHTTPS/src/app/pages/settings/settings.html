@@ -3,46 +3,38 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title style="padding-right: 12%;">{{ 'settings' | translate }}</ion-title>
+    <ion-title>{{ 'settings' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
-
-
 <ion-content padding class="page-settings">
   <div style="margin-bottom: 15%">
-
-    <h4> {{ 'Theme' | translate }} </h4>
-    <p> {{ 'darkTheme1' | translate }} </p>
-    <ion-list>
-      <ion-item style="padding: 0% 15% 0% 15%">
-        <ion-label>{{ 'titleDarkTheme' | translate }}</ion-label>
-        <ion-toggle [(ngModel)]="toogle" (ionChange)="changeTheme()"></ion-toggle>
-      </ion-item>
-    </ion-list>
+    <h4>{{'Theme' | translate }}</h4>
+    <p>{{'darkTheme1' | translate}}</p>
+    <div class="ion-text-center align-vertical">
+      <ion-label>{{'titleLightTheme' | translate}}</ion-label>
+      <ion-toggle class="ion-margin-horizontal" [(ngModel)]="toogle" (ionChange)="changeTheme()"></ion-toggle>
+      <ion-label>{{'titleDarkTheme' | translate}}</ion-label>
+    </div>
   </div>
-
-  <h4> {{ 'titleDefaultURL' | translate }} </h4>
-  <label class="item item-input">
-    <input id="url" padding type="url" placeholder="https://www.example.com"  requires [(ngModel)]="defaultURL" (keyup.enter)="changeDefaultURL()"  />
-  </label>
-  <div id="btDefaultURL">
-    <button ion-button size="large" (click)="changeDefaultURL()">OK</button>
-  </div>
-
-
-  <h4> {{ 'checkServerSettings' | translate }} </h4>
+  <h4>{{'titleDefaultURL' | translate}}</h4>
   <ion-item>
-    <ion-label stacked >{{'checkServerAddress' | translate}}</ion-label>
+    <ion-label position="stacked">{{'checkServerAddress' | translate}}</ion-label>
+    <ion-input type="url" placeholder="https://www.example.com" requires (keyup.enter)="changeDefaultURL();" [(ngModel)]="defaultURL"> </ion-input>
+  </ion-item>
+  <div class="ion-text-center">
+    <ion-button color="primary" (click)="changeDefaultURL()">OK</ion-button>
+  </div>
+  <h4>{{'checkServerSettings' | translate}}</h4>
+  <ion-item>
+    <ion-label position="stacked">{{'checkServerAddress' | translate}}</ion-label>
     <ion-input type="url" requires (change)="onChange();" (keyup.enter)="onChange();" [(ngModel)]="checkServerAddress"> </ion-input>
   </ion-item>
   <ion-item style="padding-bottom: 5%">
-    <ion-label stacked >{{'checkServerSha256' | translate}}</ion-label>
+    <ion-label position="stacked">{{'checkServerSha256' | translate}}</ion-label>
     <ion-input requires [(ngModel)]="checkServerSha256"> </ion-input>
   </ion-item>
-
-  <div style="text-align:center; margin-bottom: 20%">
-    <button ion-button id=fingerprints style="margin-top:4%;" (click)="presentLoadingDefault()" (keyup.enter)="presentLoadingDefault()">{{ 'getFingerprints' | translate }}</button>
-    <button ion-button style="margin-top:4%;" (click)="defaultCheckServer()">{{ 'restoreDefault' | translate }}</button>
+  <div class="ion-text-center">
+    <ion-button color="primary" (click)="presentLoadingDefault()" (keyup.enter)="presentLoadingDefault()">{{ 'getFingerprints' | translate }}</ion-button>
+    <ion-button color="primary" (click)="defaultCheckServer()">{{ 'restoreDefault' | translate }}</ion-button>
   </div>
-
 </ion-content>

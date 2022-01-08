@@ -32,6 +32,17 @@ img{
   display: block;
 }
 
+ion-title {
+  position  : absolute;
+  top       : 20px;
+  left      : 0;
+  right     : 0;
+  width     : 80%;
+  margin:0 auto;
+  text-align: center !important;
+  display   : block;
+}
+
 ion-footer{
   text-align: center;
   font-size: medium;

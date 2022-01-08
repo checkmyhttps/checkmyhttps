@@ -52,6 +52,7 @@
 	"Intro3": "If you want to change the check server, please look at the documentation in the CheckMyHTTPS' GitHub",
 	"continue":"Continue",
 	"Theme":"Theme",
+	"titleLightTheme":"Light Theme",
 	"titleDarkTheme":"Dark Theme",
 	"darkTheme1":"Dark theme turns the light surfaces of the page dark.",
 	"titleDefaultURL": "Change the default URL",

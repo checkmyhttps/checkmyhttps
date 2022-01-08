@@ -3,11 +3,9 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title style="padding-right: 12%;">CheckMyHTTPS</ion-title>
+    <ion-title>CheckMyHTTPS</ion-title>
   </ion-toolbar>
 </ion-header>
-
-
 <ion-content class="page-home">
   <div padding class="home">
     <div class="row">
@@ -19,12 +17,13 @@
       </div>
     </div>
     <img id=icon src="../../assets/imgs/icon.png" alt="checkmyhttps">
-    <label class="item item-input">
-      <input id="url" padding type="url" placeholder="https://www.example.com"  requires [(ngModel)]="url" (keyup.enter)="presentLoadingDefault()"  />
-    </label>
-    <div style="margin-bottom:10%">
-      <button ion-button id=btnDefaultURL (click)="setDefaultURL()">{{ 'defaultURL' | translate }}</button>
-      <button ion-button (click)="presentLoadingDefault()" >{{ 'check' | translate }}</button>
+    <ion-item class="url">
+      <ion-label position="stacked">site à tester:</ion-label>
+      <ion-input placeholder="https://www.example.com" type="url" requires [(ngModel)]="url" (keyup.enter)="presentLoadingDefault()"></ion-input>
+    </ion-item>
+    <div>
+      <ion-button color="light" (click)="setDefaultURL()">{{ 'defaultURL' | translate }}</ion-button>
+      <ion-button color="primary" (click)="presentLoadingDefault()">{{ 'check' | translate }}</ion-button>
     </div>
   </div>
 </ion-content>

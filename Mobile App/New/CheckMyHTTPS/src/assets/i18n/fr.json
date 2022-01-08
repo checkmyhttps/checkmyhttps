@@ -52,6 +52,7 @@
 	"Intro3": "Si vous souhaitez changer le serveur de vérification, veuillez regarder la documentation disponible sur le GitHub de CheckMyHTTPS",
 	"continue":"Continuer",
 	"Theme":"Thème",
+	"titleLightTheme": "Thème clair",
 	"titleDarkTheme": "Thème foncé",
 	"darkTheme1":"Le thème foncé permet d'assombrir les surfaces claires de la page.",
 	"titleDefaultURL": "Modifier l'URL par défaut",

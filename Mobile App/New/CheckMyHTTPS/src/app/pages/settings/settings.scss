@@ -3,7 +3,8 @@
     color: #000000;
 }
 
-#btDefaultURL{
-    text-align: center;
-    margin: -10px 0px 20% 0px;
+.align-vertical {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
