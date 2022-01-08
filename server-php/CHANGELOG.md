@@ -1,5 +1,8 @@
 # CheckMyHTTPS API server Changelog
 
+## 1.4.0 - 2021-10-18
+- Added DNS & fingerprints cache: divided response time by ~1000
+
 ## 1.3.0 - 2019-08-31
 - New private IP/host protection.
 

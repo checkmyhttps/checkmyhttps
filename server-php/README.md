@@ -1,6 +1,13 @@
 # CheckMyHTTPS API server installation
 
-*Requirements: You just need an HTTPS server*
+*Requirements 1: You need an HTTPS server with PHP and the following modules:*
+* php-filter
+* php-pdo
+* php-pdo_mysql
+
+*Requirements 2: You also need an SQL server:*
+* Create the database and the table instantly with the commands in the file `CreateDatabase`
+* Make sure that the SQL server is always running and that the user you will use in the API has sufficient privileges on the `cache` table
 
 1. Copy the content of the `www` folder to your webroot.
 2. Install dependencies with composer: `composer install` inside your webroot (else you can extract `vendor-static.tar.gz`).

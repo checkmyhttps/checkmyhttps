@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.1.3'
+VERSION = '1.1.5'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -34,7 +34,7 @@ timeout = 10
 defaultCheckServer = {
     'url': 'https://checkmyhttps.net/',
     'fingerprints': {
-        'sha256': '889F63E8E7F98F67E35750591CD66BC32A17A4B4FA2A44763DBEF8D756156165'
+        'sha256': '6D9BBB554CE7CD4420C26F60DD0831D40C34BB07F93E874CF631C24AB9F08F57'
     }
 }
 conf_checkServer = defaultCheckServer

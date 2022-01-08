@@ -105,7 +105,7 @@ CMH.common.compareVersion = function (versionA, versionB) {
  * Check if WebExtension TLS API is supported.
  */
 CMH.common.isWebExtTlsApiSupported = () => {
-  return (typeof browser.webRequest.getSecurityInfo !== 'undefined')
+  return ((typeof browser.webRequest !== 'undefined') && (typeof browser.webRequest.getSecurityInfo !== 'undefined'))
 }
 
 /**
