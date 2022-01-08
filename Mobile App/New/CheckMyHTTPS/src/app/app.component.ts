@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Platform, NavController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
@@ -37,7 +36,8 @@ export class AppComponent {
   
   currentPageTitle = 'Home';
 
-  constructor(public platform: Platform, public translate: TranslateService, private storage: Storage, public global: GlobalProvider, private navCtrl: NavController, private router: Router, private events: EventsService) {
+  constructor(public platform: Platform, public translate: TranslateService, private storage: Storage, public global: GlobalProvider, private events: EventsService) {
+    
     this.ngOnInit()
     this.initializeApp();
 
