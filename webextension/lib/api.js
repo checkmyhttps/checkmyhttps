@@ -14,7 +14,7 @@ CMH.api = {}
  * Request certificate info of an URL.
  */
 CMH.api.requestFromUrl = async (urlTested) => {
-  const { host, port, ip } = await CMH.common.parseURL(urlTested)
+  const { host, port, ip } = CMH.common.parseURL(urlTested)
 
   const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+'api.php?host='+encodeURIComponent(host)+'&port='+port+'&ip='+ip)
   if ((cert === null) || (response === null)) {
@@ -49,7 +49,7 @@ CMH.api.checkCheckServerApi = async (checkServer) => {
     }
   }
 
-  const { host:defaultCheckServerHost, port:defaultCheckServerPort } = await CMH.common.parseURL(CMH.options.defaultCheckServer.url)
+  const { host:defaultCheckServerHost, port:defaultCheckServerPort } = CMH.common.parseURL(CMH.options.defaultCheckServer.url)
   const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(checkServer.server+'api.php?host='+encodeURIComponent(defaultCheckServerHost)+'&port='+defaultCheckServerPort)
   if ((cert === null) || (response === null)) {
     return false
