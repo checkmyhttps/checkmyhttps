@@ -34,7 +34,6 @@
     "tabs",
     "webRequest",
     "webRequestBlocking",
-    "https://*/*",
-    "dns"
+    "*://*/*"
   ]
 }

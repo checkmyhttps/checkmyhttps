@@ -143,11 +143,8 @@ CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) =>
     }
     return 'OK'
   } 
-  //else if (cmhCertificate.whitelisted) { // Check certificate whitelisted
-    //return 'WL'
-  //} 
   else if ((userCertificate.issuer) && (cmhCertificate.issuer) && (CMH.certificatesChecker.compareCertificateFingerprints(userCertificate.issuer, cmhCertificate.issuer))) { // Compare issuer certificate
-    return 'WL'
+    return 'SC'
   } else {
     return 'KO'
   }
@@ -177,14 +174,14 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
       }
     }
   } 
-  /*else if (result === 'WL') {
+  else if (result === 'SC') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.WARNING)
     }
     if (showNotifications) {
       CMH.ui.showNotification(browser.i18n.getMessage('__severalCertificats__'))
     }
-  }*/
+  }
   else if (result === 'ERR') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.UNKNOWN)

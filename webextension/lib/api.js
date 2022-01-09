@@ -15,10 +15,6 @@ CMH.api = {}
  */
 CMH.api.requestFromUrl = async (urlTested) => {
   const { host, port, ip } = await CMH.common.parseURL(urlTested)
-  /*console.log(urlTested)
-  console.log(host)
-  console.log(port)
-  console.log(ip)*/
 
   const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+'api.php?host='+encodeURIComponent(host)+'&port='+port+'&ip='+ip)
   if ((cert === null) || (response === null)) {
