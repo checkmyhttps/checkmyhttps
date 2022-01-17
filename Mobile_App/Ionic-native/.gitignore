@@ -10,4 +10,5 @@ dist/
 src/@awesome-cordova-plugins/plugins/**/ngx
 *.d.ts
 injectable-classes.json
+docs/
 

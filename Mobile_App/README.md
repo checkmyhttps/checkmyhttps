@@ -42,9 +42,10 @@ to -> `..\Ionic\node_modules\@ionic-native`
 
 ### Build CheckMyHTTPS Ionic project:
 in `\Ionic\` folder
-1. `npm run build`
-2. `npx cap update android`
-3. `npx cap sync`
+1. `ionic capacitor add android`
+2. `npm run build`
+3. `npx cap update android`
+4. `npx cap sync`
 
 ### Build l'application Ionic:
 in `\Ionic\` folder
