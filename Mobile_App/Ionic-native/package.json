@@ -6,7 +6,7 @@
   "author": "Daniel Sogl <me@danielsogl.com> (https://danielsogl.com)",
   "license": "MIT",
   "scripts": {
-    "prepare": "is-ci",
+    "prepare": "",
     "test": "jest",
     "test:watch": "jest --watch",
     "build:core": "tsc -p tsconfig.core.json",
