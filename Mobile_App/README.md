@@ -54,5 +54,11 @@ in `\Ionic\` folder
 `ionic start`
 
 
+## Change logo and splash screen :
+1. `npm install capacitor-resources -g`
+2. change in `\Ionic\resources\` 
+3. in `\Ionic\` make: `capacitor-resources -p android`
+
+
 ## JavaScript bridge :
 `CMHPlugin\www\CMHPlugin.js`
