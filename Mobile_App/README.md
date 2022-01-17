@@ -3,9 +3,9 @@
 ## Linux (Ubuntu)
 
 ### Requirements
-1. Install Node.JS and NPM: `sudo apt install -y nodejs` and `sudo apt install npm`
-2. Install Ionic: `npm install -g @ionic/cli`
-3. Install Git: `sudo apt-get install git`
+1. Install Git: `sudo apt-get install git`
+2. Install Node.JS and NPM: `sudo apt install -y nodejs` and `sudo apt install npm`
+3. Install Ionic: `npm install -g @ionic/cli`
 
 #### For Android
 4. Install JDK 8 and Gradle and set the `$JAVA_HOME` variable: `sudo apt install openjdk-8-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/`)
@@ -15,9 +15,9 @@
 ## Windows (10)
 
 ### Requirements
-1. Install Node.JS and NPM:
-2. Install Ionic:
-3. Install Git: 
+1. Install Git: [Git](https://git-scm.com/download/win) and `npm install -g npm`
+2. Install Node.JS and NPM: [Node.JS](https://nodejs.org/en/download/)
+3. Install Ionic: `npm install -g @ionic/cli`
 
 #### For Android
 4. Install JDK 8 and Gradle and set the `$JAVA_HOME` variable: `sudo apt install openjdk-8-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/`)
@@ -54,7 +54,5 @@ in `\Ionic\` folder
 `ionic start`
 
 
-
-
-JavaScript bridge :
-CMHPlugin\www\CMHPlugin.js
+## JavaScript bridge :
+`CMHPlugin\www\CMHPlugin.js`
