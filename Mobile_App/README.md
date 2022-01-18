@@ -15,8 +15,8 @@
 ## Windows (10)
 
 ### Requirements
-1. Install Git: [Git](https://git-scm.com/download/win) and `npm install -g npm`
-2. Install Node.JS and NPM: [Node.JS](https://nodejs.org/en/download/)
+1. Install Git: [Git](https://git-scm.com/download/win)
+2. Install Node.JS and NPM: [Node.JS](https://nodejs.org/en/download/) and `npm install -g npm`
 3. Install Ionic: `npm install -g @ionic/cli`
 
 #### For Android
