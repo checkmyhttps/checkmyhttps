@@ -34,11 +34,19 @@ CMH.common.statusCode = [
   'working'
 ]
 
+
+/**
+ * @name getIP
+ * @function
+ * @returns {string} - ip
+ * Event on headers received.
+ */
 var ip = ""
-browser.webRequest.onHeadersReceived.addListener(
-  headersDetails => {ip = headersDetails.ip},
-  {urls: ['*://*/*']}
-);
+CMH.common.getIP = () => {
+  return ip
+}
+browser.webRequest.onHeadersReceived.addListener(headersDetails => {ip = headersDetails.ip},{urls: ['*://*/*']});
+
 
 /**
  * @name parseURL
@@ -63,7 +71,7 @@ CMH.common.parseURL = (urlStr) => {
     }
   }
 
-  return { host: host, port: port, ip: ip }
+  return { host: host, port: port }
 }
 
 
