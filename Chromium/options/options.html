@@ -12,6 +12,7 @@
             color: red;
         }
     </style>
+    <script src="../vendors/webextension-polyfill-0.3.1/browser-polyfill.min.js" defer></script>
     <script src="options.js" defer></script>
 	</head>
 	<body style="display: none;">
@@ -47,5 +48,24 @@
             <button type="button" id="get-fingerprints">__getFingerprints__</button>
         </div>
         <p class="message message-checkserver"></p>
+        <br>
+        <div class="settings-nativeapp" style="display: none;">
+            <h2>__nativeAppSettings__</h2>
+            <div class="native-app">
+                <div class="native-app-connected" style="display: none;">
+                    <p class="message message-nativeappcon"></p>
+                </div>
+                <div class="native-app-disconnected" style="display: none;">
+                    <button type="button" id="test-native-connection">__testNativeConnection__</button>
+                    <p class="message message-nativeappdiscon"></p>
+                    <ol>
+                        <li>__nativeAppInstallPython__</li>
+                        <li>__nativeAppInstallDownloadScript__</li>
+                        <li>__nativeAppInstallInstallScript__ "<code>python checkmyhttps.py install</code>".</li>
+                        <li>__nativeAppInstallReload__</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
 	</body>
 </html>

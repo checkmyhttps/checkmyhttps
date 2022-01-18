@@ -1,7 +1,11 @@
 # CheckMyHTTPS API server Changelog
 
+## 1.5.0 - 2022-01-17
+- The cache is now a directory in TMPFS (no more SQL server running).
+- Add the option to use the cache or not.
+
 ## 1.4.0 - 2021-10-18
-- Added DNS & fingerprints cache: divided response time by ~1000
+- Add DNS & fingerprints cache: divided response time by ~1000.
 
 ## 1.3.0 - 2019-08-31
 - New private IP/host protection.
