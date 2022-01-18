@@ -100,13 +100,7 @@ CMH.tabsManager.setTabCertificates = (tabId, certificates, url) => {
  * @param {string} [url]    - Tab URL
  * Set the ip of a tab.
  */
- CMH.tabsManager.setTabIp = (tabId, ip) => {
-  if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
-    CMH.tabsManager.tabsStatus[tabId] = {
-      status: CMH.common.status.UNKNOWN
-    }
-  }
-
+CMH.tabsManager.setTabIp = (tabId, ip) => {
   CMH.tabsManager.tabsStatus[tabId].ip = ip
 }
 
@@ -132,8 +126,8 @@ CMH.tabsManager.getTabCertificate = (tabId) => {
  * Get the ip of a tab.
  */
  CMH.tabsManager.getTabIp = (tabId) => {
-  if ((typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') || (typeof CMH.tabsManager.tabsStatus[tabId].ip === 'undefined')) {
-    return null
+  if ((typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') || (typeof CMH.tabsManager.tabsStatus[tabId].ip === 'undefined') || CMH.tabsManager.tabsStatus[tabId].ip == null) {
+    return ""
   }
   return CMH.tabsManager.tabsStatus[tabId].ip
 }
@@ -176,10 +170,28 @@ CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
     certificateFormatted = CMH.certificatesManager.formatCertificate(securityInfo.certificates)
     CMH.tabsManager.setTabCertificates(requestDetails.tabId, certificateFormatted, requestDetails.url)
   }
-  CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
 }
 browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
   { urls: ['https://*/*'], types: ['main_frame'] },
+  ['blocking']
+)
+
+/**
+ * @name onHeadersReceivedForIp
+ * @function
+ * @param {object} requestDetails - Request data
+ * When event, setTabIp when originUrl hostname and real request hostname same
+ * Get ip event when ip not in main_frame
+ */
+CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
+  if (requestDetails.ip != null) {
+    if ((new URL(requestDetails.originUrl)).hostname == (new URL(requestDetails.url)).hostname) {
+      CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+    }
+  }
+}
+browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,
+  { urls: ['https://*/*'] },
   ['blocking']
 )
 
