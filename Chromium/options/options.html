@@ -1,83 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
+	<head>
     <meta charset="UTF-8">
     <title>__settings__</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    div.form {
-        display: table;
-    }
-    div.form-row {
-        display: table-row;
-    }
-    div.form-row > label, div.form-row > input[type="text"] {
-        display: table-cell;
-        margin: 3px 10px;
-    }
-    p.message[data-type='success'] {
-        color: green;
-    }
-    p.message[data-type='error'] {
-        color: red;
-    }
+        p.message[data-type='success'] {
+            color: green;
+        }
+        p.message[data-type='error'] {
+            color: red;
+        }
     </style>
     <script src="../vendors/webextension-polyfill-0.3.1/browser-polyfill.min.js" defer></script>
     <script src="options.js" defer></script>
-</head>
-<body style="display: none;">
-    <h1>__checkMyHttpsSettings__</h1>
-
-    <div class="form">
-        <h2>__general__</h2>
-        <div class="form-row">
-            <label for="checkOnPageLoad">__checkOnPageLoad__</label>
-            <input type="checkbox" name="checkOnPageLoad" id="checkOnPageLoad">
+	</head>
+	<body style="display: none;">
+        <h1>__checkMyHttpsSettings__</h1>
+        <div class="form">
+            <h2>__general__</h2>
+            <div>
+                <label for="checkOnPageLoad">__checkOnPageLoad__</label>
+                <input type="checkbox" name="checkOnPageLoad" id="checkOnPageLoad">
+            </div>
+            <div>
+                <label for="alertOnUnicodeIDNDomainNames">__alertOnUnicodeIDNDomainNames__</label>
+                <input type="checkbox" name="alertOnUnicodeIDNDomainNames" id="alertOnUnicodeIDNDomainNames">
+            </div>
+            <div>
+                <label for="disableNotifications">__disableNotifications__</label>
+                <input type="checkbox" name="disableNotifications" id="disableNotifications">
+            </div>
+            <h2>__checkServerSettings__</h2>
+            <div>
+                <label for="api_server">__checkServerAddress__</label>
+                <input type="text" name="api_server" id="api_server" size="50" placeholder="https://checkmyhttps.net/">
+            </div>
+            <div>
+                <label for="api_sha256">__checkServerSha256__</label>
+                <input type="text" name="api_sha256" id="api_sha256" size="80" placeholder="6D9BBB554CE7CD4420C26F60DD0831D40C34BB07F93E874CF631C24AB9F08F57">
+            </div>
+            <br>
         </div>
-        <div class="form-row">
-            <label for="alertOnUnicodeIDNDomainNames">__alertOnUnicodeIDNDomainNames__</label>
-            <input type="checkbox" name="alertOnUnicodeIDNDomainNames" id="alertOnUnicodeIDNDomainNames">
+        <div class="buttons">
+            <button type="button" id="form-submit">__save__</button>
+            <button type="button" id="restore-default">__restoreDefault__</button>
+            <button type="button" id="get-fingerprints">__getFingerprints__</button>
         </div>
-        <div class="form-row">
-            <label for="disableNotifications">__disableNotifications__</label>
-            <input type="checkbox" name="disableNotifications" id="disableNotifications">
-        </div>
-
-        <h2>__checkServerSettings__</h2>
-        <div class="form-row">
-            <label for="api_server">__checkServerAddress__</label>
-            <input type="text" name="api_server" id="api_server" size="50" placeholder="https://mycheckserver.mydomain.net/">
-        </div>
-        <div class="form-row">
-            <label for="api_sha256">__checkServerSha256__</label>
-            <input type="text" name="api_sha256" id="api_sha256" size="80" placeholder="">
-        </div>
+        <p class="message message-checkserver"></p>
         <br>
-    </div>
-    <div class="buttons">
-        <button type="button" id="form-submit">__save__</button>
-        <button type="button" id="restore-default">__restoreDefault__</button>
-        <button type="button" id="get-fingerprints">__getFingerprints__</button>
-    </div>
-    <p class="message message-checkserver"></p>
-    <br>
-    <div class="settings-nativeapp" style="display: none;">
-      <h2>__nativeAppSettings__</h2>
-      <div class="native-app">
-        <div class="native-app-connected" style="display: none;">
-          <p class="message message-nativeappcon"></p>
+        <div class="settings-nativeapp" style="display: none;">
+            <h2>__nativeAppSettings__</h2>
+            <div class="native-app">
+                <div class="native-app-connected" style="display: none;">
+                    <p class="message message-nativeappcon"></p>
+                </div>
+                <div class="native-app-disconnected" style="display: none;">
+                    <button type="button" id="test-native-connection">__testNativeConnection__</button>
+                    <p class="message message-nativeappdiscon"></p>
+                    <ol>
+                        <li>__nativeAppInstallPython__</li>
+                        <li>__nativeAppInstallDownloadScript__</li>
+                        <li>__nativeAppInstallInstallScript__ "<code>python checkmyhttps.py install</code>".</li>
+                        <li>__nativeAppInstallReload__</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-        <div class="native-app-disconnected" style="display: none;">
-          <button type="button" id="test-native-connection">__testNativeConnection__</button>
-          <p class="message message-nativeappdiscon"></p>
-          <ol>
-            <li>__nativeAppInstallPython__</li>
-            <li>__nativeAppInstallDownloadScript__</li>
-            <li>__nativeAppInstallInstallScript__ "<code>python checkmyhttps.py install</code>".</li>
-            <li>__nativeAppInstallReload__</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-</body>
+	</body>
 </html>
