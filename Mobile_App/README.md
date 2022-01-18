@@ -8,7 +8,7 @@
 3. Install Ionic: `sudo npm install -g @ionic/cli`
 
 #### For Android
-4. Install JDK 8 and Gradle and set the `$JAVA_HOME` variable: `sudo apt install openjdk-8-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/`
+4. Install OpenJDK and Gradle and set the `$JAVA_HOME` variable: `sudo apt install default-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/`
 5. Install the Android SDK (with Android Studio or SDK Tools) and set the `$ANDROID_HOME` variable: `export ANDROID_HOME=~/Android/Sdk` and `export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools`)
 
 
