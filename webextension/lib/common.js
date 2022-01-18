@@ -36,19 +36,6 @@ CMH.common.statusCode = [
 
 
 /**
- * @name getIP
- * @function
- * @returns {string} - ip
- * Event on headers received.
- */
-var ip = ""
-CMH.common.getIP = () => {
-  return ip
-}
-browser.webRequest.onHeadersReceived.addListener(headersDetails => {ip = headersDetails.ip},{urls: ['*://*/*']});
-
-
-/**
  * @name parseURL
  * @function
  * @param {string} urlStr - URL to parsed

@@ -64,7 +64,8 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
       return
     }
 
-    datas_api = await CMH.api.requestFromUrl(tab.url)
+    let ip = CMH.tabsManager.getTabIp(tab.id)
+    datas_api = await CMH.api.requestFromUrl(tab.url, ip)
     if (datas_api.error) {
       if (datas_api.error === 'SSL') {
         CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.INVALID)
@@ -106,7 +107,8 @@ CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
       return
     }
 
-    datas_api = await CMH.api.requestFromUrl(urlTested)
+    let ip = ""
+    datas_api = await CMH.api.requestFromUrl(urlTested, ip)
     if (datas_api.error) {
       if (datas_api.error === 'SSL') {
         if (showNotifications) {
