@@ -27,7 +27,7 @@
 ## Installation (Same Linux & Windows)
 go to `\Mobile_App\` folder
 
-### Ajout plugin java CheckMyHTTPS:
+### Add CheckMyHTTPS java plugin:
 go to `\Ionic\` folder
 `npm install`
 `npm install ..\CMHPlugin\`
@@ -36,9 +36,9 @@ go to `\Ionic\` folder
 go to `\ionic-native\` folder
 1. `npm install`
 2. `npm run build`
-3. puis copier
+3. copy
 `\ionic-native\dist\@awesome-cordova-plugins\plugins\cmh-plugin` 
-to -> `..\Ionic\node_modules\@ionic-native`
+in -> `..\Ionic\node_modules\@ionic-native`
 
 ### Build CheckMyHTTPS Ionic project:
 in `\Ionic\` folder
@@ -47,7 +47,7 @@ in `\Ionic\` folder
 3. `npx cap update android`
 4. `npx cap sync`
 
-### Build l'application Ionic:
+### Build Ionic Android App:
 in `\Ionic\` folder
 1. Build android: `ionic capacitor build android`
 
@@ -55,7 +55,7 @@ in `\Ionic\` folder
 `ionic start`
 
 
-## Ajout logo and splash screen :
+## Add logo and splash screen :
 1. `npm install capacitor-resources -g`
 2. change in `\Ionic\resources\` 
 3. in `\Ionic\` make: `capacitor-resources -p android`
