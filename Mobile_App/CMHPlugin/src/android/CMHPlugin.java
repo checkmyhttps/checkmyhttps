@@ -80,7 +80,19 @@ public class CMHPlugin extends CordovaPlugin {
     public boolean getFingerprintsFromCheckServer(JSONArray args, CallbackContext callbackContext){
         try {
             String host = args.getString(1);
-            String urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2);
+            String ip = "";
+            try {
+                ip = InetAddress.getByName(host).getHostAddress();
+            } catch (Exception ex) {
+                System.err.println("getFingerprintsFromCheckServer pas d'ip :" + ex);
+            }
+            String urlTested = "";
+            if(!ip.equals("")) {
+                urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2) + "&ip=" + ip;
+            }
+            else {
+                urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2);
+            }
 
             //https connection to the check server with the requested URL
             HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(urlTested).openConnection();
