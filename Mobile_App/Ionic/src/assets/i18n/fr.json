@@ -13,7 +13,6 @@
 	"serverUnknown": "Serveur inconnu ...",
 	"privateIp": "Nous ne pouvons pas joindre cette IP via notre serveur de test (IP privée).",
 	"severalCertificates": "Ce site possède plusieurs certificats de sécurité. Le contrôle de conformité du flux HTTPS ne peut donc pas être assuré.",
-	"whitelisted": "Votre connexion HTTPS est sécurisée (Whitelisted Domain).",
 	"sslPinning": "Le serveur de vérification requêté est différent. Votre connexion est peut-être sur-écoute ...",
 	"checkServerSettings": "Paramétrage du serveur de vérification",
 	"checkServerAddress": "Adresse du serveur",

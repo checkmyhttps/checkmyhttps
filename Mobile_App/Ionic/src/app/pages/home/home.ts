@@ -120,25 +120,20 @@ export class HomePage {
     //verify certificates fingerprints from user and check server (2 max)
     if(!this.compareFingerprints(userFingerprints[firstKey], APIServerData.fingerprints)){
       counter++;
-      if (APIServerData.whitelisted){
-        res = "Whitelisted";
-      }
-      else{
-        if (typeof APIServerData.issuer !== "undefined") {
-          //Get the issuer of the certificate (user side)
-          secondKey = Object.keys(userFingerprints)[1];
+      if (typeof APIServerData.issuer !== "undefined") {
+        //Get the issuer of the certificate (user side)
+        secondKey = Object.keys(userFingerprints)[1];
 
-          if(!this.compareFingerprints(userFingerprints[secondKey], APIServerData.issuer.fingerprints)){
-            res = "KO";
-          }
-          else{
-            counter++;
-            res = this.isUnicode(hostTested, counter);
-          }
-        }
-        else{
+        if(!this.compareFingerprints(userFingerprints[secondKey], APIServerData.issuer.fingerprints)){
           res = "KO";
         }
+        else{
+          counter++;
+          res = this.isUnicode(hostTested, counter);
+        }
+      }
+      else{
+        res = "KO";
       }
     }
     else{
@@ -295,9 +290,6 @@ export class HomePage {
           break;
         case 'IDN':
           this.global.presentProfileModal('warning','alertOnUnicodeIDNDomainNames');
-          break;
-        case 'Whitelisted':
-          this.global.presentProfileModal('warning','whitelisted');
           break;
       }
 
