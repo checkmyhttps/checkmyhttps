@@ -1,7 +1,7 @@
 var exec = require('cordova/exec');
 
 module.exports.getFingerprints = async function (params, fingerprintsJSON, errorUser) {
-    exec(fingerprintsJSON, errorUser, "CMHPlugin", "getFingerprints", [params.param1]);
+    exec(fingerprintsJSON, errorUser, "CMHPlugin", "getFingerprints", [params.param1, params.param2]);
 };
 
 

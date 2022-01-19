@@ -91,7 +91,8 @@ export class SettingsPage {
   async getFingerprintsUrl(urlTested){
     // Get fingerprints (from client)
     try{
-      const data = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
+      const [ , , urlHost, ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
+      const data = await this.cmhPlugin.getFingerprints(urlTested, urlHost).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
       return data;
     }
     catch (err){

@@ -8,8 +8,8 @@ export class CMHPlugin extends IonicNativePlugin {
     static pluginRef = 'cordova.plugins.CMHPlugin';
     static platforms = ['Android'];
 
-    async getFingerprints(urlTested:any): Promise<any> {
-        const fingerprints = cordova(this, 'getFingerprints', {}, [{ param1: urlTested}])
+    async getFingerprints(urlTested:any, urlHost: any): Promise<any> {
+        const fingerprints = cordova(this, 'getFingerprints', {}, [{ param1: urlTested, param2: urlHost}])
         return fingerprints;
     }
 

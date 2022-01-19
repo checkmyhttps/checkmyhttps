@@ -158,9 +158,9 @@ export class HomePage {
     }
   }
 
-  async getFingerprintsUrl(urlTested){
+  async getFingerprintsUrl(urlTested, urlHost){
     try{
-      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
+      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested, urlHost).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
       return dataFingerprints;
     }
     catch (err){
@@ -233,7 +233,7 @@ export class HomePage {
       //Regex to get the host and port of the tested URL
       const [ , , urlHost, urlPort ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
 
-      const userFingerprints = await this.getFingerprintsUrl(urlTested);
+      const userFingerprints = await this.getFingerprintsUrl(urlTested, urlHost);
       const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
 
       //########### Handling Java Exceptions from cmhplugin #################
