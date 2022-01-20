@@ -13,8 +13,8 @@ export class CMHPlugin extends IonicNativePlugin {
         return fingerprints;
     }
 
-    async getFingerprintsFromCheckServer(urlTested: any, urlHost: any, urlPort: any): Promise<any> {
-        const fingerprintsFromCheckServer = cordova(this, 'getFingerprintsFromCheckServer', {}, [{ param1: urlTested, param2: urlHost, param3: urlPort }])
+    async getFingerprintsFromCheckServer(urlTested: any, urlHost: any, urlPort: any, ip: any): Promise<any> {
+        const fingerprintsFromCheckServer = cordova(this, 'getFingerprintsFromCheckServer', {}, [{ param1: urlTested, param2: urlHost, param3: urlPort, param4: ip }])
         return fingerprintsFromCheckServer;
     }
 }

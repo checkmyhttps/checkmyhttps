@@ -144,12 +144,12 @@ export class HomePage {
 
 
 
-  async getCertFromCheckServer(urlTested, urlHost, urlPort){
+  async getCertFromCheckServer(urlTested, urlHost, urlPort, ip){
     try{
       let port = "443"
       if (urlPort != undefined)
           port = urlPort;
-      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port).then(result => {return result}).catch(err => console.log("ERROR getCertFromCheckServer: " + err))
+      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port, ip).then(result => {return result}).catch(err => console.log("ERROR getCertFromCheckServer: " + err))
       return dataCertFromCheckServer;
     }
     catch (err){
@@ -233,8 +233,9 @@ export class HomePage {
       //Regex to get the host and port of the tested URL
       const [ , , urlHost, urlPort ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
 
-      const userFingerprints = await this.getFingerprintsUrl(urlTested, urlHost);
-      const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
+      const fingerprintsUrlRes = await this.getFingerprintsUrl(urlTested, urlHost);
+      const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort, fingerprintsUrlRes.ip);
+      const userFingerprints = fingerprintsUrlRes.fingerprintsCertificateChainJSON
 
       //########### Handling Java Exceptions from cmhplugin #################
       if (userFingerprints === "SSLHandshakeException"){
