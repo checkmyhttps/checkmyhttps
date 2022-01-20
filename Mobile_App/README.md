@@ -36,23 +36,24 @@ go to `\ionic-native\` folder
 in `\Ionic\` folder
 1. `npm install`
 3. `npm run build`
-2. `ionic capacitor add android`
-4. `npx cap update android`
-5. `npx cap sync`
+2. `ionic cap add android`
+4. `ionic cap update android`
+5. `ionic cap sync`
 
 ### Build Ionic Android App:
 in `\Ionic\` folder
-1. Build android: `ionic capacitor build android`
+1. Build android: `ionic cap build android`
 
 ### Start web
 `ionic start`
 
-
 ## Add logo and splash screen :
-1. `npm install capacitor-resources -g`
-2. change in `\Ionic\resources\` 
-3. in `\Ionic\` make: `capacitor-resources -p android`
+in `\Ionic\` folder
+1. `capacitor-resources -p android`
 
+## Change versionCode & versionName 
+in `\Ionic\android\app\build.gradle` file
+lines 9 & 10
 
 ## JavaScript bridge :
 `CMHPlugin\www\CMHPlugin.js`
