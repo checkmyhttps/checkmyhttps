@@ -40,11 +40,11 @@ in `\Ionic\` folder
 4. `ionic cap update android`
 5. `ionic cap sync`
 
-## Add logo and splash screen :
+### Add logo and splash screen :
 in `\Ionic\` folder
 1. `npm run resources`
 
-## Change versionCode & versionName 
+### Change versionCode & versionName 
 in `\Ionic\android\app\build.gradle` file
 lines 9 & 10
 
