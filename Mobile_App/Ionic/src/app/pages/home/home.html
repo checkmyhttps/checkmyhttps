@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>CheckMyHTTPS</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="page-home">
+  <div padding class="home">
+    <div class="row">
+      <div class="column">
+        <img id=ESIEA src="../../../assets/imgs/Logo-ESIEA.jpg" alt="ESIEA">
+      </div>
+      <div class="column">
+        <img id=CNS src="../../../assets/imgs/logo_cns.png" alt="CNS">
+      </div>
+    </div>
+    <img id=icon src="../../../assets/imgs/icon.png" alt="checkmyhttps">
+    <ion-item class="url">
+      <ion-label position="stacked">{{ 'checkURL' | translate }}</ion-label>
+      <ion-input placeholder="https://www.example.com" type="url" requires [(ngModel)]="url" (keyup.enter)="presentLoadingDefault()"></ion-input>
+    </ion-item>
+    <div>
+      <ion-button color="light" (click)="setDefaultURL()">{{ 'defaultURL' | translate }}</ion-button>
+      <ion-button color="primary" (click)="presentLoadingDefault()">{{ 'check' | translate }}</ion-button>
+    </div>
+  </div>
+</ion-content>

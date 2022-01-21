@@ -1,0 +1,30 @@
+<ion-app>
+  <ion-split-pane contentId="menu">
+    <ion-menu contentId="menu" class="theme" type="overlay">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'menu' | translate }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list>
+          <ion-item id="pages" menuClose ion-item *ngFor="let p of pages" [routerLink]="p.url">
+            {{ p.title }}
+          </ion-item>
+        </ion-list>
+      </ion-content>
+
+      <ion-footer>
+        <p>{{ 'version' | translate }}: {{version}}</p>
+      </ion-footer>
+
+    </ion-menu>
+    <ion-router-outlet id="menu"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>
+
+<!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+
+<!-- TODO
+  <ion-nav [root]="rootPage" class="theme" #content swipeBackEnabled="false"></ion-nav>-->
