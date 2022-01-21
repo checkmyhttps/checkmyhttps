@@ -7,8 +7,8 @@
     "message": "Click to Check the HTTPS connection"
   },
   
-  "__availableUpdates__": {
-    "message": "Available updates ? Please, check the default fingerprint."
+  "__defaultFingerprintsDontMatch__": {
+    "message": "The verification server fingerprint does not match the default fingerprint. Please check if the server fingerprint has been updated. Otherwise your connection may be intercepted."
   },
 
   "__defaultServerUnreachable__": {

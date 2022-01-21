@@ -1,0 +1,34 @@
+.home{
+  height:100%;
+  text-align: center;
+  overflow: auto; 
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+#ESIEA{
+  width:68%;
+  margin-top: 3%;
+}
+
+#CNS{
+  width:90%;
+}
+
+#icon{
+  height: 90px;
+  width: 90px;
+  margin: 40px auto 30px;
+}
+
+.url{
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 5%;
+}
