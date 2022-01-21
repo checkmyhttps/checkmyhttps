@@ -8,8 +8,8 @@
 3. Install Ionic: `sudo npm install -g @ionic/cli`
 
 #### For Android
-4. Install OpenJDK and Gradle and set the `$JAVA_HOME` variable: `sudo apt install default-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/`
-5. Install the Android SDK (with Android Studio or SDK Tools) and set the `$ANDROID_HOME` variable: `export ANDROID_HOME=~/Android/Sdk` and `export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools`)
+4. Install OpenJDK and Gradle and set the `$JAVA_HOME` variable: `sudo apt install default-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/default-java`
+5. Install Android Studio and Android SDK (with Android Studio or SDK Tools) and set the `$ANDROID_HOME` variable: `export ANDROID_HOME=~/Android/Sdk` and `export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools`) and `export CAPACITOR_ANDROID_STUDIO_PATH="/opt/android-studio/bin/studio.sh"`
 
 
 ## Windows (10)
@@ -40,20 +40,20 @@ in `\Ionic\` folder
 4. `ionic cap update android`
 5. `ionic cap sync`
 
+## Add logo and splash screen :
+in `\Ionic\` folder
+1. `npm run resources`
+
+## Change versionCode & versionName 
+in `\Ionic\android\app\build.gradle` file
+lines 9 & 10
+
 ### Build Ionic Android App:
 in `\Ionic\` folder
 1. Build android: `ionic cap build android`
 
 ### Start web
 `ionic start`
-
-## Add logo and splash screen :
-in `\Ionic\` folder
-1. `capacitor-resources -p android`
-
-## Change versionCode & versionName 
-in `\Ionic\android\app\build.gradle` file
-lines 9 & 10
 
 ## JavaScript bridge :
 `CMHPlugin\www\CMHPlugin.js`
