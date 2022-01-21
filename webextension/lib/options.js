@@ -21,9 +21,9 @@ CMH.options.getCertUrl = async (url) => {
 //Get the default checkserver's fingerprints
 CMH.options.getCertUrl('https://checkmyhttps.net/').then((response) => {
   if(response != null){
-        if(CMH.options.defaultCheckServer.fingerprints.sha256 != response.fingerprints.sha256){
-          CMH.ui.showNotification(browser.i18n.getMessage('__availableUpdates__'));
-        }
+    if(CMH.options.defaultCheckServer.fingerprints.sha256 != response.fingerprints.sha256){
+      CMH.ui.showNotification(browser.i18n.getMessage('__defaultFingerprintsDontMatch__'));
+    }
   }
   else{
     CMH.ui.showNotification(browser.i18n.getMessage('__defaultServerUnreachable__'));

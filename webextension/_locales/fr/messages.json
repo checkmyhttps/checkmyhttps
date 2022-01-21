@@ -3,8 +3,8 @@
     "message": "CheckMyHTTPS s'assure que vos connexions WEB sécurisée (protocole 'HTTPS') ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées)."
   },
   
-  "__availableUpdates__": {
-    "message": "Mise à jour disponible ? Veuillez vérifier l'empreinte par défaut."
+  "__defaultFingerprintsDontMatch__": {
+    "message": "L'empreinte du serveur de vérification ne correspond pas à celle par défaut. Veuillez vérifier si l'empreinte du serveur a été mise à jour. Sinon votre connexion est peut-être interceptée."
   },
 
   "__defaultServerUnreachable__": {
