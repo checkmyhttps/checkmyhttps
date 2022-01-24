@@ -50,7 +50,6 @@ public class CMHPlugin extends CordovaPlugin {
             httpsConnection.setRequestMethod("HEAD");
             httpsConnection.setConnectTimeout(5000);
             httpsConnection.connect();
-
             //Recover the fingerprints and the number of certificates of the website
             Certificate[] certificateChain = httpsConnection.getServerCertificates();
             int sizeCertificateChain = certificateChain.length;
@@ -122,7 +121,6 @@ public class CMHPlugin extends CordovaPlugin {
             }
 
             // #################################### Get the output of the check server's API ####################################
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream()));
             StringBuffer webPageServer = new StringBuffer();
             String inputLine;

@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 //Set this variable to false if you don't want to use the cache
 $use_cache = true;
 
-$path_to_cache = "/mnt/cmh_cache/";
+$path_to_cache = "/var/tmp/cmh_cache/";
 
 //Max duree of cache (default: 21600 seconds = 6 hours)
 $cacheTTL = 21600;
