@@ -1,5 +1,8 @@
 # CheckMyHTTPS API server Changelog
 
+## 1.5.1 - 2022-01-27
+- Add the possibility to specify an IP in the query
+
 ## 1.5.0 - 2022-01-17
 - The cache is now a directory in TMPFS (no more SQL server running).
 - Add the option to use the cache or not.
@@ -20,3 +23,4 @@
 ## 1.1.0 - 2018-01-08
 - Code rewrite.
 - Release code to community.
+ 
