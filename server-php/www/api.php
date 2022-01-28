@@ -84,27 +84,24 @@ if(isset($request_ip))
 }
 
 // Check hostname
-if (isset($request_host))
-{
-	if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
-		$service->host = $request_host;
-	else
-	{
-		// Convert IDNA 2008
-		$request_host = (new \Mso\IdnaConvert\IdnaConvert)->encode($request_host);
+if (isset($request_host)) {
+    if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
+        $service->host = $request_host;
+    } else {
+        // Convert IDNA 2008
+        $request_host = (new \Mso\IdnaConvert\IdnaConvert)->encode($request_host);
 
-		if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
-			$service->host = $request_host;
-	}
+        if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
+            $service->host = $request_host;
+        }
+    }
 
-	// Get IP address
-	if (!$allowPrivateIp && !empty($service->host))
-	{
-		if (filter_var($service->host, FILTER_VALIDATE_IP))
-			$service->ip = $service->host;
-		else
-		{
-			$host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
+    // Get IP address
+    if (!$allowPrivateIp && !empty($service->host) && empty($service->ip)) {
+        if (filter_var($service->host, FILTER_VALIDATE_IP)) {
+            $service->ip = $service->host;
+        } else {
+            $host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
 			
 			if($use_cache === true)
 			{
