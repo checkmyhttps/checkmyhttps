@@ -185,7 +185,7 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  */
 CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
   if (requestDetails.ip != null) {
-    if ((new URL(requestDetails.originUrl)).hostname == (new URL(requestDetails.url)).hostname) {
+    if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
       CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
     }
   }
