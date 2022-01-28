@@ -3,7 +3,7 @@
 include __DIR__ . '/vendor/autoload.php';
 
 define('INSTANCE_TITLE', 'CheckMyHTTPS API server');
-define('VERSION', '1.5.0');
+define('VERSION', '1.5.1');
 define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
 define('CMH_DEBUG', false);
 
@@ -77,8 +77,10 @@ if ((isset($request_url)) && (!isset($request_host) && !isset($request_port)))
 	}
 }
 
-if (isset($request_ip)) {
-    $service->ip = $request_ip;
+if(isset($request_ip))
+{
+	if (filter_var($request_ip, FILTER_VALIDATE_IP))
+		$service->ip = $request_ip;
 }
 
 // Check hostname
@@ -103,7 +105,11 @@ if (isset($request_host)) {
 			
 			if($use_cache === true)
 			{
-				$cachename = $path_to_cache.$host_fqdn."_".$request_port;
+				if(isset($service->ip))
+					$cachename = $path_to_cache.$host_fqdn."_".$request_port."_".$service->ip;
+				else
+					$cachename = $path_to_cache.$host_fqdn."_".$request_port;
+
 				$curdate = time();
 
 				//Looking for a DNS + fingerprints record in cache
@@ -115,11 +121,13 @@ if (isset($request_host)) {
 					$cache = file_get_contents($cachename);
 
 					$cache_exploded = explode("\n", $cache);
+					
 					$ip = $cache_exploded[0];
 					$sha1cache = $cache_exploded[1];
 					$sha256cache = $cache_exploded[2];
 					$sha1cacheissuers = $cache_exploded[3];
 					$sha256cacheissuers = $cache_exploded[4];
+
 					$cachetimestamp = filemtime($cachename);
 
 					$time_passed = $curdate - $cachetimestamp;
@@ -141,8 +149,8 @@ if (isset($request_host)) {
 				}
 				
 			}
-			//DNS record not found in cache or it was too old
-			if($cacheFound === false)
+			//DNS record not found in cache, or it was too old, or ip@ already given by the client
+			if($cacheFound === false && !isset($service->ip))
 			{
 				$insertInCache = true;
 				// Request IPv4 of the domain name
@@ -159,7 +167,7 @@ if (isset($request_host)) {
 						$insertInCache = false;
 				}
 			}
-			else
+			else if (!isset($service->ip))
 				$service->ip = $ip;
 		}
 	}
@@ -255,7 +263,7 @@ if($insertInCache === true && $use_cache === true)
 		$tmpCert = $tmpCert->issuer;
 	}
 
-	$canWrite = file_put_contents($path_to_cache.$host_fqdn."_".$request_port, $service->ip."\n".$certificate->fingerprints->sha1."\n".$certificate->fingerprints->sha256."\n".$sha1_issuers_fingerprints_chain."\n".$sha256_issuers_fingerprints_chain."\n", FILE_APPEND | LOCK_EX);
+	$canWrite = file_put_contents($cachename, $service->ip."\n".$certificate->fingerprints->sha1."\n".$certificate->fingerprints->sha256."\n".$sha1_issuers_fingerprints_chain."\n".$sha256_issuers_fingerprints_chain."\n", FILE_APPEND | LOCK_EX);
 
 	//Can't write in cache, probably full
 	if($canWrite === false)
@@ -371,4 +379,4 @@ function checkHostWhitelisted($host)
 	}
 	return false;
 }
-?>
+?> 

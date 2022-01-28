@@ -53,7 +53,7 @@ in `\Ionic\` folder
 1. Build android: `ionic cap build android`
 
 ### Start web
-`ionic start`
+`ionic serve`
 
 ## JavaScript bridge :
 `CMHPlugin\www\CMHPlugin.js`
