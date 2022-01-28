@@ -97,7 +97,7 @@ if (isset($request_host)) {
     }
 
     // Get IP address
-    if (!$allowPrivateIp && !empty($service->host) && empty($service->ip)) {
+    if (!$allowPrivateIp && !empty($service->host)) {
         if (filter_var($service->host, FILTER_VALIDATE_IP)) {
             $service->ip = $service->host;
         } else {
