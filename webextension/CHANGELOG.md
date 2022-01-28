@@ -1,5 +1,9 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.6.0 - 2022-01-28
+- Add IP getter and call API with, in order to avoid false negatives
+- Improved appearance of options 
+
 ## 5.5.4 - 2022-01-05
 - Update the fingerprint of the check server certificate
 
