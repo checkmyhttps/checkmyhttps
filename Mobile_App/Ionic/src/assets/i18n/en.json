@@ -13,7 +13,6 @@
 	"serverUnknown": "Server unknown...",
 	"privateIp": "We couldn't reach this IP from our check server (this is a private IP).",
 	"severalCertificates": "This website has several server certificates. We can not guarantee that your HTTPS connection is secure.",
-	"whitelisted": "Your HTTPS connection is secure (Whitelisted Domain).",
 	"sslPinning": "The requested check server is different. Your connection might be listened to...",
 	"checkServerSettings": "Check Server Settings",
 	"checkServerAddress": "Check Server Address",

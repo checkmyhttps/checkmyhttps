@@ -120,25 +120,20 @@ export class HomePage {
     //verify certificates fingerprints from user and check server (2 max)
     if(!this.compareFingerprints(userFingerprints[firstKey], APIServerData.fingerprints)){
       counter++;
-      if (APIServerData.whitelisted){
-        res = "Whitelisted";
-      }
-      else{
-        if (typeof APIServerData.issuer !== "undefined") {
-          //Get the issuer of the certificate (user side)
-          secondKey = Object.keys(userFingerprints)[1];
+      if (typeof APIServerData.issuer !== "undefined") {
+        //Get the issuer of the certificate (user side)
+        secondKey = Object.keys(userFingerprints)[1];
 
-          if(!this.compareFingerprints(userFingerprints[secondKey], APIServerData.issuer.fingerprints)){
-            res = "KO";
-          }
-          else{
-            counter++;
-            res = this.isUnicode(hostTested, counter);
-          }
-        }
-        else{
+        if(!this.compareFingerprints(userFingerprints[secondKey], APIServerData.issuer.fingerprints)){
           res = "KO";
         }
+        else{
+          counter++;
+          res = this.isUnicode(hostTested, counter);
+        }
+      }
+      else{
+        res = "KO";
       }
     }
     else{
@@ -149,12 +144,12 @@ export class HomePage {
 
 
 
-  async getCertFromCheckServer(urlTested, urlHost, urlPort){
+  async getCertFromCheckServer(urlTested, urlHost, urlPort, ip){
     try{
       let port = "443"
       if (urlPort != undefined)
           port = urlPort;
-      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port).then(result => {return result}).catch(err => console.log("ERROR getCertFromCheckServer: " + err))
+      const dataCertFromCheckServer = await this.cmhPlugin.getFingerprintsFromCheckServer(urlTested, urlHost, port, ip).then(result => {return result}).catch(err => console.log("ERROR getCertFromCheckServer: " + err))
       return dataCertFromCheckServer;
     }
     catch (err){
@@ -163,9 +158,9 @@ export class HomePage {
     }
   }
 
-  async getFingerprintsUrl(urlTested){
+  async getFingerprintsUrl(urlTested, urlHost){
     try{
-      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
+      const dataFingerprints = await this.cmhPlugin.getFingerprints(urlTested, urlHost).then(result => {return result}).catch(err => console.log("ERROR getFingerprintsUrl: " + err));
       return dataFingerprints;
     }
     catch (err){
@@ -238,8 +233,9 @@ export class HomePage {
       //Regex to get the host and port of the tested URL
       const [ , , urlHost, urlPort ] = urlTested.match(/^(\w+):\/\/?([a-zA-Z0-9_\-\.]+)(?::([0-9]+))?\/?.*?$/);
 
-      const userFingerprints = await this.getFingerprintsUrl(urlTested);
-      const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort);
+      const fingerprintsUrlRes = await this.getFingerprintsUrl(urlTested, urlHost);
+      const checkServerData = await this.getCertFromCheckServer(checkServer.url, urlHost, urlPort, fingerprintsUrlRes.ip);
+      const userFingerprints = fingerprintsUrlRes.fingerprintsCertificateChainJSON
 
       //########### Handling Java Exceptions from cmhplugin #################
       if (userFingerprints === "SSLHandshakeException"){
@@ -295,9 +291,6 @@ export class HomePage {
           break;
         case 'IDN':
           this.global.presentProfileModal('warning','alertOnUnicodeIDNDomainNames');
-          break;
-        case 'Whitelisted':
-          this.global.presentProfileModal('warning','whitelisted');
           break;
       }
 

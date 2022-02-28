@@ -54,7 +54,7 @@ export class AppComponent {
     this.translate.setDefaultLang(this.lang);
     this.translate.use(this.lang);
 
-    this.version = "1.2";
+    this.version = "1.3";
 
     this.events.getObservable().subscribe(() => {
       this.toggleTheme();

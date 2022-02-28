@@ -12,6 +12,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.cert.Certificate;
@@ -37,14 +38,18 @@ public class CMHPlugin extends CordovaPlugin {
 
     public boolean getFingerprints(JSONArray args, CallbackContext callbackContext){
         try {
+            String ip = "";
+            try {
+              ip = InetAddress.getByName(args.getString(1)).getHostAddress();
+            } catch (Exception ex) {
+              System.err.println("pas d'ip :" + ex);
+            }
             //https connection with the requested URL
-            String httpsURL = args.getJSONObject(0).getString("param1");
-            HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(httpsURL).openConnection();
+            HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(args.getString(0)).openConnection();
             //Only need to recover the certificate, HEAD instead of GET
             httpsConnection.setRequestMethod("HEAD");
             httpsConnection.setConnectTimeout(5000);
             httpsConnection.connect();
-            
             //Recover the fingerprints and the number of certificates of the website
             Certificate[] certificateChain = httpsConnection.getServerCertificates();
             int sizeCertificateChain = certificateChain.length;
@@ -65,8 +70,10 @@ public class CMHPlugin extends CordovaPlugin {
 
                 fingerprintsCertificateChainJSON.put("cert"+i, fingerprintsJSON);
             }
-
-            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, fingerprintsCertificateChainJSON);
+            JSONObject resultJSON = new JSONObject();
+            resultJSON.put("fingerprintsCertificateChainJSON", fingerprintsCertificateChainJSON);
+            resultJSON.put("ip", ip);
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, resultJSON);
             pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
             return true;
@@ -80,7 +87,14 @@ public class CMHPlugin extends CordovaPlugin {
     public boolean getFingerprintsFromCheckServer(JSONArray args, CallbackContext callbackContext){
         try {
             String host = args.getString(1);
-            String urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2);
+            String ip = args.getString(3);
+            String urlTested = "";
+            if(!ip.equals("")) {
+                urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2) + "&ip=" + ip;
+            }
+            else {
+                urlTested = args.getString(0) + "/api.php?host=" + host + "&port=" + args.getString(2);
+            }
 
             //https connection to the check server with the requested URL
             HttpsURLConnection httpsConnection = (HttpsURLConnection) new URL(urlTested).openConnection();
@@ -107,7 +121,6 @@ public class CMHPlugin extends CordovaPlugin {
             }
 
             // #################################### Get the output of the check server's API ####################################
-            
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream()));
             StringBuffer webPageServer = new StringBuffer();
             String inputLine;
