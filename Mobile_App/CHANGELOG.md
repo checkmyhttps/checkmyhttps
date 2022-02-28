@@ -1,5 +1,10 @@
 # CheckMyHTTPS Mobile App Changelog
 
+## 1.3.0 - 2022-02-28
+- Add IP getter and call API with, in order to avoid false negatives
+- Update of dependencies
+- Remove whitelist
+
 ## 1.2.0 - 2022-01-24
 - Update of Ionic & Angular & npm packages
 - Update CNS Logo & ESIEA Logo
