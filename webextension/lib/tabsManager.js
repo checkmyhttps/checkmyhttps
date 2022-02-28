@@ -59,10 +59,12 @@ CMH.tabsManager.setTabUrl = (tabId, url) => {
     const oldUrl = CMH.tabsManager.tabsStatus[tabId]
     if ((newUrl.host !== oldUrl.host) || (newUrl.port !== oldUrl.port)) {
       CMH.tabsManager.tabsStatus[tabId].certificates = null
+      CMH.tabsManager.tabsStatus[tabId].ip = null
       CMH.tabsManager.tabsStatus[tabId].status       = CMH.common.status.UNKNOWN
     }
   } else {
     CMH.tabsManager.tabsStatus[tabId].certificates = null
+    CMH.tabsManager.tabsStatus[tabId].ip = null
     CMH.tabsManager.tabsStatus[tabId].status       = CMH.common.status.UNKNOWN
   }
 
@@ -76,7 +78,7 @@ CMH.tabsManager.setTabUrl = (tabId, url) => {
  * @param {number} tabId        - Tab ID
  * @param {number} certificates - Current certificates
  * @param {string} [url]        - Tab URL
- * Set the status of a tab.
+ * Set the certificates of a tab.
  */
 CMH.tabsManager.setTabCertificates = (tabId, certificates, url) => {
   if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
@@ -91,17 +93,43 @@ CMH.tabsManager.setTabCertificates = (tabId, certificates, url) => {
 }
 
 /**
+ * @name setTabIp
+ * @function
+ * @param {number} tabId    - Tab ID
+ * @param {string} ip       - Current ip
+ * @param {string} [url]    - Tab URL
+ * Set the ip of a tab.
+ */
+CMH.tabsManager.setTabIp = (tabId, ip) => {
+  CMH.tabsManager.tabsStatus[tabId].ip = ip
+}
+
+/**
  * @name getTabCertificate
  * @function
  * @param {number} tabId - Tab ID
  * @returns {object} - certificates chain
- * Set the certificate of a tab.
+ * Get the certificate of a tab.
  */
 CMH.tabsManager.getTabCertificate = (tabId) => {
   if ((typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') || (typeof CMH.tabsManager.tabsStatus[tabId].certificates === 'undefined')) {
     return null
   }
   return CMH.tabsManager.tabsStatus[tabId].certificates
+}
+
+/**
+ * @name getTabIp
+ * @function
+ * @param {number} tabId - Tab ID
+ * @returns {string} - ip
+ * Get the ip of a tab.
+ */
+ CMH.tabsManager.getTabIp = (tabId) => {
+  if ((typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') || (typeof CMH.tabsManager.tabsStatus[tabId].ip === 'undefined') || CMH.tabsManager.tabsStatus[tabId].ip == null) {
+    return ""
+  }
+  return CMH.tabsManager.tabsStatus[tabId].ip
 }
 
 /**
@@ -143,10 +171,29 @@ CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
     CMH.tabsManager.setTabCertificates(requestDetails.tabId, certificateFormatted, requestDetails.url)
   }
 }
-  browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
-    { urls: ['https://*/*'], types: ['main_frame'] },
-    ['blocking']
-  )
+browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
+  { urls: ['https://*/*'], types: ['main_frame'] },
+  ['blocking']
+)
+
+/**
+ * @name onHeadersReceivedForIp
+ * @function
+ * @param {object} requestDetails - Request data
+ * When event, setTabIp when originUrl hostname and real request hostname same
+ * Get ip event when ip not in main_frame
+ */
+CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
+  if (requestDetails.ip != null) {
+    if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
+      CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+    }
+  }
+}
+browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,
+  { urls: ['https://*/*'] },
+  ['blocking']
+)
 
 /**
  * @name onTabUpdated

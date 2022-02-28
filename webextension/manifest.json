@@ -2,7 +2,7 @@
   "description": "__MSG_extensionDescription__",
   "manifest_version": 2,
   "name": "CheckMyHTTPS",
-  "version": "5.5.4",
+  "version": "5.6.0",
   "default_locale": "en",
   "icons": {
     "128": "icons/icon.png"
@@ -11,7 +11,7 @@
   "homepage_url": "https://checkmyhttps.net",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "62.0"
+      "strict_min_version": "79.0"
     }
   },
   "background": {
@@ -34,6 +34,6 @@
     "tabs",
     "webRequest",
     "webRequestBlocking",
-    "https://*/*"
+    "*://*/*"
   ]
 }

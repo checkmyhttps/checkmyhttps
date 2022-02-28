@@ -64,7 +64,8 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
       return
     }
 
-    datas_api = await CMH.api.requestFromUrl(tab.url)
+    let ip = CMH.tabsManager.getTabIp(tab.id)
+    datas_api = await CMH.api.requestFromUrl(tab.url, ip)
     if (datas_api.error) {
       if (datas_api.error === 'SSL') {
         CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.INVALID)
@@ -106,7 +107,8 @@ CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
       return
     }
 
-    datas_api = await CMH.api.requestFromUrl(urlTested)
+    let ip = ""
+    datas_api = await CMH.api.requestFromUrl(urlTested, ip)
     if (datas_api.error) {
       if (datas_api.error === 'SSL') {
         if (showNotifications) {
@@ -142,10 +144,9 @@ CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) =>
       }
     }
     return 'OK'
-  } else if (cmhCertificate.whitelisted) { // Check certificate whitelisted
-    return 'WL'
-  } else if ((userCertificate.issuer) && (cmhCertificate.issuer) && (CMH.certificatesChecker.compareCertificateFingerprints(userCertificate.issuer, cmhCertificate.issuer))) { // Compare issuer certificate
-    return 'WL'
+  } 
+  else if ((userCertificate.issuer) && (cmhCertificate.issuer) && (CMH.certificatesChecker.compareCertificateFingerprints(userCertificate.issuer, cmhCertificate.issuer))) { // Compare issuer certificate
+    return 'SC'
   } else {
     return 'KO'
   }
@@ -174,14 +175,16 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
         CMH.ui.showNotification(browser.i18n.getMessage('__IDNwarning__', url))
       }
     }
-  } else if (result === 'WL') {
+  } 
+  else if (result === 'SC') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.WARNING)
     }
     if (showNotifications) {
       CMH.ui.showNotification(browser.i18n.getMessage('__severalCertificats__'))
     }
-  } else if (result === 'ERR') {
+  }
+  else if (result === 'ERR') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.UNKNOWN)
     }

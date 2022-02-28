@@ -7,15 +7,16 @@ CheckMyHTTPS is a method allowing the verification (check) that your secured web
 If you have any doubt (or when you want), you are free to check your HTTPS connection by clicking on the CheckMyHTTPS icon (a gray padlock). At that time, the check of your HTTPS connection is performed. The gray padlock can turn to the following colors:
 - Green: the HTTPS connection isn't intercepted;
 - Red: the HTTPS connection is intercepted;
-- Blue: the check server is unreachable;
-- Black: the check is in progress.
+- Blue: the verification is impossible (check server unreachable, website in whitelist);
+- Gray: the verification is in progress.
 
-# About my privacy?
+# Respect for privacy:
 
-The extension sends only the following parameters to the check server (that can be yours): Domain name and port of the HTTPS website.
-We gave the possibility to be free concerning the HTTPS website to check. You just have to click. No one will access your privacy! :)
+- The extension is only active when you click on its icon. At that moment, it only uses the name of the visited website and the certificate received from it;
+- The "verification server" only receives the name of the visited website
+- You can create your own "verification server-
 
-# More details!
+# More details:
 
 A secure website (HTTPS) justifies its identity with your browser by sending a certificate validated by a recognized certification authority. Interception techniques, to be able to work, dynamically forge false certificates (a bit like a fake identity card).
 The method we propose to you, verifies that the certificate you receive is the one issued by the server. 
@@ -31,15 +32,16 @@ CheckMyHTTPS est une méthode permettant de vérifier (check) que vos connexions
 Si vous avez un doute (ou quand vous le souhaitez), vous êtes libre de vérifier votre connexion HTTPS en cliquant sur l'icône de l'extension CheckMyHTTPS (un cadenas gris). À ce moment-là, le contrôle de votre connexion HTTPS est effectué. Le cadenas gris peut prendre les couleurs suivantes :
 - Vert : la connexion HTTPS n'est pas interceptée;
 - Rouge : la connexion HTTPS est interceptée;
-- Bleu : le serveur de vérification ne peut être joint;
-- Noir : la vérification est en cours.
+- Bleu : la vérification est impossible (le serveur de vérification est injoignable, le site à vérifier est en liste blanche);
+- Gris : la vérification est en cours.
 
-# Concernant ma vie privée :
+# Respect de la vie privée :
 
-L'extension n'envoie que les données suivantes au serveur de vérification (qui peut être le vôtre) : nom de domaine et le port du serveur HTTPS que vous visitez.
-Vous avez le libre choix concernant le site à "checker". Comme ça, personne n'aura accès à votre vie privée ! :)
+- L’extension n'est active que lorsque vous cliquez sur son icône. À ce moment là, elle n'utilise que le nom du site visité et le certificat reçu de ce dernier;
+- Le serveur de vérification externe ne reçoit que le nom du site visité;
+- Vous pouvez créer votre propre serveur de vérification.
 
-# Plus de détails !
+# Plus de détails :
 
 Un site web sécurisé (HTTPS) justifie son identité auprès de votre navigateur par l’envoi d’un certificat de sécurité validé par une autorité de certification reconnue. Les techniques d'interception, pour fonctionner, génèrent dynamiquement de faux certificats (un peu comme une fausse carte d'identité). La méthode que nous vous proposons vérifie que le certificat que vous recevez est bien celui qui a été émis par le serveur.
 

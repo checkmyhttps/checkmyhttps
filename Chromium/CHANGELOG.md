@@ -1,66 +1,7 @@
-# CheckMyHTTPS WebExtension Changelog
+# CheckMyHTTPS Changelog
 
-## 5.6.0 - 2022-01-28
-- Add IP getter and call API with, in order to avoid false negatives
-- Improved appearance of options 
-
-## 5.5.4 - 2022-01-05
-- Update the fingerprint of the check server certificate
-
-## 5.5.3 - 2021-01-07
-- Update the fingerprint of the check server certificate
-
-## 5.5.2 - 2020-07-28
-- Set the "Tabs" permission again (in order to check HTTPS on all tabs)
-- Change the minimum Firefox version compatibility to 62 (due to the function "webRequest.getSecurityInfo")
-
-## 5.5.1 - 2020-05-25
-- Remove polyfill to save data
-- Verify the default check server's fingerprint while starting a new browser window
-- Display the "warning padlock" when an IDN attack is detected
-- Reduce permissions ("Tabs" to "activeTab")
-- The browser icon is now entitled
-
-## 5.5.0 - 2020-01-16
-- Remove the native App (needed with FF < V62)
-- Remove two useless permissions ("downloads" & "nativeMessaging")--> improving your privacy
-- webextension-polyfill 0.6.0
-
-## 5.4.1 - 2019-11-27
-- Update the SHA256 fingerprint of the default check server (certificate renewal)
-
-## 5.4.0 - 2019-08-25
-- Add the option to disable notifications.
-
-## 5.3.2 - 2019-05-30
-- Fix the error message when the check server is down.
-
-## 5.3.1 - 2019-05-06
-- Fix a bug preventing the error message when checking the check server.
-
-## 5.3.0 - 2019-03-15
-- Fix potential false positives on unsecured pages blocked by Firefox.
-- Remove SHA1 fingerprints comparison.
-- Replace the icons
-
-## 5.2.1 - 2019-02-01
-- Fix SSL Pinning on Check Server.
-
-## 5.2.0 - 2019-01-30
-- Support the WebExtension TLS API (the Python script is now optional on Firefox > 62).
-- Back on Firefox Mobile!
-- Improved tab management.
-
-## 5.1.1 - 2018-11-09
-- Fix compatibility with Python 3.7 (migrate a depreciated function).
-
-## 5.1.0 - 2018-11-08
-- Add proxy support in Python script.
-- Increase timeout to 10sec.
-
-## 5.0.0 - 2018-05-06
-- Migration to WebExtension!
-- Use a Python script to perform a check (pending the WebExtension TLS API).
+## 5.5.4 - 2022-01-07
+- New certificate fingerprint
 
 ## 4.3.0 - 2017-11-09
 - Check issuer certificate if the first check fails.

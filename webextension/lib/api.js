@@ -13,10 +13,10 @@ CMH.api = {}
  * @returns {object} - certificates of resquested host and check server
  * Request certificate info of an URL.
  */
-CMH.api.requestFromUrl = async (urlTested) => {
+CMH.api.requestFromUrl = async (urlTested, ip) => {
   const { host, port } = CMH.common.parseURL(urlTested)
 
-  const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+'api.php?host='+encodeURIComponent(host)+'&port='+port)
+  const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+'api.php?host='+encodeURIComponent(host)+'&port='+port+'&ip='+ip)
   if ((cert === null) || (response === null)) {
     return { error: 'SERVER_UNREACHABLE' }
   }

@@ -54,7 +54,7 @@ CMH.ui.setStatus = (status, tabId) => {
 CMH.ui.showNotification = (message, options) => {
   let notificationOptions = {
     type:     'basic',
-    iconUrl:  browser.extension.getURL('./images/icon.png'),
+    iconUrl:  browser.runtime.getURL('./images/icon.png'),
     title:    browser.i18n.getMessage('__alertTitle__'),
     message:  message,
     priority: 1
