@@ -435,6 +435,8 @@ def verifyCertificate(host, userCert, checkServerCert):
 
     elif (checkServerCert['whitelisted']):
         res = 'WL'
+    elif userCert['issuer'] and checkServerCert['issuer'] and compareFingerprints((userCert['issuer'], checkServerCert['issuer'])):
+        res = 'WL'
     else:
         res = 'KO'
 
