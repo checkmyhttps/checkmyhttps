@@ -1,5 +1,9 @@
 # CheckMyHTTPS Changelog
 
+## 5.6.0 - 2022-03-01
+- Add IP getter and call API with, in order to avoid false negatives
+- Improved appearance of options
+
 ## 5.5.4 - 2022-01-07
 - New certificate fingerprint
 

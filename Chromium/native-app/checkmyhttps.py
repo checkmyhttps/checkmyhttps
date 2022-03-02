@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.1.5'
+VERSION = '1.2.0'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -256,6 +256,8 @@ def openHTTPSRequest(url, checkServer=conf_checkServer):
     """ Open HTTPS request then return data body and fingerprints """
     global fingerprints
     fingerprints = None
+    global ip
+    ip           = None
     body_data    = None
 
     class HeadRequest(urllib2.Request):
@@ -292,7 +294,8 @@ def openHTTPSRequest(url, checkServer=conf_checkServer):
                         fingerprints = {
                             'sha256': hashlib.sha256(certRaw).hexdigest().upper()
                         }
-
+                        global ip
+                        ip = self.sock.getpeername()[0]
                 return CertValidatingHTTPSConnection(host, **full_kwargs)
 
             return self.do_open(http_class_wrapper, req)
@@ -316,12 +319,13 @@ def openHTTPSRequest(url, checkServer=conf_checkServer):
 
     return {
         'fingerprints': fingerprints,
-        'data': body_data
+        'data': body_data,
+        'ip': ip
     }
 
-def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
+def getFingerprintsFromCheckServer(host, port, ip, checkServer=conf_checkServer):
     """ Get fingerprints from the check server (API) """
-    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port), checkServer)
+    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port) + '&ip=' + ip, checkServer)
 
     # SSL pinning on check server
     if ((req['fingerprints'] is None) or (not compareFingerprints(req['fingerprints'], checkServer['fingerprints']))):
@@ -332,7 +336,7 @@ def getFingerprintsFromCheckServer(host, port, checkServer=conf_checkServer):
 def getFingerprintsFromClient(host, port):
     """ Get fingerprint from client """
     if port == 443 or True: # TODO: support other protocols
-        return openHTTPSRequest('https://' + host + ':' + str(port))['fingerprints']
+        return openHTTPSRequest('https://' + host + ':' + str(port))
     else:
         # Old way with a raw socket (does not work with a proxy)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -390,12 +394,11 @@ def checkUrl(url):
 
     urlParsed = parseURL(url)
 
-    userCert        = None
     checkServerCert = None
 
     try:
-        userCert        = getFingerprintsFromClient(urlParsed['host'], urlParsed['port'])
-        checkServerCert = getFingerprintsFromCheckServer(urlParsed['host'], urlParsed['port'])
+        req  = getFingerprintsFromClient(urlParsed['host'], urlParsed['port'])
+        checkServerCert = getFingerprintsFromCheckServer(urlParsed['host'], urlParsed['port'], req['ip'])
     except SSLPinningException as e:
         # print('SSL pinning failed')
         return 'SSLP'
@@ -418,7 +421,7 @@ def checkUrl(url):
     except KeyError as e:
         pass
 
-    return verifyCertificate(urlParsed['host'], userCert, checkServerCert)
+    return verifyCertificate(urlParsed['host'], req['fingerprints'], checkServerCert)
 
 def verifyCertificate(host, userCert, checkServerCert):
     """ Checks the client's certificate with the one received by the check server """
@@ -492,7 +495,7 @@ if __name__ == '__main__':
                     sendMessage({ 'action': 'check', 'result': res, 'tabId': receivedMessage['params']['tabId'], 'url': receivedMessage['params']['url'] })
                 elif receivedMessage['action'] == 'getFingerprints':
                     urlParsed = parseURL(receivedMessage['params']['url'])
-                    sendMessage({ 'action': 'resFingerprints', 'fingerprints': getFingerprintsFromClient(urlParsed['host'], urlParsed['port']), 'url': receivedMessage['params']['url'] })
+                    sendMessage({ 'action': 'resFingerprints', 'fingerprints': getFingerprintsFromClient(urlParsed['host'], urlParsed['port'])['fingerprints'], 'url': receivedMessage['params']['url'] })
                 elif receivedMessage['action'] == 'setOptions':
                     if ('checkServerUrl' in receivedMessage['params']) and ('checkServerFingerprintsSha256' in receivedMessage['params']):
                         res = verifyCheckServerApi({ 'url': receivedMessage['params']['checkServerUrl'], 'fingerprints': { 'sha256': receivedMessage['params']['checkServerFingerprintsSha256'] } })
