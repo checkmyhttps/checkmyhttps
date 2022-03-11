@@ -12,11 +12,11 @@ CMH.ui = {}
  * Initialize user interface.
  */
 CMH.ui.init = () => {
-  browser.browserAction.setTitle({ title: browser.i18n.getMessage('__clickToCheck__') })
+  chrome.action.setTitle({ title: chrome.i18n.getMessage('__clickToCheck__') })
 
   CMH.ui.setStatus(CMH.common.status.UNKNOWN)
 
-  browser.browserAction.onClicked.addListener((tab) => {
+  chrome.action.onClicked.addListener((tab) => {
     CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications)
   })
 }
@@ -34,13 +34,13 @@ CMH.ui.setStatus = (status, tabId) => {
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
       details.tabId = tabId
     }
-    browser.browserAction.setIcon(details)
+    chrome.action.setIcon(details)
   } else {
-    let details = { title: 'CheckMyHTTPS (' + browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
+    let details = { title: 'CheckMyHTTPS (' + chrome.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
       details.tabId = tabId
     }
-    browser.browserAction.setTitle(details)
+    chrome.action.setTitle(details)
   }
 }
 
@@ -54,8 +54,8 @@ CMH.ui.setStatus = (status, tabId) => {
 CMH.ui.showNotification = (message, options) => {
   let notificationOptions = {
     type:     'basic',
-    iconUrl:  browser.runtime.getURL('./images/icon.png'),
-    title:    browser.i18n.getMessage('__alertTitle__'),
+    iconUrl:  chrome.runtime.getURL('./images/icon.png'),
+    title:    chrome.i18n.getMessage('__alertTitle__'),
     message:  message,
     priority: 1
   }

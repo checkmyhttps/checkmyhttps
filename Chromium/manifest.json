@@ -1,8 +1,8 @@
 {
    "background": {
-      "page": "background.html"
+      "service_worker": "service-worker.js"
    },
-   "browser_action": {
+   "action": {
       "browser_style": false,
       "default_icon": {
          "128": "images/icon.png"
@@ -14,7 +14,7 @@
       "128": "images/icon.png"
    },
    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnaqK/LcMIdkzflE6LlaKskw1tESqq3NhJhyQr923GMzn7dXeF3f1cXTHdqfG/eOVsd+dLc3YB3GBKBsRnWi4tqX09ZAejgBoL5YJfQyR9ZAORZsCRN7cViL/Gp9hNz8kPWipjhf90pwaDeTsk9ClJHOjwShC2R1VVog67QMelKtuRQgsi9IDTbU+pL27HCflBgsVN9rI0On/4cezzFh6wvB0/N2EEdywQXTbGvSH1bXssHVcJvjtNLtDfE56kzsNjAb6DpHXOEoTHpmkTqibMuqTh/wpFvQ1G225+CJIn7OG1yiGnfxzhaZwjLs4U0ElBdFHUuDSkcltvMqFs0IkGwIDAQAB",
-   "manifest_version": 2,
+   "manifest_version": 3,
    "name": "CheckMyHTTPS",
    "options_ui": {
       "browser_style": true,

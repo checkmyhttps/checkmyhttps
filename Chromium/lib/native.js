@@ -40,7 +40,7 @@ CMH.native.minimumAppVersion = '1.2.0'
   * Connect to the native application.
   */
 CMH.native.connect = () => {
-  CMH.native.port = browser.runtime.connectNative('checkmyhttps')
+  CMH.native.port = chrome.runtime.connectNative('checkmyhttps')
 
   const listener_ping = CMH.native.port.onMessage.addListener((response) => {
     if (response.action === 'PONG') {
@@ -68,8 +68,8 @@ CMH.native.connect = () => {
     CMH.native.nativeAppInfo.connected = false
     CMH.native.port = null
     let reason = ''
-    if (browser.runtime.lastError !== null) {
-      reason += ' ('+browser.runtime.lastError.message+')'
+    if (chrome.runtime.lastError !== null) {
+      reason += ' ('+chrome.runtime.lastError.message+')'
     }
     console.log('Native disconnected' + reason)
     CMH.native.port = null

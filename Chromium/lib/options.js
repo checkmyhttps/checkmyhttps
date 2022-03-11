@@ -54,7 +54,7 @@ CMH.options.getCertUrl = async (url) => {
 }
 
 // Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'checkServerFingerprintsSha256']).then((settings) => {
+chrome.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'checkServerFingerprintsSha256']).then((settings) => {
   const settingsItems = Object.keys(settings)
 
   for (let item of settingsItems) {
@@ -63,7 +63,7 @@ browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'd
 }, (error) => { console.error(error) })
 
 // Listen for settings changes
-browser.storage.onChanged.addListener((changes, area) => {
+chrome.storage.onChanged.addListener((changes, area) => {
   const changedItems = Object.keys(changes)
   let needRefreshNativeApp = false
 

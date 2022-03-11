@@ -117,7 +117,7 @@ CMH.tabsManager.onTabActivated = (tabId) => {
     CMH.ui.setStatus(CMH.common.status.UNKNOWN, tabId)
   }
 }
-browser.tabs.onActivated.addListener((activeInfo) => { CMH.tabsManager.onTabActivated(activeInfo.tabId) })
+chrome.tabs.onActivated.addListener((activeInfo) => { CMH.tabsManager.onTabActivated(activeInfo.tabId) })
 
 /**
  * @name onTabClose
@@ -128,7 +128,7 @@ browser.tabs.onActivated.addListener((activeInfo) => { CMH.tabsManager.onTabActi
 CMH.tabsManager.onTabClose = (tabId) => {
   CMH.tabsManager.deleteTabStatus(tabId)
 }
-browser.tabs.onRemoved.addListener((tabId, removeInfo) => { CMH.tabsManager.onTabClose(tabId) })
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => { CMH.tabsManager.onTabClose(tabId) })
 
 /**
  * @name onHeadersReceived
@@ -144,7 +144,7 @@ CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
   }
 }
 if (CMH.common.isWebExtTlsApiSupported()) {
-  browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
+  chrome.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
     { urls: ['https://*/*'], types: ['main_frame'] },
     ['blocking']
   )
@@ -178,4 +178,4 @@ CMH.tabsManager.onTabUpdated = (tabId, changeInfo, tabInfo) => {
     }
   }
 }
-browser.tabs.onUpdated.addListener(CMH.tabsManager.onTabUpdated)
+chrome.tabs.onUpdated.addListener(CMH.tabsManager.onTabUpdated)

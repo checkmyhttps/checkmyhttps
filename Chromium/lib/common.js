@@ -105,7 +105,7 @@ CMH.common.compareVersion = function (versionA, versionB) {
  * Check if WebExtension TLS API is supported.
  */
 CMH.common.isWebExtTlsApiSupported = () => {
-  return ((typeof browser.webRequest !== 'undefined') && (typeof browser.webRequest.getSecurityInfo !== 'undefined'))
+  return ((typeof chrome.webRequest !== 'undefined') && (typeof chrome.webRequest.getSecurityInfo !== 'undefined'))
 }
 
 /**
@@ -114,7 +114,7 @@ CMH.common.isWebExtTlsApiSupported = () => {
  * Current platform
  */
 CMH.common.platform = undefined
-if (typeof browser.runtime.getBrowserInfo !== 'undefined') {
+if (typeof chrome.runtime.getBrowserInfo !== 'undefined') {
   browser.runtime.getBrowserInfo().then((details) => {
     if ((details.vendor === 'Mozilla') && (details.name === 'Fennec')) {
       CMH.common.platform = 'mobile'

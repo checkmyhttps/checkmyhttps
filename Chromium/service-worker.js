@@ -1,0 +1,1 @@
+importScripts('lib/common.js', 'lib/options.js', 'lib/native.js', 'lib/certificatesChecker.js', 'lib/certificatesManager.js', 'lib/api.js', 'lib/ui.js', 'lib/tabsManager.js', '/vendors/webextension-polyfill-0.3.1/browser-polyfill.min.js');
