@@ -8,3 +8,4 @@
   - A client side cache should also be implemented. Useful when there are many recurring calls to well known dependencies (jquery, vuejs...), especially as some websites use a lot of external dependencies
 - Security:
   - Implement an alternative to the current SSL Pinning. Indeed, this method implies to update every client when the server certificate changes (approximately each year).
+  - Change the "Get/Head" method with "Post" (to avoid log records on server) 
