@@ -72,6 +72,11 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
         if (showNotifications) {
           CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { priority: 2 })
         }
+      } else if (datas_api.error === 'PUBLIC_KEY') {
+        CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+        if (showNotifications) {
+          CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 })
+        }
       } else {
         CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
         if (showNotifications) {

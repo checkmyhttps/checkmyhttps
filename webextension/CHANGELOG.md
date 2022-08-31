@@ -1,8 +1,16 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.7.0 - 2022-08-31
+- Replace SSL Pinning with RSA-SHA256 signature verification (no more update needed when the check server certificate changes! Needs server API >= 1.6.0)
+- Stop sending "ip=" to the verification server if it is empty
+- Add more intelligible error messages
+- Improve appearance of options
+- Fix a minor issue with IP, causing reccurrent error logs
+- Make the notification clickable when the "Invalid Public Key" message appears, to redirect the user to the options page easily
+
 ## 5.6.0 - 2022-01-28
-- Add IP getter and call API with, in order to avoid false negatives
-- Improved appearance of options 
+- Add IP getter and call API with it, in order to avoid false negatives
+- Improve appearance of options 
 
 ## 5.5.4 - 2022-01-05
 - Update the fingerprint of the check server certificate

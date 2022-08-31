@@ -3,12 +3,24 @@
     "message": "CheckMyHTTPS s'assure que vos connexions WEB sécurisée (protocole 'HTTPS') ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées)."
   },
   
-  "__defaultFingerprintsDontMatch__": {
-    "message": "L'empreinte du serveur de vérification ne correspond pas à celle par défaut. Veuillez vérifier si l'empreinte du serveur a été mise à jour. Sinon votre connexion est peut-être interceptée."
+  "__serverSignatureNotVerified__": {
+    "message": "La signature de la réponse du serveur ne peut pas être vérifiée. Cela signifie qu'elle a été signée par une potentielle entité malicieuse. Votre connexion est sûrement interceptée. Soyez prudents."
   },
 
   "__defaultServerUnreachable__": {
     "message": "Serveur de vérification par défaut injoignable !"
+  },
+
+  "__invalidPublicKey__": {
+    "message": "Votre clé publique semble invalide ! Veuillez la vérifier dans le menu des options ou cliquer ici."
+  },
+  
+  "__invalidPublicKeyInOptions__": {
+    "message": "Votre clé publique semble invalide ! Veuillez la vérifier de nouveau."
+  },
+  
+  "__publicKeyNotCorresponding__": {
+    "message": "Cette clé publique ne correspond pas à celle requise par le serveur."
   },
 
   "__clickToCheck__": {
@@ -25,6 +37,10 @@
 
   "__serverUnreachable__": {
     "message": "Serveur injoignable ..."
+  },
+  
+  "__publicKeyUnreachable__": {
+    "message": "Impossible de trouver une clé publique sur ce serveur ..."
   },
 
   "__danger__": {
@@ -71,8 +87,8 @@
     "message": "Adresse du serveur"
   },
 
-  "__checkServerSha256__": {
-    "message": "Empreinte SHA256 de son certificat"
+  "__checkServerPublicKey__": {
+    "message": "Clé publique de l'API du serveur"
   },
 
   "__save__": {
@@ -83,8 +99,8 @@
     "message": "Défaut"
   },
 
-  "__getFingerprints__": {
-    "message": "Récupérer l'empreinte de son certificat"
+  "__getPublicKey__": {
+    "message": "Récupérer sa clé publique"
   },
 
   "__settingsSaved__": {

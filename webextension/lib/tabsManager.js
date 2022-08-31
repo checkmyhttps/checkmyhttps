@@ -185,8 +185,10 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  */
 CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
   if (requestDetails.ip != null) {
-    if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
-      CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+    if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] !== 'undefined') {
+      if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
+        CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+      }
     }
   }
 }

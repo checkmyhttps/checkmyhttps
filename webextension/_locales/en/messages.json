@@ -7,12 +7,24 @@
     "message": "Click to Check the HTTPS connection"
   },
   
-  "__defaultFingerprintsDontMatch__": {
-    "message": "The verification server fingerprint does not match the default fingerprint. Please check if the server fingerprint has been updated. Otherwise your connection may be intercepted."
+  "__serverSignatureNotVerified__": {
+    "message": "The server response signature can't be verified. This means that it has been signed by a potential malicious entity. Your connection may be intercepted. Please be careful."
   },
 
   "__defaultServerUnreachable__": {
-    "message": "Default check server unreachable !"
+    "message": "Default check server unreachable!"
+  },
+  
+  "__invalidPublicKey__": {
+    "message": "Your public key seems invalid! Please check it in the options menu or click here."
+  },
+  
+  "__invalidPublicKeyInOptions__": {
+    "message": "Your public key seems invalid! Please check it again."
+  },
+  
+  "__publicKeyNotCorresponding__": {
+    "message": "This public key does not match the one required by the server."
   },
 
   "__noHttps__": {
@@ -25,6 +37,10 @@
 
   "__serverUnreachable__": {
     "message": "Server unreachable..."
+  },
+  
+  "__publicKeyUnreachable__": {
+    "message": "Unable to find a public key on this server ..."
   },
 
   "__danger__": {
@@ -71,8 +87,8 @@
     "message": "Server address"
   },
 
-  "__checkServerSha256__": {
-    "message": "Server certificate SHA256"
+  "__checkServerPublicKey__": {
+    "message": "Server API public key"
   },
 
   "__save__": {
@@ -83,8 +99,8 @@
     "message": "Default"
   },
 
-  "__getFingerprints__": {
-    "message": "Get its certificate fingerprint"
+  "__getPublicKey__": {
+    "message": "Get its public key"
   },
 
   "__settingsSaved__": {

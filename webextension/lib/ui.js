@@ -46,6 +46,18 @@ CMH.ui.setStatus = (status, tabId) => {
 }
 
 /**
+ * @name openOptionsPageListener
+ * @function
+ * Open the options page if the user clicks on a notification concerned with it.
+ * For now, only the "Invalid Public Key" notification redirects to this page.
+ */
+CMH.ui.openOptionsPageListener = () => {
+  if (CMH.ui.openOptionsPage === 1) {
+    browser.runtime.openOptionsPage()
+  }
+}
+
+/**
  * @name showNotification
  * @function
  * @param {string} message - Message
@@ -53,6 +65,7 @@ CMH.ui.setStatus = (status, tabId) => {
  * Show a notification.
  */
 CMH.ui.showNotification = (message, options) => {
+  CMH.ui.openOptionsPage = 0
   let notificationOptions = {
     type:     'basic',
     iconUrl:  browser.runtime.getURL('./icons/icon.png'),
@@ -66,8 +79,14 @@ CMH.ui.showNotification = (message, options) => {
         notificationOptions[option] = options[option]
       }
     }
+    if (options.hasOwnProperty('openOptionsPage') && options['openOptionsPage'] === 1)
+      CMH.ui.openOptionsPage = 1
   }
+
   browser.notifications.create('cakeNotification', notificationOptions)
+
+  // Listener to open the options page, if the user clicks on a corresponding notification (Ex: "Invalid Public Key")
+  browser.notifications.onClicked.addListener(CMH.ui.openOptionsPageListener)
 }
 
 // Initialize UI when the current platform is detected
