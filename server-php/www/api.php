@@ -3,7 +3,7 @@
 include __DIR__ . '/vendor/autoload.php';
 
 define('INSTANCE_TITLE', 'CheckMyHTTPS API server');
-define('VERSION', '1.5.1');
+define('VERSION', '1.6.0');
 define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
 define('CMH_DEBUG', false);
 
@@ -33,13 +33,17 @@ $privateDomains = [
     // 'localhost'
 ];
 
+$sign = false;
+
+if (isset($_GET['sign'])) $sign = true;
+
 // Information page
 if (isset($_GET['info'])) {
-	$response = [
+	$response = (object) [
 		'version' => VERSION,
 		'title'   => INSTANCE_TITLE
 	];
-	echo json_encode($response);
+	echo json_encode(hashAndEncrypt($response, $sign));
 	exit();
 }
 
@@ -61,7 +65,7 @@ if ((isset($request_url)) && (!isset($request_host) && !isset($request_port)))
 {
 	if ((!filter_var($request_url, FILTER_VALIDATE_URL)) && (!filter_var((new \Mso\IdnaConvert\IdnaConvert)->encode($request_url), FILTER_VALIDATE_URL)))
 	{
-		echo json_encode(['error' => 'INVALID_URL']);
+		echo json_encode(hashAndEncrypt((object)['error' => 'INVALID_URL'], $sign));
 		exit();
 	}
 	else
@@ -79,29 +83,32 @@ if ((isset($request_url)) && (!isset($request_host) && !isset($request_port)))
 
 if(isset($request_ip))
 {
-	if (filter_var($request_ip, FILTER_VALIDATE_IP))
+	if (filter_var($request_ip, FILTER_VALIDATE_IP) && strpos($request_ip, ':') === false)
 		$service->ip = $request_ip;
 }
 
 // Check hostname
-if (isset($request_host)) {
-    if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
-        $service->host = $request_host;
-    } else {
-        // Convert IDNA 2008
-        $request_host = (new \Mso\IdnaConvert\IdnaConvert)->encode($request_host);
+if (isset($request_host))
+{
+	if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
+		$service->host = $request_host;
+	else
+	{
+		// Convert IDNA 2008
+		$request_host = (new \Mso\IdnaConvert\IdnaConvert)->encode($request_host);
 
-        if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host)) {
-            $service->host = $request_host;
-        }
-    }
+		if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
+			$service->host = $request_host;
+	}
 
-    // Get IP address
-    if (!$allowPrivateIp && !empty($service->host)) {
-        if (filter_var($service->host, FILTER_VALIDATE_IP)) {
-            $service->ip = $service->host;
-        } else {
-            $host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
+	// Get IP address
+	if (!$allowPrivateIp && !empty($service->host))
+	{
+		if (filter_var($service->host, FILTER_VALIDATE_IP))
+			$service->ip = $service->host;
+		else
+		{
+			$host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
 			
 			if($use_cache === true)
 			{
@@ -121,7 +128,7 @@ if (isset($request_host)) {
 					$cache = file_get_contents($cachename);
 
 					$cache_exploded = explode("\n", $cache);
-					
+
 					$ip = $cache_exploded[0];
 					$sha1cache = $cache_exploded[1];
 					$sha256cache = $cache_exploded[2];
@@ -147,7 +154,6 @@ if (isset($request_host)) {
 						$cacheFound = false;
 					}
 				}
-				
 			}
 			//DNS record not found in cache, or it was too old, or ip@ already given by the client
 			if($cacheFound === false && !isset($service->ip))
@@ -181,25 +187,28 @@ if (isset($request_port))
 }
 
 if(empty($service->host) || empty($service->ip))
-	exit(json_encode(['error' => 'UNKNOWN_HOST']));
+	exit(json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_HOST'], $sign)));
 
 if(empty($service->port))
-	exit(json_encode(['error' => 'UNKNOWN_PORT']));
+	exit(json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_PORT'], $sign)));
 
-if((!$allowPrivateIp) && (!filter_var($service->ip, FILTER_VALIDATE_IP, ['flags' => (FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)])))
+// Replace this array with your server's FQDNs and public IP addresses :
+if (in_array($service->host, ['checkmyhttps.net','www.checkmyhttps.net','185.235.207.57'])) $service->ip = '127.0.0.1';
+
+if((!$allowPrivateIp) && ($service->ip !== '127.0.0.1') && (!filter_var($service->ip, FILTER_VALIDATE_IP, ['flags' => (FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)])))
 {
 	if(($privateDomainsHidden) && ($service->ip !== $service->host))
-		exit(json_encode(['error' => 'HOST_UNREACHABLE']));
+		exit(json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE'], $sign)));
 	else
-		exit(json_encode(['error' => 'PRIVATE_HOST']));
+		exit(json_encode(hashAndEncrypt((object)['error' => 'PRIVATE_HOST'], $sign)));
 }
 
 if(in_array($service->host, $privateDomains))
 {
 	if($privateDomainsHidden)
-		exit(json_encode(['error' => 'HOST_UNREACHABLE']));
+		exit(json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE'], $sign)));
 	else
-		exit(json_encode(['error' => 'PRIVATE_HOST']));
+		exit(json_encode(hashAndEncrypt((object)['error' => 'PRIVATE_HOST'], $sign)));
 }
 
 //No record found in cache, so, we can fetch the certificates chain
@@ -208,7 +217,7 @@ if($cacheFound === false)
 	$certificate = getCertificate($service);
 	if($certificate === null)
 	{
-		echo json_encode(['error' => 'HOST_UNREACHABLE']);
+		echo json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE'], $sign));
 		exit();
 	}
 }
@@ -278,7 +287,7 @@ if($insertInCache === true && $use_cache === true)
 	}
 }
 
-echo json_encode($certificate);
+echo json_encode(hashAndEncrypt($certificate, $sign));
 exit();
 
 /**
@@ -324,7 +333,7 @@ function getCertificate($service)
 	{
 		if(CMH_DEBUG)
 		{
-			echo json_encode(['error' => true, 'errno' => $errno, 'errstr' => utf8_encode($errstr)], JSON_UNESCAPED_UNICODE);
+			echo json_encode(hashAndEncrypt((object)['error' => true, 'errno' => $errno, 'errstr' => utf8_encode($errstr)], $sign), JSON_UNESCAPED_UNICODE);
 			exit();
 		}
 	}
@@ -337,6 +346,61 @@ function getCertificate($service)
 	}
 
 	return $certificate;
+}
+
+/**
+ * Fills a string with all the fields of an object.
+ *
+ * @param object $obj the object we want to make a string with
+ * @param string &$str the string where the result will be put
+ */
+function objToString($obj, &$str)
+{
+	foreach ($obj as $member => $val)
+	{
+		if(is_object($val))
+		{
+			if(get_class($val) === 'stdClass')
+				objToString($val, $str);
+			else
+				$str = $str.$val;
+		}
+		else if ($val === false)
+			$str = $str."0";
+		else
+			$str = $str.$val;
+	}
+}
+
+/**
+ * Hashes the response and encrypts the hash.
+ *
+ * @param object $response response of the server
+ * @param string $sign set to true if the client wants the server's signature
+ * @return object Returns response with its encrypted hash if the parameter $sign is true
+ */
+function hashAndEncrypt($response, $sign)
+{
+	if(!$sign)
+		return $response;
+
+	$private_key = file_get_contents("/path/to/your/private/key");
+
+	$response->cmh_sha256 = 'SHA256_FINGERPRINT_OF_YOUR_SERVER_S_HTTPS_CERTIFICATE';
+
+	$response_to_sign = "";
+
+	//Concatenates all the fields of the response to a single string
+	objToString($response, $response_to_sign);
+
+	$signature = "";
+
+	if(!openssl_sign($response_to_sign, $signature, $private_key, "RSA-SHA256"))
+		return ['error' => 'ENCRYPTION_IMPOSSIBLE'];
+
+	$response->signature = base64_encode($signature);
+
+	return $response;
 }
 
 /**
