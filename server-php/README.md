@@ -17,6 +17,11 @@ You can set the size you want for the cache. Here, we chose 256MB to store 64,00
 
 The cache is enabled by default, but you can turn it off by setting the variable `$use_cache` to false in `api.php`.
 
+6. Create the RSA private key (PEM format) to sign the server's answers: `openssl genrsa -out private_key 3072`.
+7. Create the associated public key for the clients to check the server's signature: `openssl rsa -in private_key -pubout -out public_key`.
+8. Store your private key **outside the web server folder**, and put the public key accessible from the web at `download/public_key`.
+9. Edit `api.php` with the right path to your private key.
+
 ### Installation
 
 1. Copy the content of the `www` folder to your webroot.
