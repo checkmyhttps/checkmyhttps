@@ -16,11 +16,10 @@ const box_notifications          = document.querySelector('input[name="disableNo
 const lbl_notifications          = document.querySelector('label[for="disableNotifications"]')
 const txt_server                 = document.querySelector('input[name="api_server"]')
 const lbl_server                 = document.querySelector('label[for="api_server"]')
-const txt_sha256                 = document.querySelector('input[name="api_sha256"]')
-const lbl_sha256                 = document.querySelector('label[for="api_sha256"]')
+const txt_publicKey              = document.querySelector('input[name="api_publicKey"]')
+const lbl_publicKey              = document.querySelector('label[for="api_publicKey"]')
 const btn_save                   = document.getElementById('form-submit')
 const btn_restoreDefault         = document.getElementById('restore-default')
-const btn_getFingerprints        = document.getElementById('get-fingerprints')
 const btn_testNativeConnection   = document.getElementById('test-native-connection')
 const div_messageCheckServer     = document.querySelector('p.message-checkserver')
 const div_nativeApp              = document.querySelector('.settings-nativeapp')
@@ -73,10 +72,9 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   lbl_alertIDNDomains.textContent      = browser.i18n.getMessage('__alertOnUnicodeIDNDomainNames__')
   lbl_notifications.textContent        = browser.i18n.getMessage('__disableNotifications__')
   lbl_server.textContent               = browser.i18n.getMessage('__checkServerAddress__')
-  lbl_sha256.textContent               = browser.i18n.getMessage('__checkServerSha256__')
+  lbl_publicKey.textContent            = browser.i18n.getMessage('__checkServerPublicKey__')
   btn_save.textContent                 = browser.i18n.getMessage('__save__')
   btn_restoreDefault.textContent       = browser.i18n.getMessage('__restoreDefault__')
-  btn_getFingerprints.textContent      = browser.i18n.getMessage('__getFingerprints__')
   btn_testNativeConnection.textContent = browser.i18n.getMessage('__testNativeConnection__')
   lbl_nativeAppInstallNote1.innerHTML  = browser.i18n.getMessage('__nativeAppInstallPython__')
   lbl_nativeAppInstallNote2.innerHTML  = browser.i18n.getMessage('__nativeAppInstallDownloadScript__')
@@ -91,7 +89,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   box_notifications.checked = CMH.options.settings.disableNotifications
   lastDomainSaved  = CMH.options.settings.checkServerUrl.match(/^https:\/\/([^:\/\s]+)/)[1]
   txt_server.value = CMH.options.settings.checkServerUrl
-  txt_sha256.value = CMH.options.settings.checkServerFingerprintsSha256
+  txt_publicKey.value = CMH.options.settings.publicKey
 
   box_pageLoad.addEventListener('input', (e) => {
     browser.storage.local.set({
@@ -139,7 +137,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     const saveSettingsToBrowser = () => {
       browser.storage.local.set({
         checkServerUrl:                txt_server.value,
-        checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
+        publicKey:                     txt_publicKey.value
       }).then(() => {
         btn_save.disabled = false
         div_messageCheckServer.dataset.type = 'success'
@@ -151,58 +149,49 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
       })
     }
 
-    if (CMH.common.isWebExtTlsApiSupported()) {
-      isValidCheckServer = await CMH.api.checkCheckServerApi({
-        server: txt_server.value,
-        sha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
-      })
-      if (isValidCheckServer) {
+    if (/*CMH.common.isWebExtTlsApiSupported()*/ 1 === 1) {
+      isValidCheckServer = await CMH.options.verifyServerAtStartup(txt_server.value, txt_publicKey.value)
+      if (isValidCheckServer === 1) {
         saveSettingsToBrowser()
       } else {
         btn_save.disabled = false
         div_messageCheckServer.dataset.type = 'error'
-        div_messageCheckServer.textContent  = 'Error!'
-      }
-    } else {
+        //div_messageCheckServer.textContent  = 'Error!'
+
       CMH.native.postMessageAndWaitResponse({ action: 'setOptions', params: {
         checkServerUrl:                txt_server.value,
-        checkServerFingerprintsSha256: txt_sha256.value.replace(/:/g, '').toUpperCase()
+        publicKey:                     txt_publicKey.value
       }}, 'setOptionsRes').then((data) => {
         saveSettingsToBrowser()
       }, (error) => {
         div_messageCheckServer.dataset.type = 'error'
-        div_messageCheckServer.textContent  = 'Error (' + error + ')!'
+         switch (isValidCheckServer) {
+          case -1:
+            div_messageCheckServer.textContent  = browser.i18n.getMessage('__serverUnreachable__')
+            break;
+          case -2:
+            div_messageCheckServer.textContent  = browser.i18n.getMessage('__invalidPublicKeyInOptions__')
+            break;
+          case 0:
+            div_messageCheckServer.textContent  = browser.i18n.getMessage('__publicKeyNotCorresponding__')
+            break;
+          default:
+            div_messageCheckServer.textContent  = 'Error!'
+            break;
+        }
       })
     }
+  }
   }, true)
 
   btn_restoreDefault.addEventListener('click', (event) => {
     const defaultCheckServer = CMH.options.defaultCheckServer
     if (defaultCheckServer !== null) {
       txt_server.value = defaultCheckServer.url
-      txt_sha256.value = defaultCheckServer.fingerprints.sha256
-      btn_getFingerprints.style.display = 'none'
+      txt_publicKey.value = defaultCheckServer.publicKey
     }
   }, true)
 
-  btn_getFingerprints.addEventListener('click', (event) => {
-    btn_getFingerprints.disabled = true
-    div_messageCheckServer.textContent = ''
-    if (txt_server.value.slice(-1) !== '/') {
-      txt_server.value += '/'
-    }
-
-    CMH.options.getCertUrl(txt_server.value).then((response) => {
-      btn_getFingerprints.disabled = false
-      if (response.fingerprints !== null) {
-        txt_sha256.value = response.fingerprints.sha256
-        btn_getFingerprints.style.display = 'none'
-      } else {
-        div_messageCheckServer.dataset.type = 'error'
-        div_messageCheckServer.textContent  = 'Error!'
-      }
-    })
-  }, true)
 
   btn_testNativeConnection.addEventListener('click', (event) => {
     div_messageNativeAppDiscon.dataset.type = ''
@@ -237,27 +226,15 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     browser.runtime.reload()
     event.preventDefault()
   }, true)
+  
 
-  txt_sha256.addEventListener('blur', () => {
-    txt_sha256.value = txt_sha256.value.replace(/:/g, '').toUpperCase()
-  }, true)
-  const onFingerprintChange = () => {
-    if (txt_sha256.value.length === 0) {
-      btn_getFingerprints.style.display = ''
-    } else {
-      btn_getFingerprints.style.display = 'none'
-    }
-  }
-  txt_sha256.addEventListener('keyup', onFingerprintChange, true)
   txt_server.addEventListener('keyup', () => {
     const domainMatch = txt_server.value.match(/^https:\/\/([^:\/\s]+)/)
     if (domainMatch && (domainMatch[1] !== lastDomainSaved)) {
-      txt_sha256.value = ''
-      btn_getFingerprints.style.display = ''
+      txt_publicKey.value = ''
     }
   }, true)
 
-  onFingerprintChange()
   btn_save.disabled = false
 
   document.body.style.display = ''

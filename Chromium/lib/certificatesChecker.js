@@ -90,7 +90,7 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
     }
     try {
       const responseData = await CMH.native.postMessageAndWaitResponse({ action: 'check', params: { url: tab.url, tabId: tab.id }}, 'check')
-      CMH.certificatesChecker.handleVerificationResult(responseData.result, responseData.url, responseData.tabId, showNotifications)
+      CMH.certificatesChecker.handleVerificationResult(responseData.CMHwholeServerResponse, responseData.result, responseData.url, responseData.tabId, showNotifications)
     } catch (e) {
       CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
       if (showNotifications) {
@@ -139,7 +139,7 @@ CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
     }
     try {
       const responseData = await CMH.native.postMessageAndWaitResponse({ action: 'check', params: { url: urlTested }}, 'check')
-      CMH.certificatesChecker.handleVerificationResult(responseData.result, responseData.url, null, showNotifications)
+      CMH.certificatesChecker.handleVerificationResult(responseData.CMHwholeServerResponse, responseData.result, responseData.url, null, showNotifications)
     } catch (e) {
       return
     }
@@ -176,6 +176,50 @@ CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) =>
   }
 }
 
+CMH.certificatesChecker.checkServerSignature = async (response_data) => {
+	
+  server_signature = response_data.signature
+  
+  // Read the public key :
+  if(CMH.options.importedPublicKey === 'PUBLIC_KEY_ERROR')
+    return { error: 'PUBLIC_KEY' }
+  else
+    verifKey = CMH.options.importedPublicKey
+
+  response_to_verify = ""
+  response_to_verify = response_to_verify + response_data.fingerprints.sha1 + response_data.fingerprints.sha256
+
+  obj = response_data
+
+  while(obj.issuer)
+  {
+    response_to_verify = response_to_verify + obj.issuer.fingerprints.sha1 + obj.issuer.fingerprints.sha256
+    obj = obj.issuer
+  }
+
+  response_to_verify = response_to_verify + response_data.host + response_data.host_raw
+  response_to_verify = response_to_verify + (response_data.whitelisted ? 1 : 0)
+  response_to_verify = response_to_verify + response_data.cmh_sha256
+
+  response_to_verify = btoa(response_to_verify)
+
+  server_signature = CMH.options.str2ab(atob(server_signature))
+
+  response_to_verify = CMH.options.str2ab(atob(response_to_verify))
+
+  signatureIsValid = await crypto.subtle.verify(
+    {
+      name: "RSASSA-PKCS1-v1_5",
+      hash: { name: "SHA-256" }
+    },
+    verifKey,
+    server_signature,
+    response_to_verify
+  );
+
+  return signatureIsValid
+}
+
 /**
  * @name handleVerificationResult
  * @function
@@ -185,10 +229,18 @@ CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) =>
  * @param {boolean} showNotifications - Show notifications
  * Check if the user's certificate is valid.
  */
-CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNotifications) => {
+CMH.certificatesChecker.handleVerificationResult = async (response_data, result, url, tabId, showNotifications) => {
   if (result === 'OK') {
     if (tabId !== null) {
-      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.VALID)
+	  
+	  // Check server response signature
+	  signatureIsValid = await CMH.certificatesChecker.checkServerSignature(response_data)
+	  if (signatureIsValid !== true) {
+        CMH.tabsManager.setTabStatus(tabId, CMH.common.status.INVALID)
+	  }
+	  else {
+		CMH.tabsManager.setTabStatus(tabId, CMH.common.status.VALID)
+	  }
     }
   } else if (result === 'IDN') {
     if (tabId !== null) {

@@ -1,5 +1,8 @@
 # CheckMyHTTPS Changelog
 
+## 5.7.0 - 2023-05-09
+- Replace SSL Pinning with RSA-SHA256 signature verification (no more update needed when the check server certificate changes! Needs server API >= 1.6.0 and Python Native-App >= 1.3.0)
+
 ## 5.6.1 - 2023-04-28
 - New certificate fingerprint
 

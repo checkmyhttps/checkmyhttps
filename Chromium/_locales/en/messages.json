@@ -17,8 +17,8 @@
    "__checkServerSettings__": {
       "message": "Check server settings"
    },
-   "__checkServerSha256__": {
-      "message": "Server certificate SHA256"
+   "__checkServerPublicKey__": {
+      "message": "Server API public key"
    },
    "__clickToCheck__": {
       "message": "Click to check the HTTPS connection"
@@ -26,14 +26,26 @@
    "__danger__": {
       "message": "Your connection might be listened to..."
    },
+   "__defaultServerUnreachable__": {
+      "message": "Default check server unreachable!"
+   },
+   "__invalidPublicKey__": {
+      "message": "Your public key seems invalid! Please check it in the options menu or click here."
+   },
+   "__invalidPublicKeyInOptions__": {
+      "message": "Your public key seems invalid! Please check it again."
+   },
+   "__publicKeyNotCorresponding__": {
+      "message": "This public key does not match the one required by the server."
+   },
    "__disableNotifications__": {
       "message": "Disable notifications"
    },
    "__general__": {
       "message": "General"
    },
-   "__getFingerprints__": {
-      "message": "Get its certificate fingerprint"
+   "__getPublicKey__": {
+      "message": "Get its public key"
    },
    "__idnwarning__": {
       "message": "This is an international domain name printed in Unicode! The Punycode form is: \"$1\"."
@@ -74,11 +86,17 @@
    "__privateHost__": {
       "message": "We could not reach this host from the check server (it is a private host)."
    },
+   "__publicKeyUnreachable__": {
+      "message": "Unable to find a public key on this server ..."
+   },
    "__restoreDefault__": {
       "message": "Default"
    },
    "__save__": {
       "message": "Save"
+   },
+   "__serverSignatureNotVerified__": {
+     "message": "The server response signature can't be verified. This means that it has been signed by a potential malicious entity. Your connection may be intercepted. Please be careful."
    },
    "__serverUnreachable__": {
       "message": "Server unreachable..."

@@ -23,5 +23,5 @@
    },
    "permissions": [ "downloads", "nativeMessaging", "notifications", "storage", "tabs" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "5.6.1"
+   "version": "5.7.0"
 }

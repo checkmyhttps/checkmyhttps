@@ -22,7 +22,7 @@ else:                           # Python 2
     import urllib2
     from urlparse import urlparse
 
-VERSION = '1.2.1'
+VERSION = '1.3.0'
 
 ADDON_IDS = {
     'firefox': 'info@checkmyhttps.net',
@@ -32,10 +32,7 @@ ADDON_IDS = {
 
 timeout = 10
 defaultCheckServer = {
-    'url': 'https://checkmyhttps.net/',
-    'fingerprints': {
-        'sha256': 'DBA08676853A7FE79FAC8569C24E87D9C5F57820AE472110FB497AC2F7551398'
-    }
+    'url': 'https://checkmyhttps.net/'
 }
 conf_checkServer = defaultCheckServer
 
@@ -248,10 +245,6 @@ def compareFingerprints(userCertificate, checkServerCertificate):
     """ Compare two SSL certificates """
     return (userCertificate['sha256'] == checkServerCertificate['sha256'])
 
-class SSLPinningException(Exception):
-    """ SSL Pinning exception (MITM SSL) """
-    pass
-
 def openHTTPSRequest(url, checkServer=conf_checkServer):
     """ Open HTTPS request then return data body and fingerprints """
     global fingerprints
@@ -325,11 +318,7 @@ def openHTTPSRequest(url, checkServer=conf_checkServer):
 
 def getFingerprintsFromCheckServer(host, port, ip, checkServer=conf_checkServer):
     """ Get fingerprints from the check server (API) """
-    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port) + '&ip=' + ip, checkServer)
-
-    # SSL pinning on check server
-    if ((req['fingerprints'] is None) or (not compareFingerprints(req['fingerprints'], checkServer['fingerprints']))):
-        raise SSLPinningException()
+    req = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + host + '&port=' + str(port) + '&ip=' + ip + '&sign', checkServer)
 
     return json.loads(req['data'])
 
@@ -399,9 +388,6 @@ def checkUrl(url):
     try:
         req  = getFingerprintsFromClient(urlParsed['host'], urlParsed['port'])
         checkServerCert = getFingerprintsFromCheckServer(urlParsed['host'], urlParsed['port'], req['ip'])
-    except SSLPinningException as e:
-        # print('SSL pinning failed')
-        return 'SSLP'
     except socket.gaierror as e:
         # print('Address-related error connecting to server: %s' % e)
         return 'ERR'
@@ -421,7 +407,7 @@ def checkUrl(url):
     except KeyError as e:
         pass
 
-    return verifyCertificate(urlParsed['host'], req['fingerprints'], checkServerCert)
+    return verifyCertificate(urlParsed['host'], req['fingerprints'], checkServerCert), checkServerCert 
 
 def verifyCertificate(host, userCert, checkServerCert):
     """ Checks the client's certificate with the one received by the check server """
@@ -452,11 +438,8 @@ def verifyCheckServerApi(checkServer):
 
     checkServerCert = None
     try:
-        checkServerCert = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + urlParsed['host'] + '&port=' + str(urlParsed['port']), checkServer=checkServer)
+        checkServerCert = openHTTPSRequest(checkServer['url'] + 'api.php?host=' + urlParsed['host'] + '&port=' + str(urlParsed['port']) + '&sign', checkServer=checkServer)
         checkServerCert['data'] = json.loads(checkServerCert['data'])
-    except SSLPinningException:
-        # print('SSL pinning failed')
-        return 'SSLP'
     except socket.gaierror as e:
         # print('Address-related error connecting to server: %s' % e)
         return 'ERR'
@@ -469,12 +452,6 @@ def verifyCheckServerApi(checkServer):
     except Exception as e:
         # print('Connection error: %s' % e)
         return 'ERR'
-
-    if not compareFingerprints(checkServerCert['fingerprints'], checkServer['fingerprints']):
-        return 'KO'
-
-    if not compareFingerprints(checkServerCert['data']['fingerprints'], defaultCheckServer['fingerprints']):
-        return 'KO'
 
     return 'OK'
 
@@ -491,8 +468,8 @@ if __name__ == '__main__':
                 receivedMessage = getMessage()
                 if receivedMessage['action'] == 'check':
                     urlParsed = parseURL(receivedMessage['params']['url'])
-                    res = checkUrl(receivedMessage['params']['url'])
-                    sendMessage({ 'action': 'check', 'result': res, 'tabId': receivedMessage['params']['tabId'], 'url': receivedMessage['params']['url'] })
+                    res, CMHwholeServerResponse = checkUrl(receivedMessage['params']['url'])
+                    sendMessage({ 'action': 'check', 'result': res, 'tabId': receivedMessage['params']['tabId'], 'url': receivedMessage['params']['url'], 'CMHwholeServerResponse': CMHwholeServerResponse })
                 elif receivedMessage['action'] == 'getFingerprints':
                     urlParsed = parseURL(receivedMessage['params']['url'])
                     sendMessage({ 'action': 'resFingerprints', 'fingerprints': getFingerprintsFromClient(urlParsed['host'], urlParsed['port'])['fingerprints'], 'url': receivedMessage['params']['url'] })
@@ -501,7 +478,6 @@ if __name__ == '__main__':
                         res = verifyCheckServerApi({ 'url': receivedMessage['params']['checkServerUrl'], 'fingerprints': { 'sha256': receivedMessage['params']['checkServerFingerprintsSha256'] } })
                         if res == 'OK':
                             conf_checkServer['url']                    = receivedMessage['params']['checkServerUrl']
-                            conf_checkServer['fingerprints']['sha256'] = receivedMessage['params']['checkServerFingerprintsSha256']
                         sendMessage({ 'action': 'setOptionsRes', 'res': res })
                     else:
                         sendMessage('OK')
