@@ -1,5 +1,9 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.7.1 - 2024-02-04
+- Fix loading of options on browser startup (custom server and public key)
+- Better error messages
+
 ## 5.7.0 - 2022-08-31
 - Replace SSL Pinning with RSA-SHA256 signature verification (no more update needed when the check server certificate changes! Needs server API >= 1.6.0)
 - Stop sending "ip=" to the verification server if it is empty

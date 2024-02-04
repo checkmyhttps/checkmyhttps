@@ -109,8 +109,14 @@ CMH.options.verifyServerAtStartup = async (serverUrl, publicKey) => {
     server_signature,
     response_to_verify
   );
+  
+  certificatesFingerprintsAreEqual = CMH.certificatesChecker.compareCertificateFingerprints(cert, { fingerprints: { sha256: response_data.cmh_sha256 } })
+  
+  if (signatureIsValid == true && !certificatesFingerprintsAreEqual)
+	  return -3;
+  
   // "SSL Pinning" alternative : just to check if there is a Man In The Middle, even if it is passive
-  return (signatureIsValid && CMH.certificatesChecker.compareCertificateFingerprints(cert, { fingerprints: { sha256: response_data.cmh_sha256 } })) === true ? 1 : 0;
+  return (signatureIsValid && certificatesFingerprintsAreEqual) === true ? 1 : 0;
 }
 
 /**
@@ -160,23 +166,6 @@ MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
 -----END PUBLIC KEY-----`
 }
 
-// Verify the server's signature AND if there is a passive Man In The Middle
-CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.options.settings.publicKey).then((response) => {
-  switch(response) {
-    case 1:
-      break;
-    case -1:
-      CMH.ui.showNotification(browser.i18n.getMessage('__defaultServerUnreachable__'));
-      break;
-    case -2:
-      CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
-      break;
-    default:
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverSignatureNotVerified__'));
-      break;
-  }
-});
-
 // Get settings values
 browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
   const settingsItems = Object.keys(settings)
@@ -184,6 +173,27 @@ browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'd
   for (let item of settingsItems) {
     CMH.options.settings[item] = settings[item]
   }
+  
+  // Verify the server's signature AND if there is a passive Man In The Middle
+	CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.options.settings.publicKey).then((response) => {
+	  switch(response) {
+		case 1:
+		  break;
+		case -1:
+		  CMH.ui.showNotification(browser.i18n.getMessage('__defaultServerUnreachable__'));
+		  break;
+		case -2:
+		  CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
+		  break;
+		case -3:
+		  CMH.ui.showNotification(browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__'));
+		  break;
+		default:
+		  CMH.ui.showNotification(browser.i18n.getMessage('__serverSignatureNotVerified__'));
+		  break;
+	  }
+	});
+  
 }, (error) => { console.error(error) })
 
 // Listen for settings changes

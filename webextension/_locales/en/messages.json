@@ -36,7 +36,11 @@
   },
 
   "__serverUnreachable__": {
-    "message": "Server unreachable..."
+    "message": "Server unreachable... Is the verification server's HTTPS certificate valid? Developers, if you created your own certification authority, you need to add it to your browser."
+  },
+
+  "__serverHardcodedFingerprintNotCorresponding__": {
+    "message": "The SHA256 hash specified in the server's response does not match with the SHA256 hash of its certificate. Have you updated its fingerprint in the variable cmh_sha256 (on the server) in api.php ?"
   },
   
   "__publicKeyUnreachable__": {

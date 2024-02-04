@@ -36,7 +36,11 @@
   },
 
   "__serverUnreachable__": {
-    "message": "Serveur injoignable ..."
+    "message": "Serveur injoignable... Le certificat HTTPS du serveur de vérification est-il valide ? Si vous êtes développeur et que vous avez généré votre autorité de certification, veillez à bien l'ajouter à votre navigateur."
+  },
+
+  "__serverHardcodedFingerprintNotCorresponding__": {
+    "message": "Le hash SHA256 spécifié dans la réponse du serveur ne correspond pas au hash SHA256 de son certificat. Avez-vous bien mis à jour la variable cmh_sha256 (côté serveur) dans api.php ?"
   },
   
   "__publicKeyUnreachable__": {

@@ -123,6 +123,9 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
           case 0:
             div_messageCheckServer.textContent  = browser.i18n.getMessage('__publicKeyNotCorresponding__')
             break;
+          case -3:
+            div_messageCheckServer.textContent  = browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__');
+            break;
           default:
             div_messageCheckServer.textContent  = 'Error!'
             break;
