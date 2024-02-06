@@ -1,5 +1,10 @@
 # CheckMyHTTPS Mobile App Changelog
 
+## 5.7.1 - 2023-02-06
+
+- switch framework to Flutter
+- add signature control on server response
+
 ## 1.3.0 - 2022-02-28
 - Add IP getter and call API with, in order to avoid false negatives
 - Update of dependencies

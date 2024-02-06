@@ -1,0 +1,53 @@
+name: checkmyhttps
+description: A new Flutter project.
+
+publish_to: "none"
+
+version: 5.7.1+5
+
+environment:
+  sdk: ">=2.19.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.18.1
+  shared_preferences: 2.0.18
+  connectivity_plus: 3.0.3
+  package_info_plus: 3.0.3
+  provider: 6.0.5
+  cupertino_icons: 1.0.5
+  google_fonts: 4.0.3
+  crypto: 3.0.2 # important la version
+  convert: 3.1.1
+  url_launcher: 6.1.10
+  auto_size_text: ^3.0.0
+  fast_rsa: ^3.6.1
+
+  introduction_screen: 3.1.6
+  receive_sharing_intent: 1.4.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: 0.12.0
+  flutter_lints: 2.0.1
+
+#flutter pub run flutter_launcher_icons:main
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icons/ios-icon.png"
+  image_path_ios: "assets/images/icons/ios-icon.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/icons/android-adaptive-icon.png"
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/intro/
+    - assets/images/status/

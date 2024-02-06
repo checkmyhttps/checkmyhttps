@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Modify this file to customize your launch splash screen -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent" android:layout_width="match_parent">
+    <item android:drawable="@android:color/white" />
+
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@raw/cmh_logo" />
+    </item>
+    <item android:bottom="50dp">
+        <bitmap 
+            android:gravity="bottom"
+            android:src="@raw/cmh"/>
+    </item>
+</layer-list>
+

@@ -1,0 +1,236 @@
+{
+  "@@locale": "fr",
+  "title": "CheckMyHTTPS",
+  "@title": {
+    "type": "String"
+  },
+  "menu": "Menu",
+  "@menu": {
+    "type": "String"
+  },
+  "noInternet": "Pas de connection Internet!",
+  "@noInternet": {
+    "type": "String"
+  },
+  "lightTheme": "Thème Clair",
+  "@lightTheme": {
+    "type": "String"
+  },
+  "darkTheme": "Thème Sombre",
+  "@darkTheme": {
+    "type": "String"
+  },
+  "home": "Accueil",
+  "@home": {
+    "type": "String"
+  },
+  "intro": "Intro",
+  "@intro": {
+    "type": "String"
+  },
+  "how": "Comment",
+  "@how": {
+    "type": "String"
+  },
+  "about": "À propos",
+  "@about": {
+    "type": "String"
+  },
+  "settings": "Paramètres",
+  "@settings": {
+    "type": "String"
+  },
+  "switchTheme": "Changer le Theme",
+  "@switchTheme": {
+    "type": "String"
+  },
+  "language": "Langue",
+  "@language": {
+    "type": "String"
+  },
+  "changeLanguage": "Changer la langue",
+  "@changeLanguage": {
+    "type": "String"
+  },
+  "defaultUrl": "URL par défaut",
+  "@defaultUrl": {
+    "type": "String"
+  },
+  "checkServer": "Serveur de vérification",
+  "@checkServer": {
+    "type": "String"
+  },
+  "checkServerAddress": "Adresse du serveur de vérification",
+  "@checkServerAddress": {
+    "type": "String"
+  },
+  "checkServerHash": "Sha256 du serveur de vérification",
+  "@checkServerHash": {
+    "type": "String"
+  },
+  "checkServerPublicKey": "Clé publique du serveur de vérification",
+    "@checkServerPublicKey": {
+      "type": "String"
+  },
+  "getFingerprints": "Obtenir des empreintes digitales",
+  "@getFingerprints": {
+    "type": "String"
+  },
+  "getPublicKey": "Obtenir la clé publique",
+    "@getPublicKey": {
+      "type": "String"
+  },
+  "resetDefault": "Réinitialiser par défaut",
+  "@resetDefault": {
+    "type": "String"
+  },
+  "websiteUrl": "URL de site web",
+  "@websiteUrl": {
+    "type": "String"
+  },
+  "check": "Vérifier",
+  "@check": {
+    "type": "String"
+  },
+  "version": "Version",
+  "@version": {
+    "type": "String"
+  },
+  "titleAbout": "Vérifiez si votre trafic Web chiffré (HTTPS) est en cours d'interception",
+  "@titleAbout": {
+    "type": "String"
+  },
+  "descriptionAbout": "Cette application mobile vous permet de vérifier si votre trafic Web chiffré (SSL / TLS) vers des serveurs Internet sécurisés (HTTPS) est en cours d'interception.",
+  "@descriptionAbout": {
+    "type": "String"
+  },
+  "versionApp": "Version de l'application",
+  "@versionApp": {
+    "type": "String"
+  },
+  "originalIdea": "Idée originale et supervision",
+  "@originalIdea": {
+    "type": "String"
+  },
+  "designDevProject": "Conception et développement du projet CheckMyHTTPS",
+  "@designDevProject": {
+    "type": "String"
+  },
+  "designDevApp": "Conception et développement de l'application mobile",
+  "@designDevApp": {
+    "type": "String"
+  },
+  "explanation": "Explication",
+  "@explanation": {
+    "type": "String"
+  },
+  "howText": "Normalement, un site Web sécurisé doit prouver son identité à votre navigateur en envoyant un certificat validé par une autorité de certificat reconnue.\nLes techniques d'interception génèrent des certificats forgés dynamiquement pour tromper l'utilisateur et le faire croire que sa connexion est sécurisée.\nCette application mobile vérifie que le certificat reçu est le bon.\nElle compare le certificat reçu par le client (1) lors de la visite d'un site Web HTTPS avec le certificat vu par un serveur de contrôle distant (2), garantissant ainsi qu'aucune interception n'a lieu.\nSi ces certificats sont différents, votre connexion pourrait être écoutée ! Cela nous permet de prouver l'interception.",
+  "@howText": {
+    "type": "String"
+  },
+  "defaultServer": "Ce serveur est par défaut « {defaultServerAddress} ». Vous pouvez installer votre propre serveur (voir la documentation sur CheckMyHTTPS Github).",
+  "@defaultServer": {
+    "type": "String",
+    "placeholders": {
+      "defaultServerAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "howImageTitle": "Voici comment fonctionne CheckMyhttps:",
+  "@howImageTitle": {
+    "type": "String"
+  },
+  "howImageLegend": "Voici ce qui se passe lorsque CheckMyHTTPS vérifie votre connexion HTTPS",
+  "@howImageLegend": {
+    "type": "String"
+  },
+  "next": "Suivant",
+  "@next": {
+    "type": "String"
+  },
+  "previous": "Précédent",
+  "@previous": {
+    "type": "String"
+  },
+  "close": "Fermer",
+  "@close": {
+    "type": "String"
+  },
+  "introTitle1": "introduction",
+  "@introTitle1": {
+    "type": "String"
+  },
+  "intro1": "Cette application vérifie si votre connexion est sécurisée lorsque vous fournissez l'URL d'un site Web",
+  "@intro1": {
+    "type": "String"
+  },
+  "introTitle2": "Partager",
+  "@introTitle2": {
+    "type": "String"
+  },
+  "intro2": "Vous pouvez également lancer l'application à partir de votre navigateur Web (Chrome, Firefox) en cliquant sur Partager ...",
+  "@intro2": {
+    "type": "String"
+  },
+  "introTitle3": "Les paramètres du serveur",
+  "@introTitle3": {
+    "type": "String"
+  },
+  "intro3": "Si vous souhaitez modifier le serveur de vérification, veuillez consulter la documentation dans le github de CheckMyhttps",
+  "@intro3": {
+    "type": "String"
+  },
+  "noHttps": "Ce n'est pas un site HTTPS (vérifiez l'URL)",
+  "@noHttps": {
+    "type": "String"
+  },
+  "serverUnreachable": "Serveur injoignable...",
+  "@serverUnreachable": {
+    "type": "String"
+  },
+  "danger": "Votre connexion est peut-être sur-écoute...",
+  "@danger": {
+    "type": "String"
+  },
+  "alertOnUnicodeIdnDomainNames": "Le nom de domaine est internationalisé et votre navigateur l'affiche en Unicode",
+  "@alertOnUnicodeIdnDomainNames": {
+    "type": "String"
+  },
+  "sslPeerUnverified": "Le nom du domaine n'est pas le même que sur le certificat.",
+  "@sslPeerUnverified": {
+    "type": "String"
+  },
+  "platformNotSupported": "Applications basées sur le navigateur non prises en charge",
+  "@platformNotSupported": {
+    "type": "String"
+  },
+  "newCheckServer": "Le nouveau serveur de vérification a été enregistré",
+  "@newCheckServer": {
+    "type": "String"
+  },
+  "privateIp": "Nous ne pouvons pas joindre cette IP via notre serveur de test (IP privée).",
+  "@privateIp": {
+    "type": "String"
+  },
+  "serverUnknown": "Serveur inconnu ...",
+  "@serverUnknown": {
+    "type": "String"
+  },
+  "sslPinning": "Le serveur de vérification requêté est différent. Votre connexion est peut-être sur-écoute ...",
+  "@sslPinning": {
+    "type": "String"
+  },
+  "secureConnection": "Votre connexion HTTPS est sécurisée.",
+  "@secureConnection": {
+    "type": "String"
+  },
+  "notURL": "Ce n'est pas un URL.",
+  "@notURL": {
+    "type": "String"
+  },
+  "save": "Sauvegarder",
+    "@save": {
+      "type": "String"
+    }
+}

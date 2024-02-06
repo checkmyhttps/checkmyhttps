@@ -1,59 +1,33 @@
-# CheckMyHTTPS Mobile App installation
+# Flutter CheckMyHttps
 
-## Linux (Ubuntu)
+## Description
 
-### Requirements
-1. Install Git: `sudo apt-get install git`
-2. Install Node.JS and NPM: `sudo apt install -y nodejs` and `sudo apt install npm`
-3. Install Ionic: `sudo npm install -g @ionic/cli`
+This application is a client of the CheckMyHttps project designed for smartphones. It has been built for Android and published on the Google Play Store. It may work on iOS, but we haven't tested it.
 
-#### For Android
-4. Install OpenJDK and Gradle and set the `$JAVA_HOME` variable: `sudo apt install default-jdk gradle` and `export JAVA_HOME=/usr/lib/jvm/default-java`
-5. Install Android Studio and Android SDK (with Android Studio or SDK Tools) and set the `$ANDROID_HOME` variable: `export ANDROID_HOME=~/Android/Sdk` and `export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools`) and `export CAPACITOR_ANDROID_STUDIO_PATH="/opt/android-studio/bin/studio.sh"`
+## Installation 
 
+Download Android studio following their [tutorial](https://developer.android.com/studio/install)
 
-## Windows (10)
+### Download the dependencies of the project.
 
-### Requirements
-1. Install Git: [Git](https://git-scm.com/download/win)
-2. Install Node.JS and NPM: [Node.JS](https://nodejs.org/en/download/) and `npm install -g npm`
-3. Install Ionic: `npm install -g @ionic/cli`
+> flutter pub get
 
-#### For Android
-4. Install JDK and Gradle: [Java JDK](https://www.oracle.com/java/technologies/downloads/#jdk17-windows) [Gradle](https://gradle.org/releases/) and set the `JAVA_HOME` environment variable.
-5. Install the Android SDK (with Android Studio or SDK Tools) and set the `ANDROID_HOME` environment variable and in `PATH` environment variable: `ANDROID_HOME`+`\tools` `ANDROID_HOME`+`\cmdline-tools\latest\bin` `ANDROID_HOME`+`\platform-tools` `ANDROID_HOME`+`\emulator`
+## FAQ
 
+### Why choose Flutter?
 
-## Installation (Same Linux & Windows)
-go to `\Mobile_App\` folder
+This project is mainly maintained by students from ESIEA, and Flutter is part of their training curriculum. Moreover, we still benefit from the cross-platform advantage that the Ionic version offered.
 
-### Build Ionic wrapper du plugin:
-go to `\ionic-native\` folder
-1. `npm install`
-2. `npm run build`
+### Can I use it with my own CMH server?
 
-### Build CheckMyHTTPS Ionic project:
-in `\Ionic\` folder
-1. `npm install`
-3. `npm run build`
-2. `ionic cap add android`
-4. `ionic cap update android`
-5. `ionic cap sync`
+Due to a specificity of the Dart language, the current version of the app only works with servers that have a certificate signed by a CA Root recognized by Mozilla. You may need to modify parts of the code to use it if your organization issues its own certificates.
 
-### Add logo and splash screen :
-in `\Ionic\` folder
-1. `npm run resources`
+### What's new in this version?
 
-### Change versionCode & versionName 
-in `\Ionic\android\app\build.gradle` file
-lines 9 & 10
+We have changed the framework and also added signature verification to the app to enhance the security of the checks.
 
-### Build Ionic Android App:
-in `\Ionic\` folder
-1. Build android: `ionic cap build android`
+## Authors
 
-### Start web
-`ionic serve`
+Developed by Ghassen LAHDHIRI, Ahmed BOUSRIH, and Mehdi BELAJOUZA.
 
-## JavaScript bridge :
-`CMHPlugin\www\CMHPlugin.js`
+Review, updated and published by Cyril LEBLAY and Adrien SCHNEIDER.

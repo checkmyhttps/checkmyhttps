@@ -1,0 +1,236 @@
+{
+  "@@locale": "en",
+  "title": "CheckMyHTTPS",
+  "@title": {
+    "type": "String"
+  },
+  "menu": "Menu",
+  "@menu": {
+    "type": "String"
+  },
+  "noInternet": "No internet connection!",
+  "@noInternet": {
+    "type": "String"
+  },
+  "lightTheme": "Light Theme",
+  "@lightTheme": {
+    "type": "String"
+  },
+  "darkTheme": "Dark Theme",
+  "@darkTheme": {
+    "type": "String"
+  },
+  "home": "Home",
+  "@home": {
+    "type": "String"
+  },
+  "intro": "Intro",
+  "@intro": {
+    "type": "String"
+  },
+  "how": "How",
+  "@how": {
+    "type": "String"
+  },
+  "about": "About",
+  "@about": {
+    "type": "String"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "type": "String"
+  },
+  "switchTheme": "Switch Theme",
+  "@switchTheme": {
+    "type": "String"
+  },
+  "language": "Language",
+  "@language": {
+    "type": "String"
+  },
+  "changeLanguage": "Change Language",
+  "@changeLanguage": {
+    "type": "String"
+  },
+  "defaultUrl": "Default URL",
+  "@defaultUrl": {
+    "type": "String"
+  },
+  "checkServer": "Check Server",
+  "@checkServer": {
+    "type": "String"
+  },
+  "checkServerAddress": "Check Server Address",
+  "@checkServerAddress": {
+    "type": "String"
+  },
+  "checkServerHash": "Check Server SHA256",
+  "@checkServerHash": {
+    "type": "String"
+  },
+  "checkServerPublicKey": "Check Server Public Key",
+    "@checkServerPublicKey": {
+      "type": "String"
+  },
+  "getFingerprints": "Get Fingerprints",
+  "@getFingerprints": {
+    "type": "String"
+  },
+  "getPublicKey": "Get Public Key",
+    "@getPublicKey": {
+      "type": "String"
+  },
+  "resetDefault": "Reset Default",
+  "@resetDefault": {
+    "type": "String"
+  },
+  "websiteUrl": "Website URL",
+  "@websiteUrl": {
+    "type": "String"
+  },
+  "check": "Check",
+  "@check": {
+    "type": "String"
+  },
+  "version": "Version",
+  "@version": {
+    "type": "String"
+  },
+  "titleAbout": "Check if your encrypted WEB traffic (HTTPS) is being intercepted",
+  "@titleAbout": {
+    "type": "String"
+  },
+  "descriptionAbout": "This mobile app allows you to check if your encrypted web traffic (SSL/TLS) towards secure Internet servers (HTTPS) is being intercepted.",
+  "@descriptionAbout": {
+    "type": "String"
+  },
+  "versionApp": "Version of the app",
+  "@versionApp": {
+    "type": "String"
+  },
+  "originalIdea": "Original idea & Supervision",
+  "@originalIdea": {
+    "type": "String"
+  },
+  "designDevProject": "Design and development of the CheckMyHTTPS project",
+  "@designDevProject": {
+    "type": "String"
+  },
+  "designDevApp": "Design and development of the mobile app",
+  "@designDevApp": {
+    "type": "String"
+  },
+  "explanation": "Explanation",
+  "@explanation": {
+    "type": "String"
+  },
+  "howText": "Normally, a secure website has to prove its identity to your browser by sending a certificate validated by a recognized certificate authority.\nInterception techniques generate dynamically forged certificates in order to fool the user into believing that his connection is secure.\nThis mobile app checks that the received certificate is the right one.\nThis app will compare that the certificate received by the client (1) from a visited HTTPS website matches the certificate seen by a remote check server* (2), ensuring that no interception is taking place.\nIf they are different, your connection might be listened to! This allows us to prove the interception.",
+  "@howText": {
+    "type": "String"
+  },
+  "defaultServer": "This server is by default « {defaultServerAddress} ». You can install your own server (see documentation on the CheckMyHTTPS Github).",
+  "@defaultServer": {
+    "type": "String",
+    "placeholders": {
+      "defaultServerAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "howImageTitle": "Here is how CheckMyHTTPS works :",
+  "@howImageTitle": {
+    "type": "String"
+  },
+  "howImageLegend": "Here is what happens when CheckMyHTTPS checks your HTTPS connection",
+  "@howImageLegend": {
+    "type": "String"
+  },
+  "next": "Next",
+  "@next": {
+    "type": "String"
+  },
+  "previous": "Previous",
+  "@previous": {
+    "type": "String"
+  },
+  "close": "Close",
+  "@close": {
+    "type": "String"
+  },
+  "introTitle1": "Introduction",
+  "@introTitle1": {
+    "type": "String"
+  },
+  "intro1": "This app checks if your connection is secure when you provide the URL of a website",
+  "@intro1": {
+    "type": "String"
+  },
+  "introTitle2": "Share",
+  "@introTitle2": {
+    "type": "String"
+  },
+  "intro2": "You can also launch the app from your web browser (Chrome, Firefox) by clicking on Share...",
+  "@intro2": {
+    "type": "String"
+  },
+  "introTitle3": "The Server Parameters",
+  "@introTitle3": {
+    "type": "String"
+  },
+  "intro3": "If you want to change the check server, please look at the documentation in the CheckMyHTTPS' GitHub",
+  "@intro3": {
+    "type": "String"
+  },
+  "noHttps": "It is not a HTTPS website (check the URL)",
+  "@noHttps": {
+    "type": "String"
+  },
+  "serverUnreachable": "Server unreachable...",
+  "@serverUnreachable": {
+    "type": "String"
+  },
+  "danger": "Your connection might be listened to...",
+  "@danger": {
+    "type": "String"
+  },
+  "alertOnUnicodeIdnDomainNames": "The domain name is an international one and your browser shows it in Unicode",
+  "@alertOnUnicodeIdnDomainNames": {
+    "type": "String"
+  },
+  "sslPeerUnverified": "The requested domain name does not match the server's certificate.",
+  "@sslPeerUnverified": {
+    "type": "String"
+  },
+  "platformNotSupported": "Browser-based apps not supported",
+  "@platformNotSupported": {
+    "type": "String"
+  },
+  "newCheckServer": "The new check server has been set.",
+  "@newCheckServer": {
+    "type": "String"
+  },
+  "privateIp": "We couldn't reach this IP from our check server (this is a private IP).",
+  "@privateIp": {
+    "type": "String"
+  },
+  "serverUnknown": "Server unknown...",
+  "@serverUnknown": {
+    "type": "String"
+  },
+  "sslPinning": "The requested check server is different. Your connection might be listened to...",
+  "@sslPinning": {
+    "type": "String"
+  },
+  "secureConnection": "Your HTTPS connection is secure.",
+  "@secureConnection": {
+    "type": "String"
+  },
+  "notURL": "It is not a URL.",
+  "@notURL": {
+    "type": "String"
+  },
+  "save": "Save",
+    "@Save": {
+      "type": "String"
+    }
+}
