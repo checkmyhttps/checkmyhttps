@@ -144,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
           cause: VerificationExceptionCause.sslPinning,
         );
       }
-
       if (dataCertException?.cause == VerificationExceptionCause.danger &&
           checkServerData?.apiInfo["error"] == "HOST_UNREACHABLE") {
         dataCertException = const VerificationException(
@@ -153,6 +152,11 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else if (dataCert == null &&
           checkServerData?.apiInfo["error"] == "HOST_UNREACHABLE") {
+        dataCertException = const VerificationException(
+          type: VerificationExceptionType.warning,
+          cause: VerificationExceptionCause.serverUnreachable,
+        );
+      } else if (checkServerData!.sha256 == null) {
         dataCertException = const VerificationException(
           type: VerificationExceptionType.warning,
           cause: VerificationExceptionCause.serverUnreachable,
@@ -171,7 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
       }
 
       if (dataCert?.sha256 != checkServerData!.apiInfo["fingerprints"]["sha256"] ||
-          checkServerData?.apiInfo?["issuer"] == null) {
+          checkServerData?.apiInfo?["issuer"] == null ||
+          checkServerData!.sha256.toString() != checkServerData.apiInfo["cmh_sha256"]) {
         dataCertException = const VerificationException(
           type: VerificationExceptionType.invalid,
           cause: VerificationExceptionCause.danger,

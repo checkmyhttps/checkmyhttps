@@ -6,7 +6,6 @@ import "package:flutter/foundation.dart";
 import "package:convert/convert.dart";
 import "package:crypto/crypto.dart";
 
-
 class Fingerprints {
   final String? ip;
   final String sha256;
@@ -27,9 +26,11 @@ class Fingerprints {
 
 class CheckServerFingerprints {
   final dynamic apiInfo;
+  final String sha256;
 
   const CheckServerFingerprints({
     required this.apiInfo,
+    required this.sha256,
   });
 
   @override
@@ -76,6 +77,8 @@ class VerificationService {
           return httpsConnectionRequest.close();
         },
       );
+
+      X509Certificate? certificate = await httpsConnection.certificate;
 
       if (withResponse == true) {
         final contents = StringBuffer();
@@ -171,6 +174,7 @@ class VerificationService {
 
     return CheckServerFingerprints(
       apiInfo: requestFingerprints.response,
+      sha256: requestFingerprints.sha256,
     );
   }
 
@@ -191,6 +195,8 @@ class VerificationService {
     );
     return CheckServerFingerprints(
       apiInfo: requestFingerprints.response,
+      sha256: requestFingerprints.sha256,
+
     );
   }
 }
