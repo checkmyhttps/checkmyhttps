@@ -14,7 +14,7 @@ If you have any doubt (or when you want), you are free to check your HTTPS conne
 
 - The extension is only active when you click on its icon. At that moment, it only uses the name of the visited website and the certificate received from it;
 - The "verification server" only receives the name of the visited website
-- You can create your own "verification server-
+- You can create your own "verification server"
 
 # More details:
 
@@ -38,8 +38,8 @@ Si vous avez un doute (ou quand vous le souhaitez), vous êtes libre de vérifie
 # Respect de la vie privée :
 
 - L’extension n'est active que lorsque vous cliquez sur son icône. À ce moment là, elle n'utilise que le nom du site visité et le certificat reçu de ce dernier;
-- Le serveur de vérification externe ne reçoit que le nom du site visité;
-- Vous pouvez créer votre propre serveur de vérification.
+- Le "serveur de vérification" externe ne reçoit que le nom du site visité;
+- Vous pouvez créer votre propre "serveur de vérification".
 
 # Plus de détails :
 
@@ -51,7 +51,8 @@ ________________________________________________________________________________
 
 Original idea & project management: Richard REY (aka Rexy)
 
-Development: Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA, Quentin COLLART, Mathis CADIO & Sylvain BOUTEILLER
+Current developers : Sylvain BOUTEILLER, Adrien SCHNEIDER
+Previous developers : Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA, Quentin COLLART, Mathis CADIO, Ghassen LAHDHIRI, Ahmed BOUSRIH, Mehdi BELAJOUZA 
 
 Logo: Clément SICCARDI
 
