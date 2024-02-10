@@ -52,6 +52,7 @@ ________________________________________________________________________________
 Original idea & project management: Richard REY (aka Rexy)
 
 Current developers : Sylvain BOUTEILLER, Adrien SCHNEIDER
+
 Previous developers : Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA, Quentin COLLART, Mathis CADIO, Ghassen LAHDHIRI, Ahmed BOUSRIH, Mehdi BELAJOUZA 
 
 Logo: Clément SICCARDI
