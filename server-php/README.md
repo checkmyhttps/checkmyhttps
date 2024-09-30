@@ -30,6 +30,43 @@ The cache is enabled by default, but you can turn it off by setting the variable
 2. Install dependencies with composer: `composer install` inside your webroot (else you can extract `vendor-static.tar.gz`).
 3. Then configure your clients to use your own check server.
 
+### Scripted installation
+1. Prepare the directory layout
+- sources
+```
+$HOME/checkmyhttps
+```
+- wwwdir 
+```
+/opt/checkmyhttps/www
+```
+- private key dir
+```
+/opt/checkmyhttps/key
+```
+- tmpdir
+```
+/opt/checkmyhttps/tmp
+```
+- locate the server's https certificate
+```
+/etc/ssl/my.crt
+```
+- locate the webserver or php user
+```
+www-data
+```
+
+2. installation
+```
+# add this line in `/etc/fstab`: 
+tmpfs /opt/checkmyhttps/tmp tmpfs mand,noatime,size=256m,nosuid,noexec,uid=www-data,gid=www-data,mode=770 0 0
+mount /opt/checkmyhttps/tmp
+
+./install.sh /opt/checkmyhttps/www /opt/checkmyhttps/key /etc/ssl/my.crt  mydomain.com
+```
+3. You will be asked to generate a new app ssl certificate
+
 ### Testing with Docker
 
 1. Put your certificate in `confs/cert` folder (with names: `cert.cer`, `privkey.key` and `chain.cer`).
