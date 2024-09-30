@@ -375,6 +375,7 @@ function objToString($obj, &$str)
  */
 function hashAndEncrypt($response, $sign)
 {
+	global $PRIVATE_KEY, $CERT_SHA256;
 	if(!$sign)
 		return $response;
 
