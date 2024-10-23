@@ -2,20 +2,14 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
+include __DIR__ . '/config.php';
+
 define('INSTANCE_TITLE', 'CheckMyHTTPS API server');
 define('VERSION', '1.6.0');
 define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
 define('CMH_DEBUG', false);
 
 header('Content-Type: application/json');
-
-//Set this variable to false if you don't want to use the cache
-$use_cache = true;
-
-$path_to_cache = "/var/tmp/cmh_cache/";
-
-//Max duree of cache (default: 21600 seconds = 6 hours)
-$cacheTTL = 21600;
 
 //DNS record found in cache ?
 $cacheFound = false;
@@ -193,7 +187,7 @@ if(empty($service->port))
 	exit(json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_PORT'], $sign)));
 
 // Replace this array with your server's FQDNs and public IP addresses :
-if (in_array($service->host, ['checkmyhttps.net','www.checkmyhttps.net','185.235.207.57'])) $service->ip = '127.0.0.1';
+if (in_array($service->host, $TRUSTED_HOSTS)) $service->ip = '127.0.0.1';
 
 if((!$allowPrivateIp) && ($service->ip !== '127.0.0.1') && (!filter_var($service->ip, FILTER_VALIDATE_IP, ['flags' => (FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)])))
 {
@@ -381,12 +375,13 @@ function objToString($obj, &$str)
  */
 function hashAndEncrypt($response, $sign)
 {
+	global $PRIVATE_KEY, $CERT_SHA256;
 	if(!$sign)
 		return $response;
 
-	$private_key = file_get_contents("/path/to/your/private/key");
+	$private_key = file_get_contents($PRIVATE_KEY);
 
-	$response->cmh_sha256 = 'SHA256_FINGERPRINT_OF_YOUR_SERVER_S_HTTPS_CERTIFICATE';
+	$response->cmh_sha256 = $CERT_SHA256;
 
 	$response_to_sign = "";
 
