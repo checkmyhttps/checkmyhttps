@@ -1,6 +1,10 @@
 # CheckMyHTTPS API server installation
 
-### Requirements
+* You can choose between a manual or a scripted installation
+
+### Manual installation
+
+**REQUIRMENTS**
 
 * You need an HTTPS server with PHP and php-filter module
 * You also need a TMPFS partition for the cache. Here is the process (Linux):
@@ -8,7 +12,7 @@
 2. Change the gid of the administrator (valid during this session only): `[administrator]$ newgrp apache`
 3. Create the cache directory: `[administrator]$ mkdir /var/tmp/cmh_cache`
 
-**IMPORTANT**: In the next 2 steps, you will need to replace **960** and **955** by the uid and the gid of your server (with Apache: `id apache`).
+**Important**: In the next 2 steps, you will need to replace **960** and **955** by the uid and the gid of your server (with Apache: `id apache`).
 
 4. Mount it with the good rights (apache:apache only): `[root]# mount -t tmpfs -o mand,noatime,size=256m,nosuid,noexec,uid=`**960**`,gid=`**955**`,mode=770 tmpfs /var/tmp/cmh_cache`
 5. Make it permanent (reboot-safe): add this line in `/etc/fstab`: `tmpfs /var/tmp/cmh_cache tmpfs mand,noatime,size=256m,nosuid,noexec,uid=`**960**`,gid=`**955**`,mode=770 0 0`
@@ -24,13 +28,19 @@ The cache is enabled by default, but you can turn it off by setting the variable
 10. Edit `config.php` with the **uppercase** SHA256 fingerprint of your HTTPS certificate (replace `SHA256_FINGERPRINT_OF_YOUR_SERVER_S_HTTPS_CERTIFICATE` in `$response->cmh_sha256`). You can use this command to retrieve the SHA256 fingerprint: ` openssl x509 -in your_certificate.crt -inform PEM -out /dev/stdout -outform DER | sha256sum | tr a-z A-Z`
 11. Edit `config.php` and replace `['checkmyhttps.net','www.checkmyhttps.net','185.235.207.57']` with all your server's FQDN and ip addresses.
 
-### Installation
+**INSTALLATION**
 
 1. Copy the content of the `www` folder to your webroot.
 2. Install dependencies with composer: `composer install` inside your webroot (else you can extract `vendor-static.tar.gz`).
 3. Then configure your clients to use your own check server.
 
+
 ### Scripted installation
+
+**REQUIRMENTS**
+
+* You need an HTTPS server with PHP and php-filter module
+
 1. Prepare the directory layout
 - sources
 ```
@@ -57,21 +67,25 @@ $HOME/checkmyhttps
 www-data
 ```
 
-2. installation
-```
-# add this line in `/etc/fstab`: 
+2. Add this line in `/etc/fstab`: 
 tmpfs /opt/checkmyhttps/tmp tmpfs mand,noatime,size=256m,nosuid,noexec,uid=www-data,gid=www-data,mode=770 0 0
 mount /opt/checkmyhttps/tmp
 
+3. Make sure to copy the content of the `www` folder to your webroot. (Here it's `/opt/checkmyhttps/www`)
+
+**INSTALLATION**
+
+4. Launch the script. You will be asked to generate a new app ssl certificate. Make sure to not add a `/` at the end of the directories.
 ./install.sh /opt/checkmyhttps/www /opt/checkmyhttps/key /etc/ssl/my.crt  mydomain.com
 ```
-3. You will be asked to generate a new app ssl certificate
+
 
 ### Testing with Docker
 
 1. Put your certificate in `confs/cert` folder (with names: `cert.cer`, `privkey.key` and `chain.cer`).
 2. Build the Docker image: `docker build -t checkmyhttps/cmh_server .`.
 3. Run the docker container: `docker run -it --rm -p 443:443 checkmyhttps/cmh_server`.
+
 
 ### More information
 
