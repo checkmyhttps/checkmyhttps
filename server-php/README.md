@@ -68,16 +68,18 @@ www-data
 ```
 
 2. Add this line in `/etc/fstab`: 
-tmpfs /opt/checkmyhttps/tmp tmpfs mand,noatime,size=256m,nosuid,noexec,uid=www-data,gid=www-data,mode=770 0 0
-mount /opt/checkmyhttps/tmp
+
+`tmpfs /opt/checkmyhttps/tmp tmpfs mand,noatime,size=256m,nosuid,noexec,uid=www-data,gid=www-data,mode=770 0 0`
+
+`mount /opt/checkmyhttps/tmp`
 
 3. Make sure to copy the content of the `www` folder to your webroot. (Here it's `/opt/checkmyhttps/www`)
 
 **INSTALLATION**
 
 4. Launch the script. You will be asked to generate a new app ssl certificate. Make sure to not add a `/` at the end of the directories.
-./install.sh /opt/checkmyhttps/www /opt/checkmyhttps/key /etc/ssl/my.crt  mydomain.com
-```
+
+`./install.sh /opt/checkmyhttps/www /opt/checkmyhttps/key /etc/ssl/my.crt  mydomain.com`
 
 
 ### Testing with Docker
