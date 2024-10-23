@@ -73,8 +73,6 @@ www-data
 
 `mount /opt/checkmyhttps/tmp`
 
-3. Make sure to copy the content of the `www` folder to your webroot. (Here it's `/opt/checkmyhttps/www`)
-
 **INSTALLATION**
 
 4. Launch the script. You will be asked to generate a new app ssl certificate. Make sure to not add a `/` at the end of the directories.
