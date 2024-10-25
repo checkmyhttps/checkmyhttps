@@ -12,6 +12,26 @@ Download Android studio following their [tutorial](https://developer.android.com
 
 > flutter pub get
 
+## Dependencies management
+
+We have adding a json file directly in the project in order to list all the dependencies of the flutter project, the goal is to be able to check quickly if there are dependencies out of date in
+the project.
+
+If you want to reproduce this json file, you should follow this steps : 
+
+### First Step : 
+  In order to get all the dependencies of the flutter project, you will have to use this command :  “dart pub deps --json >> output.json”  in the shell of android studio project.
+
+  Reference : https://dart.dev/tools/pub/cmd/pub-deps
+
+### Second Step : 
+  After that, you should send the “output.json” file into an json viewer online like this one : https://jsonformatter.org/json-viewer
+
+### Third Step :
+
+If you are looking for a specific dependency, you can use the research bar in the top right corner.
+ 
+
 ## FAQ
 
 ### Why choose Flutter?
