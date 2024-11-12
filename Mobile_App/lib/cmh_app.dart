@@ -21,28 +21,20 @@ class CmhApp extends StatefulWidget {
 
 class _CmhAppState extends State<CmhApp> {
   late IAppSettings _settings;
-  late final StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late final StreamSubscription< List<ConnectivityResult> > _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
 
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
-      (ConnectivityResult connec) async {
-        bool isConnected = (connec != ConnectivityResult.none);
-        try {
-          final result = await InternetAddress.lookup(
-            Uri.parse(CmhConfig.defaultUrl).host,
-          );
-          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            isConnected = true;
-          }
-        } on SocketException catch (_) {
-          isConnected = false;
-        }
+          (listOfconnection) async {
 
-        if (_settings.hasInternetConnection != isConnected) {
-          _settings.hasInternetConnection = isConnected;
+        if ( listOfconnection.contains(ConnectivityResult.other) || listOfconnection.contains( ConnectivityResult.none ) ) {
+          _settings.hasInternetConnection = false;
+        }
+        else {
+          _settings.hasInternetConnection = true;
         }
       },
     );

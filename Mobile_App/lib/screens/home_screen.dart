@@ -36,18 +36,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (Platform.isAndroid) {
       _intentDataStreamSubscription =
-          ReceiveSharingIntent.getTextStream().listen((value) {
-            if (value.isNotEmpty) {
-              defaultUrl.value = defaultUrl.value.copyWith(
-                text: value,
-              );
+          ReceiveSharingIntent.instance.getMediaStream().listen( (listOfMedia) {
+
+            if ( listOfMedia.isNotEmpty ) {
+
+              String urlSharedFromOtherApp = listOfMedia.first.path;
+
+              if (urlSharedFromOtherApp.isNotEmpty) {
+                defaultUrl.value = defaultUrl.value.copyWith(text: urlSharedFromOtherApp);
+              }
             }
           });
-      ReceiveSharingIntent.getInitialText().then((value) {
-        if (value != null && value.isNotEmpty) {
-          defaultUrl.value = defaultUrl.value.copyWith(
-            text: value,
-          );
+
+      ReceiveSharingIntent.instance.getInitialMedia().then( (listOfMedia) {
+
+        if (listOfMedia.isNotEmpty){
+
+          String urlSharedFromOtherApp = listOfMedia.first.path;
+
+          if (urlSharedFromOtherApp != null && urlSharedFromOtherApp.isNotEmpty) {
+            defaultUrl.value = defaultUrl.value.copyWith(
+              text: urlSharedFromOtherApp,
+            );
+          }
         }
       });
     }
