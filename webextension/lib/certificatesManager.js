@@ -34,7 +34,7 @@ CMH.certificatesManager.getCertUrl = async (urlTested, httpHeadMethod=false) => 
     if (httpHeadMethod) {
       fetchInit = { method: 'HEAD' }
     } else {
-      fetchInit = {}
+      fetchInit = { method: 'POST'}
     }
     response = await fetch(urlTested, fetchInit)
 

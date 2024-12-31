@@ -1,6 +1,6 @@
 {
   "description": "__MSG_extensionDescription__",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "CheckMyHTTPS",
   "version": "5.7.1",
   "default_locale": "en",
@@ -17,14 +17,13 @@
   "background": {
     "page": "background.html"
   },
-  "browser_action": {
-    "browser_style": false,
+  "action": {
     "default_icon": {
       "128": "icons/icon.png"
     }
   },
   "options_ui": {
-    "browser_style": true,
+    "browser_style": false,
     "open_in_tab": false,
     "page": "options/options.html"
   },
@@ -33,7 +32,9 @@
     "storage",
     "tabs",
     "webRequest",
-    "webRequestBlocking",
-    "*://*/*"
+    "webRequestBlocking"
+  ],
+  "host_permissions":[
+    "<all_urls>"
   ]
 }
