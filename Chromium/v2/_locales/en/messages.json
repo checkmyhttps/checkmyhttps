@@ -1,0 +1,128 @@
+{
+   "__alertOnUnicodeIDNDomainNames__": {
+      "message": "Alert on Unicode IDN"
+   },
+   "__alertTitle__": {
+      "message": "CheckMyHTTPS Alert!"
+   },
+   "__checkMyHttpsSettings__": {
+      "message": "CheckMyHTTPS Settings"
+   },
+   "__checkOnPageLoad__": {
+      "message": "Check on page load"
+   },
+   "__checkServerAddress__": {
+      "message": "Server address"
+   },
+   "__checkServerSettings__": {
+      "message": "Check server settings"
+   },
+   "__checkServerPublicKey__": {
+      "message": "Server API public key"
+   },
+   "__clickToCheck__": {
+      "message": "Click to check the HTTPS connection"
+   },
+   "__danger__": {
+      "message": "Your connection might be listened to..."
+   },
+   "__defaultServerUnreachable__": {
+      "message": "Default check server unreachable!"
+   },
+   "__invalidPublicKey__": {
+      "message": "Your public key seems invalid! Please check it in the options menu or click here."
+   },
+   "__invalidPublicKeyInOptions__": {
+      "message": "Your public key seems invalid! Please check it again."
+   },
+   "__publicKeyNotCorresponding__": {
+      "message": "This public key does not match the one required by the server."
+   },
+   "__disableNotifications__": {
+      "message": "Disable notifications"
+   },
+   "__general__": {
+      "message": "General"
+   },
+   "__getPublicKey__": {
+      "message": "Get its public key"
+   },
+   "__idnwarning__": {
+      "message": "This is an international domain name printed in Unicode! The Punycode form is: \"$1\"."
+   },
+   "__invalid__": {
+      "message": "Invalid"
+   },
+   "__nativeAppInstallAt__": {
+      "message": "Installed at \"$1\" (version $2)."
+   },
+   "__nativeAppInstallDownloadScript__": {
+      "message": "Download the \u003Ca href=\"../native-app/checkmyhttps.py\" data-download>native-app\u003C/a>."
+   },
+   "__nativeAppInstallInstallScript__": {
+      "message": "Install the native application with the following command line"
+   },
+   "__nativeAppInstallPython__": {
+      "message": "Check you have \u003Ca href=\"https://www.python.org/downloads/\" target=\"_blank\">Python\u003C/a> installed (OpenSSL version > 1.0.1)."
+   },
+   "__nativeAppInstallReload__": {
+      "message": "\u003Ca href=\"#\" id=\"extension-reload\">Reload\u003C/a> the add-on."
+   },
+   "__nativeAppNeedToBeUpdated__": {
+      "message": "The native application needs to be updated.\u003Cbr>Please see the Installation Guide below:"
+   },
+   "__nativeAppNotConnected__": {
+      "message": "The native application is not connected. Please check the options page."
+   },
+   "__nativeAppNotFoundSeeInstall__": {
+      "message": "The connection to the native application could not be made.\u003Cbr>Please see the Installation Guide below:"
+   },
+   "__nativeAppSettings__": {
+      "message": "Native application settings"
+   },
+   "__noHttps__": {
+      "message": "It is not a HTTPS website. Please check the URL."
+   },
+   "__privateHost__": {
+      "message": "We could not reach this host from the check server (it is a private host)."
+   },
+   "__publicKeyUnreachable__": {
+      "message": "Unable to find a public key on this server ..."
+   },
+   "__restoreDefault__": {
+      "message": "Default"
+   },
+   "__save__": {
+      "message": "Save"
+   },
+   "__serverSignatureNotVerified__": {
+     "message": "The server response signature can't be verified. This means that it has been signed by a potential malicious entity. Your connection may be intercepted. Please be careful."
+   },
+   "__serverUnreachable__": {
+      "message": "Server unreachable..."
+   },
+   "__settingsSaved__": {
+      "message": "Settings saved"
+   },
+   "__severalCertificats__": {
+      "message": "This website has several server certificates. We could not guarantee the security of your HTTPS connection."
+   },
+   "__testNativeConnection__": {
+      "message": "Test your connection to the native app"
+   },
+   "__unknown__": {
+      "message": "Unknown"
+   },
+   "__valid__": {
+      "message": "Valid"
+   },
+   "__warning__": {
+      "message": "Warning"
+   },
+   "__working__": {
+      "message": "Working"
+   },
+   "extensionDescription": {
+      "message": "CheckMyHTTPS ensures that your HTTPS connections are not hijacked and therefore not listened to."
+   }
+}
