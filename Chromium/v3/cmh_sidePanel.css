@@ -1,0 +1,94 @@
+h1 {
+    color: #787878;
+    text-align: center;
+    font-size: 3em;
+} 
+
+h2 {
+    color: #787878;
+    font-weight: 400;
+    font-size: 2em;
+    margin-bottom: 2%;
+}
+
+p {
+    color: #a2a2a2;
+    font-size: large;
+}
+
+p.message[data-type='success'] {
+    color: green;
+}
+p.message[data-type='error'] {
+    color: red;
+}
+
+
+img {
+    display: block;
+    max-width: 100%;
+    max-height: 100vh;
+    width: auto;
+    margin: auto;
+}
+
+#sendCertificate {
+
+    margin-top: 2%;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 35px;
+    background-color: #3182f3;
+    border-color: #3182f3;
+    color: white;
+}
+
+#certificateInput {
+
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 50px;
+    padding: 0;
+}
+
+[data-tab-content] {
+    display: none;
+}
+
+.active[data-tab-content] {
+    display:block;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid black;
+    font-size: 2em;
+}
+
+.tab {
+    cursor: pointer;
+    padding: 10px;
+}
+
+.tab:hover {
+    background-color: #AAA;
+}
+
+.tab.active {
+    background-color: #CCC;
+}
+
+label {
+    font-size: 2em;
+}
+
+input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+}

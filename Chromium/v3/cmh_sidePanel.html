@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+    <title>CheckMyHttps</title>
+    <link rel="stylesheet" href="cmh_sidePanel.css">  
+    <script src="cmh_sidePanel.js" defer></script>
+  </head>
+  <body>
+
+    <ul class="tabs">
+      <li data-tab-target="#home" class="active tab"> Home </li>
+      <li data-tab-target="#options" class="tab"> Options </li>
+    </ul>
+
+    <div class="tab-content">
+
+      <div id="home" data-tab-content class="active">
+        <h1>Extension CheckMyHttps</h1>
+        <p>En raison de restriction chrome, nous ne pouvons pas récupérer le certificat en interne, merci de suivre ces étapes:</p>
+    
+        <h2>Etape n°01</h2>
+        <img src="images/steps/step1_modified.PNG">
+        
+        <h2>Etape n°02</h2>
+        <img src="images/steps/step2_modified.png">
+        
+        <h2>Etape n°03</h2>
+        <img src="images/steps/step3_modified.png">
+    
+        <h2>Etape n°04</h2>
+        <img src="images/steps/step4_modified.PNG">
+    
+        <h2>Envoie du certificat</h2>
+     
+    
+        <input type="text" id="certificateInput"> <br>
+        <button id="sendCertificate" type="submit"> Envoyer </button>  
+      </div>
+
+      <div id="options" data-tab-content >
+        <script src="./options/options.js" defer></script>
+        <h1 id="options-title">__checkMyHttpsSettings__</h1>
+        <div class="form">
+            <h2>__general__</h2>
+            <div>
+                <label for="alertOnUnicodeIDNDomainNames">__alertOnUnicodeIDNDomainNames__</label>
+                <input type="checkbox" name="alertOnUnicodeIDNDomainNames" id="alertOnUnicodeIDNDomainNames">
+            </div>
+            <div>
+                <label for="disableNotifications">__disableNotifications__</label>
+                <input type="checkbox" name="disableNotifications" id="disableNotifications">
+            </div>
+            <h2>__checkServerSettings__</h2>
+            <div>
+                <label for="api_server">__checkServerAddress__</label>
+                <input type="text" name="api_server" id="api_server" size="50" placeholder="https://checkmyhttps.net/">
+            </div>
+            <div>
+                <label for="api_publicKey">__checkServerPublicKey__</label>
+                <input type="text" name="api_publicKey" id="api_publicKey" size="70" placeholder="-----BEGIN PUBLIC KEY-----
+                  MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
+                  be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
+                  sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE
+                  5DO55nUbhp51HisOUsZwtYNEE53D8Ev8wX2iwzAx4X0E2KvVpoyI23u4UVFdQxUJ
+                  GVzI7Bs8OQyzFJBhalEjaylK3gDNDMFF3reNGgIEPIMIs9I6bUaOgaQsT/b65SR9
+                  qxWyrOrQcYl42y8mpC7SN+8zPnxUuRQgIgvR1VDThJVf5+pRi+phPLaX5exEkoDZ
+                  ISU8UiCquAfd0dgjNzo/wUvSykkJvAZHNtkn5kNeVE/cOYFw8jWZfX7oe2Gy5CGk
+                  83abNDpkpdvDpDJwHA8oP8q/0Wzd1EJkGyPfr79eEwtUEblWXaYvVPrvcrBkuex0
+                  F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
+                  MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
+                  8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
+                  17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
+                  -----END PUBLIC KEY-----"
+                >
+            </div>
+            <br>
+        </div>
+        <div class="buttons">
+            <button type="button" id="form-submit">__save__</button>
+            <button type="button" id="restore-default">__restoreDefault__</button>
+            <button type="button" id="get-publicKey">__getPublicKey__</button>
+        </div>
+        <p class="message message-checkserver"></p>
+      </div>
+
+    </div>
+
+
+    <script src="certificate.js"></script>
+    <script src="lib/common.js"></script>
+    <script src="lib/ui.js"></script>
+    <script src="lib/tabsManager.js"></script>
+    <script src="lib/certificatesChecker.js"></script>
+    <script src="lib/certificatesManager.js"></script>
+    <script src="lib/api.js"></script>
+    <script src="lib/options.js"></script>
+  </body>
+</html>

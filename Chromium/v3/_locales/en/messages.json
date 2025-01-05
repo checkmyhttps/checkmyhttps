@@ -1,0 +1,129 @@
+{
+  "extensionDescription": {
+    "message": "CheckMyHTTPS ensures that your secured WEB connections ('HTTPS' protocol) are not intercepted (neither decrypted, nor listened, nor modified)."
+  },
+
+  "__clickToCheck__": {
+    "message": "Click to Check the HTTPS connection"
+  },
+  
+  "__serverSignatureNotVerified__": {
+    "message": "The server response signature can't be verified. This means that it has been signed by a potential malicious entity. Your connection may be intercepted. Please be careful."
+  },
+
+  "__defaultServerUnreachable__": {
+    "message": "Default check server unreachable!"
+  },
+  
+  "__invalidPublicKey__": {
+    "message": "Your public key seems invalid! Please check it in the options menu or click here."
+  },
+  
+  "__invalidPublicKeyInOptions__": {
+    "message": "Your public key seems invalid! Please check it again."
+  },
+  
+  "__publicKeyNotCorresponding__": {
+    "message": "This public key does not match the one required by the server."
+  },
+
+  "__noHttps__": {
+    "message": "It is not an HTTPS website. Please check the URL."
+  },
+
+  "__privateHost__": {
+    "message": "We could not reach this host from the check server (it is a private host)."
+  },
+
+  "__serverUnreachable__": {
+    "message": "Server unreachable... Is the verification server's HTTPS certificate valid? Developers, if you created your own certification authority, you need to add it to your browser."
+  },
+
+  "__serverHardcodedFingerprintNotCorresponding__": {
+    "message": "The SHA256 hash specified in the server's response does not match with the SHA256 hash of its certificate. Have you updated its fingerprint in the variable cmh_sha256 (on the server) in api.php ?"
+  },
+  
+  "__publicKeyUnreachable__": {
+    "message": "Unable to find a public key on this server ..."
+  },
+
+  "__danger__": {
+    "message": "Your connection might be listened to..."
+  },
+
+  "__alertTitle__": {
+    "message": "CheckMyHTTPS Alert!"
+  },
+
+  "__severalCertificats__": {
+    "message": "This website has several server certificates. We could not guarantee the security of your HTTPS connection."
+  },
+
+  "__idnwarning__": {
+    "message": "This is an international domain name printed in Unicode! The Punycode form is: \"$1\"."
+  },
+
+  "__checkMyHttpsSettings__": {
+    "message": "CheckMyHTTPS Settings"
+  },
+
+  "__general__": {
+    "message": "General"
+  },
+
+  "__checkOnPageLoad__": {
+    "message": "Check when the page loads"
+  },
+
+  "__alertOnUnicodeIDNDomainNames__": {
+    "message": "Alert on Unicode IDN"
+  },
+
+  "__disableNotifications__": {
+    "message": "Disable notifications"
+  },
+  
+  "__checkServerSettings__": {
+    "message": "Check server settings"
+  },
+
+  "__checkServerAddress__": {
+    "message": "Server address"
+  },
+
+  "__checkServerPublicKey__": {
+    "message": "Server API public key"
+  },
+
+  "__save__": {
+    "message": "Save"
+  },
+
+  "__restoreDefault__": {
+    "message": "Default"
+  },
+
+  "__getPublicKey__": {
+    "message": "Get its public key"
+  },
+
+  "__settingsSaved__": {
+    "message": "Settings saved"
+  },
+
+  "__valid__": {
+    "message": "Connection is not intercepted"
+  },
+  "__invalid__": {
+    "message": "Connection is intercepted"
+  },
+  "__unknown__": {
+    "message": "Click to verify this HTTPS connection"
+  },
+  "__warning__": {
+    "message": "The external verification server cannot be reached"
+  },
+  "__working__": {
+    "message": "The verification test is in progress"
+  }
+}
