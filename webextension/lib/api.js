@@ -16,14 +16,28 @@ CMH.api = {}
  */
 CMH.api.requestFromUrl = async (urlTested, ip) => {
   const { host, port } = CMH.common.parseURL(urlTested)
-
+  
   // We won't send "ip=" to the verification server if it is empty
+  
   if (ip === "")
-    arguments = 'api.php?host='+encodeURIComponent(host)+'&port='+port+'&sign'
-  else
-    arguments = 'api.php?host='+encodeURIComponent(host)+'&port='+port+'&ip='+ip+'&sign'
+  {
+    arguments = {
+        host: encodeURIComponent(host),
+        port: port,
+        sign: true
+    }
+  }
+  else 
+  {
+    arguments = {
+        host: encodeURIComponent(host),
+        port: port,
+        sign: true,
+        ip:ip
+    }
+  }
 
-  const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+arguments)
+  const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+"api.php", false, arguments)
   if ((cert === null) || (response === null)) {
     return { error: 'SERVER_UNREACHABLE' }
   }

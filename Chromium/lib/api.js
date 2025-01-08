@@ -14,7 +14,13 @@ CMH.api = {}
 CMH.api.requestFromUrl = async (urlTested) => {
  const { host, port } = CMH.common.parseURL(urlTested)
 
- const { data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+'api.php?host='+encodeURIComponent(host)+'&port='+port)
+ let arguments = {
+    host: encodeURIComponent(host),
+    port: port,
+    sign: true
+ }
+
+ const { data:response_data, response } = await CMH.certificatesManager.getCertUrl(CMH.options.settings.checkServerUrl+"api.php", false, arguments);
  if ( response === null ) {
    return { error: 'SERVER_UNREACHABLE' }
  }
