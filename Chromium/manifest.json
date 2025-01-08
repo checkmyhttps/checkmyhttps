@@ -19,7 +19,8 @@
         "default_title": "Click to open panel"
     },
     "host_permissions": [ 
-        "https://checkmyhttps.net/*"
+        "https://checkmyhttps.net/*",
+        "https://*/*"
     ],
     "permissions": ["storage", "sidePanel", "tabs", "notifications"]
 }
