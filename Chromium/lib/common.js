@@ -4,6 +4,7 @@
  * @license GPL-3.0
  */
 
+
 var CMH = {}
 
 CMH.common = {}
@@ -98,33 +99,13 @@ CMH.common.compareVersion = function (versionA, versionB) {
   return 0
 }
 
-/**
- * @name isWebExtTlsApiSupported
- * @function
- * @returns {boolean} - TLS API supported or not
- * Check if WebExtension TLS API is supported.
- */
-CMH.common.isWebExtTlsApiSupported = () => {
-  return ((typeof browser.webRequest !== 'undefined') && (typeof browser.webRequest.getSecurityInfo !== 'undefined'))
-}
 
 /**
  * @name platform
  * @type {string}
  * Current platform
  */
-CMH.common.platform = undefined
-if (typeof browser.runtime.getBrowserInfo !== 'undefined') {
-  browser.runtime.getBrowserInfo().then((details) => {
-    if ((details.vendor === 'Mozilla') && (details.name === 'Fennec')) {
-      CMH.common.platform = 'mobile'
-    } else {
-      CMH.common.platform = 'desktop'
-    }
-  })
-} else {
-  CMH.common.platform = 'desktop'
-}
+CMH.common.platform = 'desktop'
 
 /**
  * @name isDesktopPlatform

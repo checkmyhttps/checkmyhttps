@@ -30,30 +30,6 @@ CMH.options.defaultCheckServer = {
 }
 
 /**
- * @name getCertUrl
- * @function
- * @param {string} url - URL to check
- * @returns {object} - fingerprints
- * Get the certificate fingerprints of an URL.
- */
-CMH.options.getCertUrl = async (url) => {
-  if (CMH.common.isWebExtTlsApiSupported()) {
-    const { cert } = await CMH.certificatesManager.getCertUrl(url, true)
-    return cert
-  } else {
-    try {
-      const data = await CMH.native.postMessageAndWaitResponse({ action: 'getFingerprints', params: { url: url }}, 'resFingerprints')
-      cert = {
-        fingerprints: data.fingerprints
-      }
-      return cert
-    } catch (e) {
-      return { fingerprints: null }
-    }
-  }
-}
-
-/**
  * @name str2ab
  * @function
  * @param {string} str - String to convert
@@ -185,20 +161,20 @@ CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.optio
     case 1:
       break;
     case -1:
-      CMH.ui.showNotification(browser.i18n.getMessage('__defaultServerUnreachable__'));
+      CMH.ui.showNotification(chrome.i18n.getMessage('__defaultServerUnreachable__'));
       break;
     case -2:
-      CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
+      CMH.ui.showNotification(chrome.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
       break;
     default:
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverSignatureNotVerified__'));
+      CMH.ui.showNotification(chrome.i18n.getMessage('__serverSignatureNotVerified__'));
       break;
   }
 });
 
 
 // Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
+chrome.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
   const settingsItems = Object.keys(settings)
 
   for (let item of settingsItems) {
@@ -208,21 +184,10 @@ browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'd
 
 
 // Listen for settings changes
-browser.storage.onChanged.addListener((changes, area) => {
-  const changedItems = Object.keys(changes)
-  let needRefreshNativeApp = false
-
-  for (let item of changedItems) {
-    CMH.options.settings[item] = changes[item].newValue
-    if ((!needRefreshNativeApp) && (['checkServerUrl', 'publicKey'].includes(item))) {
-      needRefreshNativeApp = true
-    }
-  }
-
-  if (needRefreshNativeApp && (!CMH.common.isWebExtTlsApiSupported())) {
-    CMH.native.port.postMessage({ action: 'setOptions', params: {
-      checkServerUrl:                CMH.options.settings.checkServerUrl,
-      publicKey:                     CMH.options.settings.publicKey
-    }})
-  }
+chrome.storage.onChanged.addListener((changes, area) => {
+    const changedItems = Object.keys(changes)
+  
+    for (let item of changedItems)
+      CMH.options.settings[item] = changes[item].newValue
 })
+  

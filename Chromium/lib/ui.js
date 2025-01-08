@@ -7,21 +7,6 @@
 CMH.ui = {}
 
 /**
- * @name init
- * @function
- * Initialize user interface.
- */
-CMH.ui.init = () => {
-  browser.browserAction.setTitle({ title: browser.i18n.getMessage('__clickToCheck__') })
-
-  CMH.ui.setStatus(CMH.common.status.UNKNOWN)
-
-  browser.browserAction.onClicked.addListener((tab) => {
-    CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications)
-  })
-}
-
-/**
  * @name setStatus
  * @function
  * @param {number} status - Tab check status
@@ -29,19 +14,25 @@ CMH.ui.init = () => {
  * Set status of the action button.
  */
 CMH.ui.setStatus = (status, tabId) => {
-  if (CMH.common.isDesktopPlatform()) {
-    let details = { path: `./images/${CMH.common.statusCode[status]}.png` }
-    if ((typeof tabId !== 'undefined') && (tabId !== null)) {
-      details.tabId = tabId
+  
+    if (CMH.common.isDesktopPlatform()) {
+   
+        let details = { path: `./images/${CMH.common.statusCode[status]}.png` }
+        
+        if ((typeof tabId !== 'undefined') && (tabId !== null)) {
+            details.tabId = tabId
+        }
+        chrome.action.setIcon(details)
+    } 
+    else {
+        let details = { title: 'CheckMyHTTPS (' + chrome.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
+        
+        if ( (typeof tabId !== 'undefined') && (tabId !== null) ) {
+            details.tabId = tabId
+        }
+        
+        chrome.action.setTitle(details)
     }
-    browser.browserAction.setIcon(details)
-  } else {
-    let details = { title: 'CheckMyHTTPS (' + browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
-    if ((typeof tabId !== 'undefined') && (tabId !== null)) {
-      details.tabId = tabId
-    }
-    browser.browserAction.setTitle(details)
-  }
 }
 
 /**
@@ -54,8 +45,8 @@ CMH.ui.setStatus = (status, tabId) => {
 CMH.ui.showNotification = (message, options) => {
   let notificationOptions = {
     type:     'basic',
-    iconUrl:  browser.runtime.getURL('./images/icon.png'),
-    title:    browser.i18n.getMessage('__alertTitle__'),
+    iconUrl:  chrome.runtime.getURL('./images/icon.png'),
+    title:    chrome.i18n.getMessage('__alertTitle__'),
     message:  message,
     priority: 1
   }
@@ -66,16 +57,5 @@ CMH.ui.showNotification = (message, options) => {
       }
     }
   }
-  browser.notifications.create('cakeNotification', notificationOptions)
+  chrome.notifications.create('cakeNotification', notificationOptions)
 }
-
-// Initialize UI when the current platform is detected
-(() => {
-  interval = setInterval(() => {
-    if (typeof CMH.common.isDesktopPlatform() !== 'undefined') {
-      clearInterval(interval)
-
-      CMH.ui.init()
-    }
-  }, 10)
-})()

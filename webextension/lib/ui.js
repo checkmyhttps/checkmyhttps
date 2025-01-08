@@ -12,11 +12,11 @@ CMH.ui = {}
  * Initialize user interface.
  */
 CMH.ui.init = () => {
-  browser.browserAction.setTitle({ title: browser.i18n.getMessage('__clickToCheck__') })
+  browser.action.setTitle({ title: browser.i18n.getMessage('__clickToCheck__') })
 
   CMH.ui.setStatus(CMH.common.status.UNKNOWN)
 
-  browser.browserAction.onClicked.addListener((tab) => {
+  browser.action.onClicked.addListener((tab) => {
     CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications)
   })
 }
@@ -34,14 +34,14 @@ CMH.ui.setStatus = (status, tabId) => {
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
       details.tabId = tabId
     }
-    browser.browserAction.setIcon(details)
-    browser.browserAction.setTitle({title: browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`)})
+    browser.action.setIcon(details)
+    browser.action.setTitle({title: browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`)})
   } else {
     let details = { title: 'CheckMyHTTPS (' + browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
       details.tabId = tabId
     }
-    browser.browserAction.setTitle(details)
+    browser.action.setTitle(details)
   }
 }
 
