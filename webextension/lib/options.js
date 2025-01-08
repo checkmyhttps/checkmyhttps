@@ -51,11 +51,11 @@ CMH.options.importPublicKey = async (pem) => {
 
   const pemContents = pem.substring(pemHeader.length, pem.length - pemFooter.length);
   // base64 decode the string to get the binary data
-  const binaryDerString = window.atob(pemContents);
+  const binaryDerString = atob(pemContents);
   // convert from a binary string to an ArrayBuffer
   const binaryDer = CMH.options.str2ab(binaryDerString);
 
-  return window.crypto.subtle.importKey(
+  return crypto.subtle.importKey(
     "spki",
     binaryDer,
     {
