@@ -13,7 +13,7 @@ CMH.certificatesManager = {}
  * @param {boolean} [httpHeadMethod=false] - Use HTTP HEAD method
  * Get the certificate of an URL.
  */
-CMH.certificatesManager.getCertUrl = async (urlTested, httpHeadMethod=false) => {
+CMH.certificatesManager.getCertUrl = async (urlTested, httpHeadMethod=false, arguments={}) => {
   let response      = null
   let response_data = null
 
@@ -21,7 +21,7 @@ CMH.certificatesManager.getCertUrl = async (urlTested, httpHeadMethod=false) => 
     if (httpHeadMethod) {
       fetchInit = { method: 'HEAD' }
     } else {
-      fetchInit = {}
+      fetchInit = { method: 'POST', headers: {"Content-Type": "application/json"}, cache: 'no-cache', body: JSON.stringify(arguments)}
     }
     response = await fetch(urlTested, fetchInit)
 
