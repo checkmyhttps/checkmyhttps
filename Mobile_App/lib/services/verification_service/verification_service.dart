@@ -67,16 +67,9 @@ class VerificationService {
 
       if (withResponse == true) 
       {
-        if (postArguments != null) {
-          httpsConnectionRequest = await client.postUrl(url);
-          httpsConnectionRequest.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
-          httpsConnectionRequest.write(jsonEncode(postArguments));
-        }
-        else 
-        {
-          httpsConnectionRequest = await client.getUrl(url);
-        }
-
+        httpsConnectionRequest = await client.postUrl(url);
+        httpsConnectionRequest.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+        httpsConnectionRequest.write(jsonEncode(postArguments));    
       }
       else
       {
