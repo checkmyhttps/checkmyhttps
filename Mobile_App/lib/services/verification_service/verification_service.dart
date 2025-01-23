@@ -42,7 +42,7 @@ class CheckServerFingerprints {
 
 class VerificationService {
   static Future<Fingerprints> getFingerprints(Uri url, {
-    bool? withResponse,
+    bool? withResponse, Map? postArguments
   }) async {
     try {
       if (kIsWeb == true) {
@@ -63,12 +63,18 @@ class VerificationService {
       dynamic response;
       String? ip;
 
-      HttpClientRequest httpsConnectionRequest = await (withResponse == true
-          ? client.getUrl(url)
-          : client.openUrl(
-        "HEAD",
-        url,
-      ));
+      HttpClientRequest httpsConnectionRequest;
+
+      if (withResponse == true) 
+      {
+        httpsConnectionRequest = await client.postUrl(url);
+        httpsConnectionRequest.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
+        httpsConnectionRequest.write(jsonEncode(postArguments));    
+      }
+      else
+      {
+        httpsConnectionRequest = await client.openUrl("HEAD", url);
+      } 
 
       HttpClientResponse httpsConnection =
       await httpsConnectionRequest.done.timeout(
@@ -87,6 +93,7 @@ class VerificationService {
         }
         response = json.decode(contents.toString());
       }
+      
       List<int>? cert = httpsConnection.certificate?.der.toList();
       Digest? mdSHA256 = cert != null ? sha256.convert(cert) : null;
       await InternetAddress.lookup(url.host).then(
@@ -162,14 +169,14 @@ class VerificationService {
         scheme: "https",
         host: apiBaseUrl,
         path: "api.php",
-        queryParameters: {
+      ),
+      withResponse: true,
+      postArguments: {
           "host": host,
           "port": port,
           "ip": ip,
-          "sign": sign
+          "sign": true
         },
-      ),
-      withResponse: true,
     );
 
     return CheckServerFingerprints(
@@ -186,12 +193,12 @@ class VerificationService {
         scheme: "https",
         host: apiBaseUrl,
         path: "api.php",
-        queryParameters: {
-          "info" : "",
-          "sign": ""
-        },
       ),
       withResponse: true,
+      postArguments: {
+        "info" : "",
+        "sign": true
+      }
     );
     return CheckServerFingerprints(
       apiInfo: requestFingerprints.response,
