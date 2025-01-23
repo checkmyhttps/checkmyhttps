@@ -42,10 +42,21 @@ if (isset($_GET['info'])) {
 }
 
 // User inputs
+$data = json_decode( file_get_contents("php://input") );
+
+// For POST requests
+if ( isset($data->url) ) $request_url = $data->url;
+if ( isset($data->host) ) $request_host = $data->host;
+if ( isset($data->port) ) $request_port = $data->port;
+if ( isset($data->sign) ) $sign = $data->sign;
+if ( isset($data->ip) ) $request_ip = $data->ip;
+
+// For GET requests
 if (isset($_GET['url']))  $request_url  = $_GET['url'];
 if (isset($_GET['host'])) $request_host = $_GET['host'];
 if (isset($_GET['port'])) $request_port = $_GET['port'];
 if (isset($_GET['ip'])) $request_ip = $_GET['ip'];
+
 
 // Service requested by the user
 $service = (object) [
