@@ -1,7 +1,5 @@
 <?php
 
-include __DIR__ . '/vendor/autoload.php';
-
 include __DIR__ . '/config.php';
 
 define('INSTANCE_TITLE', 'CheckMyHTTPS API server');
@@ -57,6 +55,10 @@ if (isset($_GET['host'])) $request_host = $_GET['host'];
 if (isset($_GET['port'])) $request_port = $_GET['port'];
 if (isset($_GET['ip'])) $request_ip = $_GET['ip'];
 
+//error_log("AFFICHAGE DES VALEURS");
+//error_log("Valeur host" . print_r($request_host, true) );
+//error_log("Valeur ip" . print_r($request_ip, true) );
+
 
 // Service requested by the user
 $service = (object) [
@@ -68,7 +70,7 @@ $service = (object) [
 // Parse host:port from URL
 if ((isset($request_url)) && (!isset($request_host) && !isset($request_port)))
 {
-	if ((!filter_var($request_url, FILTER_VALIDATE_URL)) && (!filter_var((new \Mso\IdnaConvert\IdnaConvert)->encode($request_url), FILTER_VALIDATE_URL)))
+	if ((!filter_var($request_url, FILTER_VALIDATE_URL)) && (!filter_var(unicodeToPunycode($request_url), FILTER_VALIDATE_URL)))
 	{
 		echo json_encode(hashAndEncrypt((object)['error' => 'INVALID_URL'], $sign));
 		exit();
@@ -100,7 +102,7 @@ if (isset($request_host))
 	else
 	{
 		// Convert IDNA 2008
-		$request_host = (new \Mso\IdnaConvert\IdnaConvert)->encode($request_host);
+		$request_host =  unicodeToPunycode($request_host);
 
 		if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
 			$service->host = $request_host;
@@ -449,4 +451,17 @@ function checkHostWhitelisted($host)
 	}
 	return false;
 }
+
+function unicodeToPunycode($input) {
+    $normalized = \Normalizer::normalize($input, \Normalizer::FORM_C);
+    $punycode = idn_to_ascii($normalized, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+    return $punycode;
+}
+
+function punycodeToUnicode($input) {
+    $unicode = idn_to_utf8($input, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+    $normalized = \Normalizer::normalize($unicode, \Normalizer::FORM_C);
+    return $normalized;
+}
+
 ?> 

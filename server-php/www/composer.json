@@ -1,7 +1,0 @@
-{
-    "name": "checkmyhttps/server-api",
-    "version": "1.1.0",
-    "require": {
-        "mso/idna-convert": "^1.1"
-    }
-}

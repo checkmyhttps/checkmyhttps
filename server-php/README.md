@@ -6,7 +6,7 @@
 
 **REQUIRMENTS**
 
-* You need an HTTPS server with PHP and php-filter module
+* You need an HTTPS server with PHP, the PHP class Normalizer (php-intl) and php-filter module
 * You also need a TMPFS partition for the cache. Here is the process (Linux):
 1. Add your administrator user to the group of your server. Example with an Apache server: `[root]# usermod -a -G apache administrator`
 2. Change the gid of the administrator (valid during this session only): `[administrator]$ newgrp apache`
@@ -31,8 +31,7 @@ The cache is enabled by default, but you can turn it off by setting the variable
 **INSTALLATION**
 
 1. Copy the content of the `www` folder to your webroot.
-2. Install dependencies with composer: `composer install` inside your webroot (else you can extract `vendor-static.tar.gz`).
-3. Then configure your clients to use your own check server.
+2. Then configure your clients to use your own check server.
 
 
 ### Scripted installation

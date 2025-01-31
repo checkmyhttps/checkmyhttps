@@ -16,5 +16,6 @@ RUN chown www-data:www-data /var/tmp/cmh_cache/
 
 COPY ./www /var/www/cmh_api/
 
-COPY ./vendor-static.tar.gz /tmp/
-RUN tar -xzf /tmp/vendor-static.tar.gz -C /var/www/cmh_api/ && rm -f /tmp/vendor.tar.gz
+RUN apt-get update && apt-get install -y \
+	libicu-dev \
+	&& docker-php-ext-install intl
