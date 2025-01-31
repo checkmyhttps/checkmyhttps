@@ -1,5 +1,9 @@
 # CheckMyHTTPS API server Changelog
 
+## 1.5.2 - 2024-01-24
+- Add the possibility to handle POST requests
+- Delete the dependance to composer
+
 ## 1.5.1 - 2022-01-27
 - Add the possibility to specify an IP in the query
 
