@@ -128,7 +128,7 @@
   "@howText": {
     "type": "String"
   },
-  "defaultServer": "This server is by default « {defaultServerAddress} ». You can install your own server (see documentation on the CheckMyHTTPS Github).",
+  "defaultServer": "This server is by default « {defaultServerAddress} ». You can install your own server (see documentation on the CheckMyHTTPS' GitHub).",
   "@defaultServer": {
     "type": "String",
     "placeholders": {

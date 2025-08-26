@@ -8,7 +8,7 @@
   "@menu": {
     "type": "String"
   },
-  "noInternet": "Pas de connection Internet!",
+  "noInternet": "Pas de connexion Internet!",
   "@noInternet": {
     "type": "String"
   },
@@ -128,7 +128,7 @@
   "@howText": {
     "type": "String"
   },
-  "defaultServer": "Ce serveur est par défaut « {defaultServerAddress} ». Vous pouvez installer votre propre serveur (voir la documentation sur CheckMyHTTPS Github).",
+  "defaultServer": "Ce serveur est par défaut « {defaultServerAddress} ». Vous pouvez installer votre propre serveur (voir la documentation sur CheckMyHTTPS GitHub).",
   "@defaultServer": {
     "type": "String",
     "placeholders": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "howImageTitle": "Voici comment fonctionne CheckMyhttps:",
+  "howImageTitle": "Voici comment fonctionne CheckMyHTTPS:",
   "@howImageTitle": {
     "type": "String"
   },
@@ -157,7 +157,7 @@
   "@close": {
     "type": "String"
   },
-  "introTitle1": "introduction",
+  "introTitle1": "Introduction",
   "@introTitle1": {
     "type": "String"
   },
@@ -177,7 +177,7 @@
   "@introTitle3": {
     "type": "String"
   },
-  "intro3": "Si vous souhaitez modifier le serveur de vérification, veuillez consulter la documentation dans le github de CheckMyhttps",
+  "intro3": "Si vous souhaitez modifier le serveur de vérification, veuillez consulter la documentation dans le GitHub de CheckMyHTTPS",
   "@intro3": {
     "type": "String"
   },
@@ -209,7 +209,7 @@
   "@newCheckServer": {
     "type": "String"
   },
-  "privateIp": "Nous ne pouvons pas joindre cette IP via notre serveur de test (IP privée).",
+  "privateIp": "Nous ne pouvons pas joindre cette IP via notre serveur de vérification (IP privée).",
   "@privateIp": {
     "type": "String"
   },

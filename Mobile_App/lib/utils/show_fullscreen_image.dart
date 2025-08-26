@@ -27,10 +27,10 @@ class FullscreenImageDialog extends StatefulWidget {
 
   const FullscreenImageDialog(
     this.provider, {
-    Key? key,
+    super.key,
     required this.backgroundColor,
     required this.closeButtonColor,
-  }) : super(key: key);
+  });
 
   @override
   State<FullscreenImageDialog> createState() => _FullscreenImageDialogState();
@@ -44,9 +44,7 @@ class _FullscreenImageDialogState extends State<FullscreenImageDialog> {
       shadowColor: Colors.transparent,
       insetPadding: const EdgeInsets.all(0),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-      child: FullscreenImageView(
-        provider: widget.provider,
-      ),
+      child: FullscreenImageView(provider: widget.provider),
     );
   }
 }
@@ -54,10 +52,7 @@ class _FullscreenImageDialogState extends State<FullscreenImageDialog> {
 class FullscreenImageView extends StatefulWidget {
   final ImageProvider provider;
 
-  const FullscreenImageView({
-    Key? key,
-    required this.provider,
-  }) : super(key: key);
+  const FullscreenImageView({super.key, required this.provider});
 
   @override
   State<FullscreenImageView> createState() => _FullscreenImageViewState();
@@ -75,7 +70,9 @@ class _FullscreenImageViewState extends State<FullscreenImageView>
   @override
   void initState() {
     _animationController = AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
 
     super.initState();
   }
@@ -111,9 +108,10 @@ class _FullscreenImageViewState extends State<FullscreenImageView>
     if (scale < 2.0) {
       final position = _doubleTapDetails.localPosition;
       final begin = _transformationController.value;
-      final end = Matrix4.identity()
-        ..translate(-position.dx, -position.dy)
-        ..scale(2.0);
+      final end =
+          Matrix4.identity()
+            ..translate(-position.dx, -position.dy)
+            ..scale(2.0);
 
       _updateDoubleTapAnimation(begin, end);
       _animationController.forward(from: 0.0);
@@ -129,7 +127,8 @@ class _FullscreenImageViewState extends State<FullscreenImageView>
 
   void _updateDoubleTapAnimation(Matrix4 begin, Matrix4 end) {
     _doubleTapAnimation = Matrix4Tween(begin: begin, end: end).animate(
-        CurveTween(curve: Curves.easeInOut).animate(_animationController));
+      CurveTween(curve: Curves.easeInOut).animate(_animationController),
+    );
     _doubleTapAnimation?.addListener(_animationListener);
   }
 

@@ -10,7 +10,7 @@ import "package:checkmyhttps/widgets/widgets.dart";
 import "package:checkmyhttps/extensions/extensions.dart";
 
 class AboutScreen extends StatefulWidget {
-  const AboutScreen({Key? key}) : super(key: key);
+  const AboutScreen({super.key});
 
   @override
   State<AboutScreen> createState() => _AboutScreenState();
@@ -46,72 +46,70 @@ class _AboutScreenState extends State<AboutScreen> {
               Text(
                 "- ",
                 style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? const Color(0xFF616161)
-                      : const Color(0xFF9E9E9E),
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? const Color(0xFF616161)
+                          : const Color(0xFF9E9E9E),
                   height: 1.5,
                 ),
               ),
               TextLink(
                 text: CmhConstants.originalIdea.name,
                 link: CmhConstants.originalIdea.link,
-              )
+              ),
             ],
           ),
         ),
         DescriptionItem(
           title: AppLocalizations.of(context).designDevProject,
-          subtitle: CmhConstants.designDevProject
-              .map(
-                (contribution) => Wrap(
-                  children: [
-                    Text(
-                      "- ${contribution.date} : ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? const Color(0xFF616161)
-                            : const Color(0xFF9E9E9E),
-                        height: 1.5,
-                      ),
-                    ),
-                    ...Iterable<int>.generate(
-                      contribution.contributors.length,
-                    )
-                        .toList()
-                        .map(
-                          (idx) {
-                            return idx == 0
-                                ? [
-                                    TextLink(
-                                      text: contribution.contributors[idx].name,
-                                      link: contribution.contributors[idx].link,
-                                    ),
-                                  ]
-                                : [
-                                    Text(
-                                      " & ",
-                                      style: TextStyle(
-                                        color: Theme.of(context).brightness ==
+          subtitle:
+              CmhConstants.designDevProject
+                  .map(
+                    (contribution) => Wrap(
+                      children: [
+                        Text(
+                          "- ${contribution.date} : ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? const Color(0xFF616161)
+                                    : const Color(0xFF9E9E9E),
+                            height: 1.5,
+                          ),
+                        ),
+                        ...Iterable<int>.generate(
+                          contribution.contributors.length,
+                        ).toList().map((idx) {
+                          return idx == 0
+                              ? [
+                                TextLink(
+                                  text: contribution.contributors[idx].name,
+                                  link: contribution.contributors[idx].link,
+                                ),
+                              ]
+                              : [
+                                Text(
+                                  " & ",
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).brightness ==
                                                 Brightness.light
                                             ? const Color(0xFF616161)
                                             : const Color(0xFF9E9E9E),
-                                        height: 1.5,
-                                      ),
-                                    ),
-                                    TextLink(
-                                      text: contribution.contributors[idx].name,
-                                      link: contribution.contributors[idx].link,
-                                    ),
-                                  ];
-                          },
-                        )
-                        .flattened
-                        .toList(),
-                  ],
-                ),
-              )
-              .toList(),
+                                    height: 1.5,
+                                  ),
+                                ),
+                                TextLink(
+                                  text: contribution.contributors[idx].name,
+                                  link: contribution.contributors[idx].link,
+                                ),
+                              ];
+                        }).flattened,
+                      ],
+                    ),
+                  )
+                  .toList(),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 30),

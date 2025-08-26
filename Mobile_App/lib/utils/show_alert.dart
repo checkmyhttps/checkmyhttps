@@ -9,7 +9,8 @@ import "../services/verification_service/verification_exception.dart";
 
 Future<T?> showAlert<T>({
   required BuildContext context,
-  required Alert alert, required bool barrierDismissible,
+  required Alert alert,
+  required bool barrierDismissible,
 }) async {
   return showCupertinoDialog<T>(
     context: context,

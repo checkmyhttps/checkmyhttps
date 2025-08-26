@@ -16,22 +16,17 @@ class CmhAppRoutesGenerator {
         if (CmhAppSettings.instance.hasInternetConnection) {
           switch (routeSettings.name) {
             case CmhAppRoutes.splash:
-              return WillPopScope(
-                onWillPop: () async => false,
+              return PopScope(
+                canPop: false,
                 child: const PageScafold(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 20),
                   withAppBar: false,
                   child: SplashScreen(),
                 ),
               );
 
             case CmhAppRoutes.home:
-              return const PageScafold(
-                scrollable: true,
-                child: HomeScreen(),
-              );
+              return const PageScafold(scrollable: true, child: HomeScreen());
 
             case CmhAppRoutes.intro:
               return PageScafold(
@@ -40,16 +35,10 @@ class CmhAppRoutesGenerator {
               );
 
             case CmhAppRoutes.how:
-              return const PageScafold(
-                scrollable: true,
-                child: HowScreen(),
-              );
+              return const PageScafold(scrollable: true, child: HowScreen());
 
             case CmhAppRoutes.about:
-              return const PageScafold(
-                scrollable: true,
-                child: AboutScreen(),
-              );
+              return const PageScafold(scrollable: true, child: AboutScreen());
 
             case CmhAppRoutes.settings:
               return const PageScafold(
@@ -58,10 +47,7 @@ class CmhAppRoutesGenerator {
               );
 
             default:
-              return const PageScafold(
-                scrollable: true,
-                child: HomeScreen(),
-              );
+              return const PageScafold(scrollable: true, child: HomeScreen());
           }
         } else {
           return ErrorScreen(

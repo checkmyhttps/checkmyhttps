@@ -10,7 +10,7 @@ class PageScafold extends StatefulWidget {
   final bool? scrollable;
 
   const PageScafold({
-    Key? key,
+    super.key,
     this.margin = const EdgeInsets.only(
       left: 10,
       right: 10,
@@ -19,7 +19,7 @@ class PageScafold extends StatefulWidget {
     this.withAppBar = true,
     this.scrollable = false,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<PageScafold> createState() => _PageScafoldState();
@@ -42,14 +42,13 @@ class _PageScafoldState extends State<PageScafold> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         drawer: const PageDrawer(),
         appBar: widget.withAppBar == true ? const PageAppBar() : null,
-        body: widget.scrollable == true
-            ? SingleChildScrollView(
-                child: childWidget,
-              )
-            : childWidget,
+        body:
+            widget.scrollable == true
+                ? SingleChildScrollView(child: childWidget)
+                : childWidget,
       ),
     );
   }

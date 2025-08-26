@@ -15,26 +15,22 @@ class CmhLightTheme extends ICmhTheme {
 
   @override
   ThemeData get data => ThemeData(
-        textTheme: _cmhThemeTextTheme.apply(
-          bodyColor: _cmhThemeTextColor,
-          displayColor: _cmhThemeTextColor,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _cmhThemePrimaryColor,
-          ),
-        ),
-        popupMenuTheme: ThemeData().popupMenuTheme.copyWith(
-              color: _cmhThemeBackgroundColor,
-              textStyle: const TextStyle(
-                color: _cmhThemeTextColor,
-              ),
-            ),
-        dividerColor: _cmhThemeTextColor,
-        primaryColor: _cmhThemePrimaryColor,
-        brightness: Brightness.light,
-        colorScheme: ThemeData().colorScheme.copyWith(
-              background: _cmhThemeBackgroundColor,
-            ),
-      );
+    textTheme: _cmhThemeTextTheme.apply(
+      bodyColor: _cmhThemeTextColor,
+      displayColor: _cmhThemeTextColor,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(backgroundColor: _cmhThemePrimaryColor),
+    ),
+    popupMenuTheme: ThemeData().popupMenuTheme.copyWith(
+      color: _cmhThemeBackgroundColor,
+      textStyle: const TextStyle(color: _cmhThemeTextColor),
+    ),
+    dividerColor: _cmhThemeTextColor,
+    primaryColor: _cmhThemePrimaryColor,
+    brightness: Brightness.light,
+    colorScheme: ThemeData().colorScheme.copyWith(
+      surface: _cmhThemeBackgroundColor,
+    ),
+  );
 }

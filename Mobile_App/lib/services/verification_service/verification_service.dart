@@ -23,15 +23,11 @@ class Fingerprints {
   }
 }
 
-
 class CheckServerFingerprints {
   final dynamic apiInfo;
   final String sha256;
 
-  const CheckServerFingerprints({
-    required this.apiInfo,
-    required this.sha256,
-  });
+  const CheckServerFingerprints({required this.apiInfo, required this.sha256});
 
   @override
   String toString() {
@@ -39,10 +35,11 @@ class CheckServerFingerprints {
   }
 }
 
-
 class VerificationService {
-  static Future<Fingerprints> getFingerprints(Uri url, {
-    bool? withResponse, Map? postArguments
+  static Future<Fingerprints> getFingerprints(
+    Uri url, {
+    bool? withResponse,
+    Map? postArguments,
   }) async {
     try {
       if (kIsWeb == true) {
@@ -65,26 +62,24 @@ class VerificationService {
 
       HttpClientRequest httpsConnectionRequest;
 
-      if (withResponse == true) 
-      {
+      if (withResponse == true) {
         httpsConnectionRequest = await client.postUrl(url);
-        httpsConnectionRequest.headers.set(HttpHeaders.contentTypeHeader, "application/json; charset=UTF-8");
-        httpsConnectionRequest.write(jsonEncode(postArguments));    
-      }
-      else
-      {
+        httpsConnectionRequest.headers.set(
+          HttpHeaders.contentTypeHeader,
+          "application/json; charset=UTF-8",
+        );
+        httpsConnectionRequest.write(jsonEncode(postArguments));
+      } else {
         httpsConnectionRequest = await client.openUrl("HEAD", url);
-      } 
+      }
 
-      HttpClientResponse httpsConnection =
-      await httpsConnectionRequest.done.timeout(
-        const Duration(milliseconds: 1000),
-        onTimeout: () {
-          return httpsConnectionRequest.close();
-        },
-      );
-
-      X509Certificate? certificate = await httpsConnection.certificate;
+      HttpClientResponse httpsConnection = await httpsConnectionRequest.done
+          .timeout(
+            const Duration(milliseconds: 1000),
+            onTimeout: () {
+              return httpsConnectionRequest.close();
+            },
+          );
 
       if (withResponse == true) {
         final contents = StringBuffer();
@@ -93,20 +88,18 @@ class VerificationService {
         }
         response = json.decode(contents.toString());
       }
-      
+
       List<int>? cert = httpsConnection.certificate?.der.toList();
       Digest? mdSHA256 = cert != null ? sha256.convert(cert) : null;
-      await InternetAddress.lookup(url.host).then(
-            (addressList) {
-          ip = addressList
-              .firstWhere(
-                (address) => address.type == InternetAddressType.IPv4,
-          )
-              .address;
-        },
-      );
+      await InternetAddress.lookup(url.host).then((addressList) {
+        ip =
+            addressList
+                .firstWhere(
+                  (address) => address.type == InternetAddressType.IPv4,
+                )
+                .address;
+      });
       client.close();
-
       if (mdSHA256 == null) {
         throw const VerificationException(
           type: VerificationExceptionType.warning,
@@ -156,27 +149,17 @@ class VerificationService {
     }
   }
 
-
   static Future<CheckServerFingerprints> getFingerprintsFromCheckServer({
     required String apiBaseUrl,
     required String host,
     required String port,
     required String? ip,
-    required String sign
+    required String sign,
   }) async {
     final requestFingerprints = await getFingerprints(
-      Uri(
-        scheme: "https",
-        host: apiBaseUrl,
-        path: "api.php",
-      ),
+      Uri(scheme: "https", host: apiBaseUrl, path: "api.php"),
       withResponse: true,
-      postArguments: {
-          "host": host,
-          "port": port,
-          "ip": ip,
-          "sign": true
-        },
+      postArguments: {"host": host, "port": port, "ip": ip, "sign": true},
     );
 
     return CheckServerFingerprints(
@@ -185,30 +168,22 @@ class VerificationService {
     );
   }
 
-  static Future<CheckServerFingerprints> VerifySignatureSettings({
+  static Future<CheckServerFingerprints> verifySignatureSettings({
     required String apiBaseUrl,
   }) async {
     final requestFingerprints = await getFingerprints(
-      Uri(
-        scheme: "https",
-        host: apiBaseUrl,
-        path: "api.php",
-      ),
+      Uri(scheme: "https", host: apiBaseUrl, path: "api.php"),
       withResponse: true,
-      postArguments: {
-        "info" : "",
-        "sign": true
-      }
+      postArguments: {"info": "", "sign": true},
     );
     return CheckServerFingerprints(
       apiInfo: requestFingerprints.response,
       sha256: requestFingerprints.sha256,
-
     );
   }
 }
 
-String JsonToResponse(dynamic json) {
+String jsonToResponse(dynamic json) {
   // Fonction récursive pour parcourir les valeurs JSON
   String parseValues(dynamic value, String key) {
     if (key == "signature") {
@@ -216,7 +191,8 @@ String JsonToResponse(dynamic json) {
       return "";
     } else if (value is Map) {
       // Concatène les valeurs des sous-objets, sauf pour les labels spécifiés
-      return value.entries.map((entry) => parseValues(entry.value, entry.key))
+      return value.entries
+          .map((entry) => parseValues(entry.value, entry.key))
           .join();
     } else if (value is Iterable) {
       // Concatène les éléments des listes
@@ -233,13 +209,14 @@ String JsonToResponse(dynamic json) {
       }
     }
   }
+
   // Vérifie si l'objet JSON est un Map et appelle la fonction récursive
   if (json is Map) {
-    return json.entries.map((entry) => parseValues(entry.value, entry.key))
+    return json.entries
+        .map((entry) => parseValues(entry.value, entry.key))
         .join();
   } else {
     // Si json n'est pas un Map, retourne directement sa représentation sous forme de chaîne
     return json.toString();
   }
 }
-

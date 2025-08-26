@@ -6,10 +6,7 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  const PageAppBar({
-    Key? key,
-  })  : preferredSize = const Size.fromHeight(60.0),
-        super(key: key);
+  const PageAppBar({super.key}) : preferredSize = const Size.fromHeight(60.0);
 
   final ShapeBorder kBackButtonShape = const RoundedRectangleBorder(
     borderRadius: BorderRadius.only(
@@ -29,12 +26,14 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Card(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.white
-              : Colors.black,
-          shadowColor: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.grey,
+          color:
+              Theme.of(context).brightness == Brightness.light
+                  ? Colors.white
+                  : Colors.black,
+          shadowColor:
+              Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.grey,
           elevation: 2.5,
           margin: const EdgeInsets.all(0),
           shape: kBackButtonShape,
@@ -47,26 +46,27 @@ class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Icon(
                 Icons.menu,
                 size: kMinInteractiveDimension * 0.6,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
+                color:
+                    Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
               ),
             ),
           ),
         ),
         Card(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.white
-              : Colors.black,
-          shadowColor: Theme.of(context).brightness == Brightness.light
-              ? Colors.black
-              : Colors.grey,
+          color:
+              Theme.of(context).brightness == Brightness.light
+                  ? Colors.white
+                  : Colors.black,
+          shadowColor:
+              Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.grey,
           elevation: 2.5,
           margin: const EdgeInsets.all(0),
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-            ),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30)),
           ),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 120,

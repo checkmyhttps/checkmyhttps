@@ -133,11 +133,11 @@ class SharedPrefsStorageService implements IStorageService {
         appDefaultUrlDeleted;
   }
 
-  getAppCheckServerPublicKey() {
+  @override
+  String? getAppCheckServerPublicKey() {
     return _prefs?.getString(_appCheckServerPublicKey);
   }
 
-  @override
   Future<bool>? setAppCheckServerPublicKey(String value) {
     return _prefs?.setString(_appCheckServerPublicKey, value);
   }

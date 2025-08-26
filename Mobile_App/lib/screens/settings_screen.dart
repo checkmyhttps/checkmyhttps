@@ -1,6 +1,5 @@
 import "dart:convert";
 import "dart:io";
-import "dart:typed_data";
 import "package:fast_rsa/fast_rsa.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
@@ -19,10 +18,11 @@ class InputField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextEditingController controller;
   final bool disabled;
-  void Function(String)? onSubmit;
+  final void Function(String)? onSubmit;
   final double fontSize;
 
-  InputField({super.key,
+  const InputField({
+    super.key,
     this.withSuffix = false,
     this.keyboardType = TextInputType.text,
     required this.controller,
@@ -42,17 +42,13 @@ class InputField extends StatelessWidget {
       decoration: InputDecoration(
         suffixIcon: withSuffix ? const Icon(Icons.abc) : null,
       ),
-      style: TextStyle(
-        fontSize: fontSize,
-      ),
+      style: TextStyle(fontSize: fontSize),
     );
   }
 }
 
-
-
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -67,9 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    defaultUrl = TextEditingController(
-      text: storageService.getAppDefaultUrl(),
-    );
+    defaultUrl = TextEditingController(text: storageService.getAppDefaultUrl());
     checkServerAddress = TextEditingController(
       text: storageService.getAppCheckServerAddress(),
     );
@@ -77,11 +71,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       text: storageService.getAppCheckServerPublicKey(),
     );
   }
+
   /// Function to handle theme change in the application.
   void handleChangeTheme(bool isDark) async {
     await storageService.setDarkTheme(isDark);
     CmhAppSettings.instance.changeTheme();
   }
+
   /// Function to handle language change in the application.
   void handleLanguageChange(String? language) async {
     if (language != null) {
@@ -89,25 +85,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
       CmhAppSettings.instance.changeLanguage(language);
     }
   }
+
   /// Function to handle changes to the default URL in the application.
   void handleDefaultUrlChange(String value) async {
     if (value.isNotEmpty) {
       closeKeyboard();
       await storageService.setAppDefaultUrl(value);
-      defaultUrl.value = defaultUrl.value.copyWith(
-        text: value,
-      );
+      defaultUrl.value = defaultUrl.value.copyWith(text: value);
     }
   }
+
   /// Function to handle changes to the check server address in the application.
   void handleCheckServerAddressChange(String value) async {
     if (value.isNotEmpty) {
       await storageService.setAppCheckServerAddress(value);
-      checkServerAddress.value = checkServerAddress.value.copyWith(
-        text: value,
-      );
+      checkServerAddress.value = checkServerAddress.value.copyWith(text: value);
     }
   }
+
   /// Function to handle changes to the check server public key in the application.
   void handleCheckServerPublicKeyChange(String value) async {
     if (value.isNotEmpty) {
@@ -117,47 +112,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
   }
+
   /// Function to save settings and perform verification.
-  void Save() async {
-      closeKeyboard();
-      setState(() {
-        loading = true;
-      });
-      VerificationException? dataCertException;
-      handleDefaultUrlChange(defaultUrl.text);
-      handleCheckServerAddressChange(checkServerAddress.value.text);
-      CheckServerFingerprints? checkServerData;
-      checkServerData = await VerificationService.VerifySignatureSettings(apiBaseUrl: Uri.parse(checkServerAddress.text).host);
-      var Response = JsonToResponse(checkServerData.apiInfo);
-      /// Perform RSA signature verification.
-      bool result = await RSA.verifyPKCS1v15Bytes(
-          base64.decode(checkServerData.apiInfo["signature"].toString()),
-          Uint8List.fromList(Response.codeUnits),
-          Hash.SHA256,
-          checkServerPublicKey.text.toString());
-      /// Check verification result and handle accordingly.
-      if(result==false) {
-        dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
-          cause: VerificationExceptionCause.checkServerPublicKey,
-        );
-      }
-      else{
-        /// Update check server public key if verification is successful.
-        handleCheckServerPublicKeyChange(checkServerPublicKey.text);
-      }
-      /// Display verification exception alert if there is an exception.
-      if (dataCertException != null) {
-          showVerificationExceptionAlert(
-            dataCertException,
-            context,
-          );
-      }
+  void save() async {
+    closeKeyboard();
+    setState(() {
+      loading = true;
+    });
+    VerificationException? dataCertException;
+    handleDefaultUrlChange(defaultUrl.text);
+    handleCheckServerAddressChange(checkServerAddress.value.text);
+    CheckServerFingerprints? checkServerData;
+    checkServerData = await VerificationService.verifySignatureSettings(
+      apiBaseUrl: Uri.parse(checkServerAddress.text).host,
+    );
+    var response = jsonToResponse(checkServerData.apiInfo);
+
+    /// Perform RSA signature verification.
+    bool result = await RSA.verifyPKCS1v15Bytes(
+      base64.decode(checkServerData.apiInfo["signature"].toString()),
+      Uint8List.fromList(response.codeUnits),
+      Hash.SHA256,
+      checkServerPublicKey.text.toString(),
+    );
+
+    /// Check verification result and handle accordingly.
+    if (result == false) {
+      dataCertException = const VerificationException(
+        type: VerificationExceptionType.warning,
+        cause: VerificationExceptionCause.checkServerPublicKey,
+      );
+    } else {
+      /// Update check server public key if verification is successful.
+      handleCheckServerPublicKeyChange(checkServerPublicKey.text);
+    }
+
+    /// Display verification exception alert if there is an exception.
+    if (dataCertException != null) {
+      showVerificationExceptionAlert(dataCertException, context);
+    }
     setState(() {
       loading = false;
     });
   }
-
 
   void resetDefault() async {
     handleDefaultUrlChange(CmhConfig.defaultUrl);
@@ -172,7 +169,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     bool withResponse = true;
-    Uri url = Uri.parse(checkServerAddress.value.text + "download/public_key");
+    Uri url = Uri.parse("${checkServerAddress.value.text}download/public_key");
     try {
       if (kIsWeb == true) {
         throw const VerificationException(
@@ -191,21 +188,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       HttpClient client = HttpClient();
       dynamic response;
 
-      HttpClientRequest httpsConnectionRequest = await (withResponse == true
-          ? client.getUrl(url)
-          : client.openUrl(
-        "HEAD",
-        url,
-      ));
+      HttpClientRequest httpsConnectionRequest =
+          await (withResponse == true
+              ? client.getUrl(url)
+              : client.openUrl("HEAD", url));
 
-
-      HttpClientResponse httpsConnection =
-      await httpsConnectionRequest.done.timeout(
-        const Duration(milliseconds: 1000),
-        onTimeout: () {
-          return httpsConnectionRequest.close();
-        },
-      );
+      HttpClientResponse httpsConnection = await httpsConnectionRequest.done
+          .timeout(
+            const Duration(milliseconds: 1000),
+            onTimeout: () {
+              return httpsConnectionRequest.close();
+            },
+          );
       if (withResponse == true) {
         final contents = StringBuffer();
         await for (var data in httpsConnection.transform(utf8.decoder)) {
@@ -213,10 +207,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
         response = contents;
       }
-      checkServerPublicKey.text =response.toString();
+      checkServerPublicKey.text = response.toString();
       client.close();
-
-    }  on HandshakeException catch (e) {
+    } on HandshakeException catch (e) {
       if (e.message.toUpperCase().contains("HANDSHAKE ERROR")) {
         throw const VerificationException(
           type: VerificationExceptionType.warning,
@@ -241,14 +234,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         SettingsGroup(
           items: [
             SettingsItem(
-              icon: Theme.of(context).brightness == Brightness.light
-                  ? Icons.light_mode_rounded
-                  : Icons.dark_mode_rounded,
-              iconColor: CmhDarkTheme().data.colorScheme.background,
-              iconBackgroundColor: CmhLightTheme().data.colorScheme.background,
-              title: Theme.of(context).brightness == Brightness.light
-                  ? CmhAppSettings.instance.l10n.lightTheme
-                  : CmhAppSettings.instance.l10n.darkTheme,
+              icon:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Icons.light_mode_rounded
+                      : Icons.dark_mode_rounded,
+              iconColor: CmhDarkTheme().data.colorScheme.surface,
+              iconBackgroundColor: CmhLightTheme().data.colorScheme.surface,
+              title:
+                  Theme.of(context).brightness == Brightness.light
+                      ? CmhAppSettings.instance.l10n.lightTheme
+                      : CmhAppSettings.instance.l10n.darkTheme,
               subtitle: AppLocalizations.of(context).switchTheme,
               trailing: Switch.adaptive(
                 activeColor: Theme.of(context).primaryColor,
@@ -258,12 +253,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             SettingsItem(
               icon: Icons.language,
-              iconColor: CmhDarkTheme().data.colorScheme.background,
-              iconBackgroundColor: CmhLightTheme().data.colorScheme.background,
+              iconColor: CmhDarkTheme().data.colorScheme.surface,
+              iconBackgroundColor: CmhLightTheme().data.colorScheme.surface,
               title: AppLocalizations.of(context).language,
               subtitle: AppLocalizations.of(context).changeLanguage,
               trailing: DropdownButton(
-                dropdownColor: Theme.of(context).colorScheme.background,
+                dropdownColor: Theme.of(context).colorScheme.surface,
                 isDense: true,
                 value: CmhAppSettings.instance.getLanguageName(),
                 icon: Icon(
@@ -271,30 +266,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: Theme.of(context).primaryColor,
                 ),
                 elevation: 16,
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
+                style: TextStyle(color: Theme.of(context).primaryColor),
                 underline: const SizedBox.shrink(),
                 onChanged: handleLanguageChange,
                 items:
                     CmhAppSettings.instance.languages.keys.map((String value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(
-                      value,
-                    ),
-                  );
-                }).toList(),
+                      return DropdownMenuItem(value: value, child: Text(value));
+                    }).toList(),
               ),
             ),
             SettingsItem(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               icon: Icons.link_rounded,
-              iconColor: CmhDarkTheme().data.colorScheme.background,
-              iconBackgroundColor: CmhLightTheme().data.colorScheme.background,
+              iconColor: CmhDarkTheme().data.colorScheme.surface,
+              iconBackgroundColor: CmhLightTheme().data.colorScheme.surface,
               title: AppLocalizations.of(context).defaultUrl,
               trailingSubtitle: true,
               trailing: Padding(
@@ -312,13 +297,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: AppLocalizations.of(context).checkServer,
           items: [
             SettingsItem(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 4,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               icon: CupertinoIcons.link,
-              iconColor: CmhDarkTheme().data.colorScheme.background,
-              iconBackgroundColor: CmhLightTheme().data.colorScheme.background,
+              iconColor: CmhDarkTheme().data.colorScheme.surface,
+              iconBackgroundColor: CmhLightTheme().data.colorScheme.surface,
               title: AppLocalizations.of(context).checkServerAddress,
               trailingSubtitle: true,
               trailing: Padding(
@@ -332,13 +314,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             SettingsItem(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 4,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               icon: Icons.key,
-              iconColor: CmhDarkTheme().data.colorScheme.background,
-              iconBackgroundColor: CmhLightTheme().data.colorScheme.background,
+              iconColor: CmhDarkTheme().data.colorScheme.surface,
+              iconBackgroundColor: CmhLightTheme().data.colorScheme.surface,
               title: AppLocalizations.of(context).checkServerPublicKey,
               trailingSubtitle: true,
               trailing: Padding(
@@ -351,7 +330,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 10,
                 ),
               ),
-            )
+            ),
           ],
         ),
         Wrap(
@@ -362,26 +341,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             ActionButton(
               text: AppLocalizations.of(context).save,
-              onPressed: Save,
+              onPressed: save,
               loading: loading,
+              textColor: Colors.white,
             ),
             ActionButton(
               text: AppLocalizations.of(context).resetDefault,
               onPressed: resetDefault,
               loading: loading,
+              textColor: Colors.white,
             ),
             ActionButton(
               text: AppLocalizations.of(context).getPublicKey,
-              onPressed: getPublicKey,//(Uri.parse("https://checkmyhttps.net/download/public_key")),
+              onPressed:
+                  getPublicKey, //(Uri.parse("https://checkmyhttps.net/download/public_key")),
               loading: loading,
+              textColor: Colors.white,
             ),
-            Container(
-              margin: EdgeInsets.only(top: 10)
-            ),
+            Container(margin: EdgeInsets.only(top: 10)),
           ],
         ),
       ],
     );
   }
 }
-

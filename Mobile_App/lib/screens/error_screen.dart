@@ -16,7 +16,7 @@ class ErrorScreen extends StatelessWidget {
   final bool? showSettings;
 
   const ErrorScreen({
-    Key? key,
+    super.key,
     this.title,
     this.description,
     this.child,
@@ -25,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
     this.color = const Color(0xffff4b47),
     this.icon = Icons.warning,
     this.showSettings,
-  }) : super(key: key);
+  });
 
   void handleOpenSettings() {
     NavigationService navigationService = NavigationService();
@@ -41,38 +41,26 @@ class ErrorScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.only(
-            bottom: size.height * 0.05,
-          ),
+          padding: EdgeInsets.only(bottom: size.height * 0.05),
           child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.1,
-            ),
-            margin: EdgeInsets.symmetric(
-              vertical: size.height * 0.05,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+            margin: EdgeInsets.symmetric(vertical: size.height * 0.05),
             width: size.width,
             height: size.height * 0.2,
-            child: child ??
+            child:
+                child ??
                 Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 10,
-                  ),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: FittedBox(
                     fit: BoxFit.cover,
-                    child: Icon(
-                      icon,
-                      color: Colors.red,
-                    ),
+                    child: Icon(icon, color: Colors.red),
                   ),
                 ),
           ),
         ),
         if (title != null)
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 16,
-            ),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               title!,
               style: const TextStyle(
@@ -85,9 +73,7 @@ class ErrorScreen extends StatelessWidget {
           ),
         if (description != null)
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               description!,
               textAlign: TextAlign.center,
@@ -101,13 +87,9 @@ class ErrorScreen extends StatelessWidget {
           ),
         if (actionText != null)
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 52,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 52),
             child: MaterialButton(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               color: Theme.of(context).textTheme.labelLarge?.color,
               onPressed: action,
               child: Text(

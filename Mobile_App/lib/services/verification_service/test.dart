@@ -1,4 +1,4 @@
-String JsonToResponse(dynamic json) {
+String jsonToResponse(dynamic json) {
   // Fonction récursive pour parcourir les valeurs JSON
   String parseValues(dynamic value, String key) {
     if (key == "signature") {
@@ -6,7 +6,8 @@ String JsonToResponse(dynamic json) {
       return "";
     } else if (value is Map) {
       // Concatène les valeurs des sous-objets, sauf pour les labels spécifiés
-      return value.entries.map((entry) => parseValues(entry.value, entry.key))
+      return value.entries
+          .map((entry) => parseValues(entry.value, entry.key))
           .join();
     } else if (value is Iterable) {
       // Concatène les éléments des listes
@@ -23,9 +24,11 @@ String JsonToResponse(dynamic json) {
       }
     }
   }
+
   // Vérifie si l'objet JSON est un Map et appelle la fonction récursive
   if (json is Map) {
-    return json.entries.map((entry) => parseValues(entry.value, entry.key))
+    return json.entries
+        .map((entry) => parseValues(entry.value, entry.key))
         .join();
   } else {
     // Si json n'est pas un Map, retourne directement sa représentation sous forme de chaîne

@@ -8,7 +8,7 @@ import "package:flutter/material.dart";
 import "package:introduction_screen/introduction_screen.dart";
 
 class IntroScreen extends StatefulWidget {
-  const IntroScreen({Key? key}) : super(key: key);
+  const IntroScreen({super.key});
 
   @override
   State<IntroScreen> createState() => _IntroScreenState();
@@ -21,9 +21,7 @@ class _IntroScreenState extends State<IntroScreen> {
   void handleSkipOrDone() async {
     await _storageService.setAppFirstRun(false);
 
-    _navigationService.pushNamedAndRemoveUntil(
-      CmhAppRoutes.home,
-    );
+    _navigationService.pushNamedAndRemoveUntil(CmhAppRoutes.home);
   }
 
   @override
@@ -31,13 +29,15 @@ class _IntroScreenState extends State<IntroScreen> {
     var size = MediaQuery.of(context).size;
 
     return IntroductionScreen(
-      globalBackgroundColor: Theme.of(context).colorScheme.background,
+      globalBackgroundColor: Theme.of(context).colorScheme.surface,
       showSkipButton: SharedPrefsStorageService().getAppFirstRun(),
       showDoneButton: SharedPrefsStorageService().getAppFirstRun(),
       showBackButton: !SharedPrefsStorageService().getAppFirstRun(),
       pages: [
         PageViewModel(
-          useRowInLandscape: (MediaQuery.of(context).size.width > MediaQuery.of(context).size.height),
+          useRowInLandscape:
+              (MediaQuery.of(context).size.width >
+                  MediaQuery.of(context).size.height),
           title: AppLocalizations.of(context).introTitle1,
           body: AppLocalizations.of(context).intro1,
           image: Image(
@@ -47,7 +47,9 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
         ),
         PageViewModel(
-          useRowInLandscape: (MediaQuery.of(context).size.width > MediaQuery.of(context).size.height),
+          useRowInLandscape:
+              (MediaQuery.of(context).size.width >
+                  MediaQuery.of(context).size.height),
           title: AppLocalizations.of(context).introTitle2,
           body: AppLocalizations.of(context).intro2,
           image: Image(
@@ -57,7 +59,9 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
         ),
         PageViewModel(
-          useRowInLandscape: (MediaQuery.of(context).size.width > MediaQuery.of(context).size.height),
+          useRowInLandscape:
+              (MediaQuery.of(context).size.width >
+                  MediaQuery.of(context).size.height),
           title: AppLocalizations.of(context).introTitle3,
           body: AppLocalizations.of(context).intro3,
           image: Image(
@@ -72,32 +76,37 @@ class _IntroScreenState extends State<IntroScreen> {
       skip: Text(AppLocalizations.of(context).close),
       done: Text(AppLocalizations.of(context).close),
       next: Text(AppLocalizations.of(context).next),
-      back: SharedPrefsStorageService().getAppFirstRun()
-          ? null
-          : Text(AppLocalizations.of(context).previous),
+      back:
+          SharedPrefsStorageService().getAppFirstRun()
+              ? null
+              : Text(AppLocalizations.of(context).previous),
       dotsDecorator: DotsDecorator(
         activeColor: Theme.of(context).primaryColor,
         color: Colors.grey,
       ),
       skipStyle: TextButton.styleFrom(
-        foregroundColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : Colors.black,
+        foregroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
       ),
       doneStyle: TextButton.styleFrom(
-        foregroundColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : Colors.black,
+        foregroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
       ),
       nextStyle: TextButton.styleFrom(
-        foregroundColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : Colors.black,
+        foregroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
       ),
       backStyle: TextButton.styleFrom(
-        foregroundColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : Colors.black,
+        foregroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
       ),
     );
   }

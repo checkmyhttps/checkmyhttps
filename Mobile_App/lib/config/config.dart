@@ -3,8 +3,7 @@ import "package:flutter/cupertino.dart";
 class CmhConfig {
   static const String defaultUrl = "https://esiea.fr/";
   static const String checkServerAddress = "https://checkmyhttps.net/";
-  static const String checkServerPublicKey =
-  """-----BEGIN PUBLIC KEY-----
+  static const String checkServerPublicKey = """-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
 be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
 sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE

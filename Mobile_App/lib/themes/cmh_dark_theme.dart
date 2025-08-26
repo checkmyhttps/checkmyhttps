@@ -14,26 +14,22 @@ class CmhDarkTheme extends ICmhTheme {
 
   @override
   ThemeData get data => ThemeData.dark().copyWith(
-        textTheme: CmhLightTheme().data.textTheme.apply(
-              bodyColor: _cmhThemeTextColor,
-              displayColor: _cmhThemeTextColor,
-            ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _cmhThemePrimaryColor,
-          ),
-        ),
-        popupMenuTheme: ThemeData().popupMenuTheme.copyWith(
-              color: _cmhThemeBackgroundColor,
-              textStyle: const TextStyle(
-                color: _cmhThemeTextColor,
-              ),
-            ),
-        dividerColor: _cmhThemeTextColor,
-        primaryColor: _cmhThemePrimaryColor,
-        brightness: Brightness.dark,
-        colorScheme: ThemeData.dark().colorScheme.copyWith(
-              background: _cmhThemeBackgroundColor,
-            ),
-      );
+    textTheme: CmhLightTheme().data.textTheme.apply(
+      bodyColor: _cmhThemeTextColor,
+      displayColor: _cmhThemeTextColor,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(backgroundColor: _cmhThemePrimaryColor),
+    ),
+    popupMenuTheme: ThemeData().popupMenuTheme.copyWith(
+      color: _cmhThemeBackgroundColor,
+      textStyle: const TextStyle(color: _cmhThemeTextColor),
+    ),
+    dividerColor: _cmhThemeTextColor,
+    primaryColor: _cmhThemePrimaryColor,
+    brightness: Brightness.dark,
+    colorScheme: ThemeData.dark().colorScheme.copyWith(
+      surface: _cmhThemeBackgroundColor,
+    ),
+  );
 }

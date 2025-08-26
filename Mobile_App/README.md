@@ -1,8 +1,8 @@
-# Flutter CheckMyHttps
+# Flutter CheckMyHTTPS
 
 ## Description
 
-This application is a client of the CheckMyHttps project designed for smartphones. It has been built for Android and published on the Google Play Store. It may work on iOS, but we haven't tested it.
+This application is a client of the CheckMyHTTPS project designed for smartphones. It has been built for Android and published on the Google Play Store. It may work on iOS, but we haven't tested it.
 
 ## Installation 
 

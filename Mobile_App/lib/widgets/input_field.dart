@@ -10,7 +10,7 @@ class InputField extends StatefulWidget {
   final bool disabled;
 
   const InputField({
-    Key? key,
+    super.key,
     this.controller,
     this.onSubmit,
     this.keyboardType,
@@ -18,7 +18,7 @@ class InputField extends StatefulWidget {
     this.withSuffix = true,
     this.maxHeight = 40,
     this.disabled = false,
-  }) : super(key: key);
+  });
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -41,41 +41,37 @@ class _InputFieldState extends State<InputField> {
       controller: controller,
       keyboardType: TextInputType.url,
       decoration: InputDecoration(
-        constraints: BoxConstraints(
-          maxHeight: widget.maxHeight,
-        ),
-        suffixIcon: widget.withSuffix != false
-            ? ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
+        constraints: BoxConstraints(maxHeight: widget.maxHeight),
+        suffixIcon:
+            widget.withSuffix != false
+                ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
                   ),
-                ),
-                onPressed: handleSubmit,
-                child: Icon(
-                  Icons.save,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black
-                      : Colors.white,
-                  size: 20,
-                ),
-              )
-            : null,
+                  onPressed: handleSubmit,
+                  child: Icon(
+                    Icons.save,
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black
+                            : Colors.white,
+                    size: 20,
+                  ),
+                )
+                : null,
         isDense: true,
         contentPadding: EdgeInsets.symmetric(
           vertical: widget.maxHeight * .3,
           horizontal: widget.maxHeight * .2,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
-          ),
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
         ),
       ),
       onSubmitted: (value) => handleSubmit(value: value),

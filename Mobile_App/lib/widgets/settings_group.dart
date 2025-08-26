@@ -9,7 +9,7 @@ class SettingsGroup extends StatelessWidget {
   final List<SettingsItem> items;
 
   const SettingsGroup({
-    Key? key,
+    super.key,
     required this.items,
     this.title,
     this.backgroundColor,
@@ -17,7 +17,7 @@ class SettingsGroup extends StatelessWidget {
       fontSize: 25,
       fontWeight: FontWeight.bold,
     ),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +28,14 @@ class SettingsGroup extends StatelessWidget {
         children: [
           (title != null)
               ? Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    title!,
-                    style: titleStyle,
-                  ),
-                )
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Text(title!, style: titleStyle),
+              )
               : const SizedBox.shrink(),
           Container(
             decoration: BoxDecoration(
-              color: backgroundColor ??
+              color:
+                  backgroundColor ??
                   (Theme.of(context).brightness == Brightness.light
                       ? Colors.white
                       : Colors.black),
@@ -45,26 +43,24 @@ class SettingsGroup extends StatelessWidget {
             ),
             child: Column(
               children: [
-                ...Iterable<int>.generate(
-                  items.length,
-                ).toList().map((idx) {
+                ...Iterable<int>.generate(items.length).toList().map((idx) {
                   return idx == items.length - 1
                       ? items[idx]
                       : Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: (Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? Colors.black
-                                        : Colors.white)
-                                    .withOpacity(0.1),
-                                width: 0,
-                              ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: (Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : Colors.white)
+                                  .withValues(alpha: 0.1),
+                              width: 0,
                             ),
                           ),
-                          child: items[idx],
-                        );
+                        ),
+                        child: items[idx],
+                      );
                 }),
               ],
             ),

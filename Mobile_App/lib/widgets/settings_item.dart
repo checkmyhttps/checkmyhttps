@@ -15,7 +15,7 @@ class SettingsItem extends StatelessWidget {
   final EdgeInsets? padding;
 
   const SettingsItem({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     this.iconColor,
@@ -28,62 +28,61 @@ class SettingsItem extends StatelessWidget {
     this.trailingSubtitle,
     this.onTap,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final subtitleWidget = subtitle != null
-        ? Text(
-            subtitle!,
-            style: subtitleStyle,
-          )
-        : null;
+    final subtitleWidget =
+        subtitle != null ? Text(subtitle!, style: subtitleStyle) : null;
 
     return ListTile(
       contentPadding: padding,
       onTap: onTap,
-      leading: icon != null
-          ? Container(
-              decoration: BoxDecoration(
-                color: iconBackgroundColor ??
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black),
-                borderRadius: BorderRadius.circular(iconBorderRadius),
-              ),
-              padding: const EdgeInsets.all(5),
-              child: Icon(
-                icon,
-                size: 20,
-                color: iconColor ??
-                    (Theme.of(context).brightness == Brightness.dark
-                        ? Colors.black
-                        : Colors.white),
-              ),
-            )
-          : null,
-      title: Text(
-        title,
-        style: titleStyle,
-      ),
-      subtitle: trailingSubtitle != null && trailing != null
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                subtitleWidget ?? const SizedBox.shrink(),
-                trailing!,
-              ],
-            )
-          : subtitleWidget,
-      trailing: trailingSubtitle == null
-          ? trailing ??
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
+      leading:
+          icon != null
+              ? Container(
+                decoration: BoxDecoration(
+                  color:
+                      iconBackgroundColor ??
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black),
+                  borderRadius: BorderRadius.circular(iconBorderRadius),
+                ),
+                padding: const EdgeInsets.all(5),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color:
+                      iconColor ??
+                      (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black
+                          : Colors.white),
+                ),
               )
-          : null,
+              : null,
+      title: Text(title, style: titleStyle),
+      subtitle:
+          trailingSubtitle != null && trailing != null
+              ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  subtitleWidget ?? const SizedBox.shrink(),
+                  trailing!,
+                ],
+              )
+              : subtitleWidget,
+      trailing:
+          trailingSubtitle == null
+              ? trailing ??
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
+                  )
+              : null,
     );
   }
 }

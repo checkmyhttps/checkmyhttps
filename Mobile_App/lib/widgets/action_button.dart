@@ -9,14 +9,14 @@ class ActionButton extends StatelessWidget {
   final void Function()? onPressed;
 
   const ActionButton({
-    Key? key,
+    super.key,
     required this.text,
     this.backgroundColor,
     this.textColor,
     this.onPressed,
     this.disabled = false,
     this.loading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,39 +25,30 @@ class ActionButton extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(6),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(6)),
         ),
       ),
       onPressed: disabled || loading ? null : onPressed,
-      child: loading
-          ? Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                const SizedBox(
-                  height: 18,
-                  width: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+      child:
+          loading
+              ? Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                ),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Color(0x00000000),
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0x00000000),
+                    ),
                   ),
-                ),
-              ],
-            )
-          : Text(
-              text,
-              style: TextStyle(
-                fontSize: 15,
-                color: textColor,
-              ),
-            ),
+                ],
+              )
+              : Text(text, style: TextStyle(fontSize: 15, color: textColor)),
     );
   }
 }

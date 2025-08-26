@@ -6,7 +6,7 @@ import "package:checkmyhttps/services/services.dart";
 import "package:checkmyhttps/settings/settings.dart";
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _HomeScreenState();
@@ -19,9 +19,7 @@ class _HomeScreenState extends State<SplashScreen>
   late final AnimationController _animationController = AnimationController(
     duration: const Duration(milliseconds: 2500),
     vsync: this,
-  )..repeat(
-      reverse: true,
-    );
+  )..repeat(reverse: true);
 
   @override
   void initState() {
@@ -48,20 +46,20 @@ class _HomeScreenState extends State<SplashScreen>
             children: [
               FadeTransition(
                 opacity: _animationController.drive(
-                  CurveTween(
-                    curve: Curves.easeInOut,
-                  ),
+                  CurveTween(curve: Curves.easeInOut),
                 ),
                 child: Container(
-                  margin: const EdgeInsets.only(
-                    bottom: 10,
-                  ),
+                  margin: const EdgeInsets.only(bottom: 10),
                   height: size.height * 0.2,
                   child: LayoutBuilder(
-                    builder: (BuildContext layoutContext,
-                        BoxConstraints constraints) {
-                      var layoutSize =
-                          Size(constraints.maxWidth, constraints.maxHeight);
+                    builder: (
+                      BuildContext layoutContext,
+                      BoxConstraints constraints,
+                    ) {
+                      var layoutSize = Size(
+                        constraints.maxWidth,
+                        constraints.maxHeight,
+                      );
                       return Image(
                         image: const AssetImage(CmhAssets.logo),
                         height: layoutSize.height,

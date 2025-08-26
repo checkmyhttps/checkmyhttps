@@ -48,9 +48,7 @@ List<PageDrawerDrawerItem> kdrawerItems = [
 ];
 
 class PageDrawer extends StatefulWidget {
-  const PageDrawer({
-    Key? key,
-  }) : super(key: key);
+  const PageDrawer({super.key});
 
   @override
   State<PageDrawer> createState() => _PageDrawerState();
@@ -60,7 +58,7 @@ class _PageDrawerState extends State<PageDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -72,12 +70,14 @@ class _PageDrawerState extends State<PageDrawer> {
               ),
             ),
             elevation: 2.5,
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white
-                : Colors.black,
-            shadowColor: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.grey,
+            color:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Colors.black,
+            shadowColor:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.grey,
             child: SizedBox(
               height: kToolbarHeight,
               child: Center(
@@ -97,24 +97,24 @@ class _PageDrawerState extends State<PageDrawer> {
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemCount: kdrawerItems.length,
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 10,
-              ),
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : Colors.black,
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.white
+                            : Colors.black,
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: SettingsItem(
                     icon: kdrawerItems.elementAt(index).icon,
                     title: kdrawerItems.elementAt(index).name(context),
-                    onTap: () => NavigationService().pushNamed(
-                      kdrawerItems.elementAt(index).route,
-                    ),
+                    onTap:
+                        () => NavigationService().pushNamed(
+                          kdrawerItems.elementAt(index).route,
+                        ),
                   ),
                 );
               },
@@ -131,7 +131,7 @@ class _PageDrawerState extends State<PageDrawer> {
                     color: (Theme.of(context).brightness == Brightness.light
                             ? Colors.black
                             : Colors.white)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     width: 0,
                   ),
                 ),
@@ -139,9 +139,7 @@ class _PageDrawerState extends State<PageDrawer> {
               child: Center(
                 child: Text(
                   "${AppLocalizations.of(context).version}: ${CmhAppSettings.instance.versionNumber}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),

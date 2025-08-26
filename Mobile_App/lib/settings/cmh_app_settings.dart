@@ -55,16 +55,19 @@ class CmhAppSettings with ChangeNotifier implements IAppSettings {
 
   @override
   Locale get defaultLanguage => AppLocalizations.supportedLocales.firstWhere(
-      (locale) =>
-          locale ==
-          (kIsWeb ? window.locale : Locale(Platform.localeName.split("_")[0])),
-      orElse: () => CmhConfig.defaultLanguage);
+    (locale) =>
+        locale ==
+        (kIsWeb
+            ? PlatformDispatcher.instance.locale
+            : Locale(Platform.localeName.split("_")[0])),
+    orElse: () => CmhConfig.defaultLanguage,
+  );
 
   @override
   Map<String, Locale> get languages => <String, Locale>{
-        "English": const Locale("en"),
-        "Français": const Locale("fr"),
-      };
+    "English": const Locale("en"),
+    "Français": const Locale("fr"),
+  };
 
   @override
   Map<ThemeType, ICmhTheme> get themes => CmhThemes.themes;
@@ -72,9 +75,10 @@ class CmhAppSettings with ChangeNotifier implements IAppSettings {
   @override
   set language(Locale? newLanguage) {
     _language = newLanguage;
-    _l10n = newLanguage == const Locale("fr")
-        ? AppLocalizationsFr()
-        : AppLocalizationsEn();
+    _l10n =
+        newLanguage == const Locale("fr")
+            ? AppLocalizationsFr()
+            : AppLocalizationsEn();
     notifyListeners();
   }
 
@@ -109,15 +113,9 @@ class CmhAppSettings with ChangeNotifier implements IAppSettings {
     final storageService = await SharedPrefsStorageService.init();
 
     if (storageService.getAppFirstRun()) {
-      storageService.setAppDefaultUrl(
-        CmhConfig.defaultUrl,
-      );
-      storageService.setAppCheckServerAddress(
-        CmhConfig.checkServerAddress,
-      );
-      storageService.setAppCheckServerPublicKey(
-        CmhConfig.checkServerPublicKey,
-      );
+      storageService.setAppDefaultUrl(CmhConfig.defaultUrl);
+      storageService.setAppCheckServerAddress(CmhConfig.checkServerAddress);
+      storageService.setAppCheckServerPublicKey(CmhConfig.checkServerPublicKey);
     }
 
     appSettings.language =
@@ -125,12 +123,10 @@ class CmhAppSettings with ChangeNotifier implements IAppSettings {
 
     appSettings.theme =
         storageService.isDarkTheme() == true ? CmhDarkTheme() : CmhLightTheme();
-    await Connectivity().checkConnectivity().then(
-      (connectivityResult) {
-        appSettings.hasInternetConnection =
-            connectivityResult != ConnectivityResult.none;
-      },
-    );
+    await Connectivity().checkConnectivity().then((connectivityResult) {
+      appSettings.hasInternetConnection =
+          connectivityResult[0] != ConnectivityResult.none;
+    });
 
     return appSettings;
   }

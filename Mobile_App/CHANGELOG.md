@@ -1,5 +1,12 @@
 # CheckMyHTTPS Mobile App Changelog
 
+## 5.7.2 - 2025-06-27
+
+- Updates to current Flutter syntax
+- Target SDK set to Android 15 (API level 35)
+- Minimum SDK set to Android 14 (API level 34) as required by Google to publish on Play Store
+- Small fixes of localization files
+
 ## 5.7.1 - 2023-02-06
 
 - switch framework to Flutter
