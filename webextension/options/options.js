@@ -1,22 +1,14 @@
 /**
- * @file Common file.
+ * @file Options.
  * @author CheckMyHTTPS's team
  * @license GPL-3.0
  */
 
-const page_title                 = document.querySelector('body > h1')
-const title_general              = document.querySelector('div.form > h2:nth-of-type(1)')
-const title_checkServer          = document.querySelector('div.form > h2:nth-of-type(2)')
 const box_pageLoad               = document.querySelector('input[name="checkOnPageLoad"]')
-const lbl_pageLoad               = document.querySelector('label[for="checkOnPageLoad"]')
 const box_alertIDNDomains        = document.querySelector('input[name="alertOnUnicodeIDNDomainNames"]')
-const lbl_alertIDNDomains        = document.querySelector('label[for="alertOnUnicodeIDNDomainNames"]')
 const box_notifications          = document.querySelector('input[name="disableNotifications"]')
-const lbl_notifications          = document.querySelector('label[for="disableNotifications"]')
 const txt_server                 = document.querySelector('input[name="api_server"]')
-const lbl_server                 = document.querySelector('label[for="api_server"]')
-const txt_publicKey              = document.querySelector('input[name="api_publicKey"]')
-const lbl_publicKey              = document.querySelector('label[for="api_publicKey"]')
+const txt_publicKey              = document.querySelector('textarea[name="api_publicKey"]')
 const btn_save                   = document.getElementById('form-submit')
 const btn_restoreDefault         = document.getElementById('restore-default')
 const btn_getPublicKey           = document.getElementById('get-publicKey')
@@ -26,27 +18,25 @@ const div_messageCheckServer     = document.querySelector('p.message-checkserver
 browser.runtime.getBackgroundPage().then((backgroundPage) => {
   const CMH = backgroundPage.CMH
 
-  let lastDomainSaved = ''
-
-  document.title                       = browser.i18n.getMessage('__checkMyHttpsSettings__')
-  page_title.textContent               = browser.i18n.getMessage('__checkMyHttpsSettings__')
-  title_general.textContent            = browser.i18n.getMessage('__general__')
-  title_checkServer.textContent        = browser.i18n.getMessage('__checkServerSettings__')
-  lbl_pageLoad.textContent             = browser.i18n.getMessage('__checkOnPageLoad__')
-  lbl_alertIDNDomains.textContent      = browser.i18n.getMessage('__alertOnUnicodeIDNDomainNames__')
-  lbl_notifications.textContent        = browser.i18n.getMessage('__disableNotifications__')
-  lbl_server.textContent               = browser.i18n.getMessage('__checkServerAddress__')
-	lbl_publicKey.textContent               = browser.i18n.getMessage('__checkServerPublicKey__')
+  document.querySelector('body > h1').textContent                                 = browser.i18n.getMessage('__checkMyHttpsSettings__')
+  document.querySelector('div.form > h2:nth-of-type(1)').textContent              = browser.i18n.getMessage('__general__')
+  document.querySelector('div.form > h2:nth-of-type(2)').textContent              = browser.i18n.getMessage('__checkServerSettings__')
+  document.querySelector('label[for="checkOnPageLoad"]').textContent              = browser.i18n.getMessage('__checkOnPageLoad__')
+  document.querySelector('label[for="alertOnUnicodeIDNDomainNames"]').textContent = browser.i18n.getMessage('__alertOnUnicodeIDNDomainNames__')
+  document.querySelector('label[for="disableNotifications"]').textContent         = browser.i18n.getMessage('__disableNotifications__')
+  document.querySelector('label[for="api_server"]').textContent                   = browser.i18n.getMessage('__checkServerAddress__')
+	document.querySelector('label[for="api_publicKey"]').textContent                = browser.i18n.getMessage('__checkServerPublicKey__')
   btn_save.textContent                 = browser.i18n.getMessage('__save__')
   btn_restoreDefault.textContent       = browser.i18n.getMessage('__restoreDefault__')
-  btn_getPublicKey.textContent      = browser.i18n.getMessage('__getPublicKey__')
+  btn_getPublicKey.textContent         = browser.i18n.getMessage('__getPublicKey__')
 
   box_pageLoad.checked = CMH.options.settings.checkOnPageLoad
   box_alertIDNDomains.checked = CMH.options.settings.alertOnUnicodeIDNDomainNames
   box_notifications.checked = CMH.options.settings.disableNotifications
-  lastDomainSaved  = CMH.options.settings.checkServerUrl.match(/^https:\/\/([^:\/\s]+)/)[1]
   txt_server.value = CMH.options.settings.checkServerUrl
   txt_publicKey.value = CMH.options.settings.publicKey
+
+  let lastDomainSaved  = CMH.options.settings.checkServerUrl.match(/^https:\/\/([^:\/\s]+)/)[1]
 
   box_pageLoad.addEventListener('input', (e) => {
     browser.storage.local.set({
@@ -93,7 +83,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
 
     const saveSettingsToBrowser = () => {
       browser.storage.local.set({
-        checkServerUrl:                txt_server.value,
+        checkServerUrl: txt_server.value,
         publicKey: txt_publicKey.value
       }).then(() => {
         btn_save.disabled = false
@@ -106,30 +96,31 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
       })
     }
 
-    if (CMH.common.isWebExtTlsApiSupported()) {
-      isValidCheckServer = await CMH.options.verifyServerAtStartup(txt_server.value, txt_publicKey.value)
-      if (isValidCheckServer === 1) {
-        saveSettingsToBrowser()
-      } else {
-        btn_save.disabled = false
-        div_messageCheckServer.dataset.type = 'error'
-        switch (isValidCheckServer) {
-          case -1:
-            div_messageCheckServer.textContent  = browser.i18n.getMessage('__serverUnreachable__')
-            break;
-          case -2:
-            div_messageCheckServer.textContent  = browser.i18n.getMessage('__invalidPublicKeyInOptions__')
-            break;
-          case 0:
-            div_messageCheckServer.textContent  = browser.i18n.getMessage('__publicKeyNotCorresponding__')
-            break;
-          case -3:
-            div_messageCheckServer.textContent  = browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__');
-            break;
-          default:
-            div_messageCheckServer.textContent  = 'Error!'
-            break;
-        }
+    const isValidCheckServer = await CMH.options.verifyServerAtStartup(txt_server.value, txt_publicKey.value, "nostartup")
+    if (isValidCheckServer.error === undefined) {
+      saveSettingsToBrowser()
+    } else {
+      btn_save.disabled = false
+      div_messageCheckServer.dataset.type = 'error'
+      switch (isValidCheckServer.error) {
+        case 'PUBLIC_KEY':
+          div_messageCheckServer.textContent = browser.i18n.getMessage('__invalidPublicKeyInOptions__')
+          break;
+        case 'CHECK_SERVER_UNREACHABLE':
+          div_messageCheckServer.textContent = browser.i18n.getMessage('__checkServerUnreachable__')
+          break;  
+        case 'SIGNATURE':
+          div_messageCheckServer.textContent = browser.i18n.getMessage('__invalidServerSignature__')
+          break;
+        case 'FINGERPRINT':
+          div_messageCheckServer.textContent = browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__');
+          break;
+        case 'UNKNOWN_ISSUE':
+          div_messageCheckServer.textContent = browser.i18n.getMessage('__unknownIssue__');
+          break;
+        default:
+          div_messageCheckServer.textContent = 'Error!'
+          break;
       }
     }
   }, true)
@@ -150,10 +141,10 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
       txt_server.value += '/'
     }
 
-    CMH.certificatesManager.getCertUrl(txt_server.value+'download/public_key').then((response) => {
+    CMH.api.sendRequest(txt_server.value+'download/public_key').then(reponse => {
       btn_getPublicKey.disabled = false
-      if (response.data !== null) {
-        txt_publicKey.value = response.data
+      if (reponse.error === undefined) {
+        txt_publicKey.value = reponse.data.slice(0,-1)
         btn_getPublicKey.style.display = 'none'
       } else {
         div_messageCheckServer.dataset.type = 'error'
@@ -170,6 +161,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     }
   }
   txt_publicKey.addEventListener('keyup', onPublicKeyChange, true)
+
   txt_server.addEventListener('keyup', () => {
     const domainMatch = txt_server.value.match(/^https:\/\/([^:\/\s]+)/)
     if (domainMatch && (domainMatch[1] !== lastDomainSaved)) {

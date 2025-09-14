@@ -12,14 +12,11 @@ CMH.ui = {}
  * Initialize user interface.
  */
 CMH.ui.init = () => {
-  browser.action.setTitle({ title: browser.i18n.getMessage('__clickToCheck__') })
-
-  CMH.ui.setStatus(CMH.common.status.UNKNOWN)
-
   browser.action.onClicked.addListener((tab) => {
     CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications)
   })
 }
+
 
 /**
  * @name setStatus
@@ -35,7 +32,7 @@ CMH.ui.setStatus = (status, tabId) => {
       details.tabId = tabId
     }
     browser.action.setIcon(details)
-    browser.action.setTitle({title: browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`)})
+    browser.action.setTitle({tabId: tabId, title: browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`)})
   } else {
     let details = { title: 'CheckMyHTTPS (' + browser.i18n.getMessage(`__${CMH.common.statusCode[status]}__`) + ')' }
     if ((typeof tabId !== 'undefined') && (tabId !== null)) {
@@ -44,6 +41,7 @@ CMH.ui.setStatus = (status, tabId) => {
     browser.action.setTitle(details)
   }
 }
+
 
 /**
  * @name openOptionsPageListener
@@ -56,6 +54,19 @@ CMH.ui.openOptionsPageListener = () => {
     browser.runtime.openOptionsPage()
   }
 }
+
+
+/**
+ * @name openIDNInfoLinkPageListener
+ * @function
+ * Open the wikipedia IDN homograph attack page if the user clicks on IDNWarning notification.
+ */
+CMH.ui.openIDNInfoLinkPageListener = () => {
+  if (CMH.ui.openIDNInfoLinkPage === 1) {
+    browser.tabs.create({ url: "https://wikipedia.org/wiki/IDN_homograph_attack" })
+  }
+}
+
 
 /**
  * @name showNotification
@@ -81,12 +92,15 @@ CMH.ui.showNotification = (message, options) => {
     }
     if (options.hasOwnProperty('openOptionsPage') && options['openOptionsPage'] === 1)
       CMH.ui.openOptionsPage = 1
+    if (options.hasOwnProperty('openIDNInfoLinkPage') && options['openIDNInfoLinkPage'] === 1)
+      CMH.ui.openIDNInfoLinkPage = 1
   }
 
   browser.notifications.create('cakeNotification', notificationOptions)
 
-  // Listener to open the options page, if the user clicks on a corresponding notification (Ex: "Invalid Public Key")
+  // Listener to open the options page or link, if the user clicks on a corresponding notification (Ex: "Invalid Public Key")
   browser.notifications.onClicked.addListener(CMH.ui.openOptionsPageListener)
+  browser.notifications.onClicked.addListener(CMH.ui.openIDNInfoLinkPageListener)
 }
 
 // Initialize UI when the current platform is detected

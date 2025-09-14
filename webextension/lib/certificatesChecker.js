@@ -40,8 +40,16 @@ CMH.certificatesChecker.isCheckableUrl = (urlTested, showNotifications) => {
     return false
   }
 
+  if (host.match("addons.mozilla.org")) {
+    if (showNotifications) {
+      CMH.ui.showNotification(browser.i18n.getMessage('__firefoxRestriction__'))
+    }
+    return false
+  }
+
   return true
 }
+
 
 /**
  * @name checkTab
@@ -57,76 +65,57 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
 
   CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.WORKING)
 
-  if (CMH.common.isWebExtTlsApiSupported()) {
-    let cert = await CMH.certificatesManager.getCertTab(tab)
-    if (cert === null) {
-      CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
-      return
+  // Get the certificate of tab.url from user's view
+  let userCert = await CMH.certificatesManager.getCertTab(tab)
+  if (userCert === null) {
+    CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+    if (showNotifications) {
+      CMH.ui.showNotification(browser.i18n.getMessage('__webServerToCheckUnreachable__'))
     }
 
-    let ip = CMH.tabsManager.getTabIp(tab.id)
-    datas_api = await CMH.api.requestFromUrl(tab.url, ip)
-    if (datas_api.error) {
-      if (datas_api.error === 'SSL') {
+    return
+  }
+  
+  // Get the certificate of tab.url from check server's view
+  let ip = CMH.tabsManager.getTabIp(tab.id)
+  data_api = await CMH.api.getCertFromCheckServer(tab.url, ip)
+
+  if (data_api.error) {
+    if (data_api.error === 'PUBLIC_KEY') {
+      CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+      if (showNotifications) {
+        CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 })
+      } 
+    } else if (data_api.error === 'CHECK_SERVER_UNREACHABLE') {
+      CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+      if (showNotifications) {
+        CMH.ui.showNotification(browser.i18n.getMessage('__checkServerUnreachable__'))
+      }
+    } else if (data_api.error === 'SIGNATURE') {
         CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.INVALID)
         if (showNotifications) {
-          CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { priority: 2 })
+          CMH.ui.showNotification(browser.i18n.getMessage('__invalidServerSignature__'), { priority: 2 })
         }
-      } else if (datas_api.error === 'PUBLIC_KEY') {
-        CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+    } else if (data_api.error === 'FINGERPRINT') {
+        CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.INVALID)
         if (showNotifications) {
-          CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 })
+          CMH.ui.showNotification(browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__'), { priority: 2 })
         }
-      } else {
-        CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
-        if (showNotifications) {
-          CMH.ui.showNotification(browser.i18n.getMessage('__serverUnreachable__'))
-        }
+    } else {
+      CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+      if (showNotifications) {
+        CMH.ui.showNotification(browser.i18n.getMessage('__unknownIssue__'))
       }
-      return
     }
 
-    const verificationRes = CMH.certificatesChecker.verifyCertificate(cert, datas_api.data)
-    CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
-  }
-  else
-    return
-}
-
-/**
- * @name checkUrl
- * @function
- * @param {string}  urlTested         - URL to check
- * @param {boolean} showNotifications - Show notifications
- * Check an URL.
- */
-CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
-  if (!CMH.certificatesChecker.isCheckableUrl(urlTested, showNotifications)) {
     return
   }
 
-  if (CMH.common.isWebExtTlsApiSupported()) {
-    const requestUrl = await CMH.certificatesManager.getCertUrl(urlTested, true)
-    cert = requestUrl.cert
-    if (cert === null) {
-      return
-    }
-
-    let ip = ""
-    datas_api = await CMH.api.requestFromUrl(urlTested, ip)
-    if (datas_api.error) {
-      if (datas_api.error === 'SSL') {
-        if (showNotifications) {
-          CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { priority: 2 })
-        }
-      }
-      return
-    }
-
-    const verificationRes = CMH.certificatesChecker.verifyCertificate(cert, datas_api.data)
-    CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
-  }
+  // Compare certificates from user's view and from check server's view
+  const verificationRes = CMH.certificatesChecker.verifyCertificate(userCert, data_api.data)
+  CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
 }
+
 
 /**
  * @name verifyCertificate
@@ -137,9 +126,9 @@ CMH.certificatesChecker.checkUrl = async (urlTested, showNotifications) => {
  * Check if the user's certificate is valid.
  */
 CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) => {
-  if (CMH.certificatesChecker.compareCertificateFingerprints(userCertificate, cmhCertificate)) {
+  if (CMH.certificatesChecker.compareCertificateFingerprints(userCertificate.fingerprints.sha256, cmhCertificate.fingerprints.sha256)) {
     if (CMH.options.settings.alertOnUnicodeIDNDomainNames) {
-      // Check if the domain name is an IDN
+      // Check if the domain name is an IDN (Internationalized Domain Name) e.g. примеры.рф
       const domainName = cmhCertificate.host.split(':')[0]
       const names = domainName.split('.')
       for (let name of names) {
@@ -149,20 +138,18 @@ CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) =>
       }
     }
     return 'OK'
-  } 
-  else if ((userCertificate.issuer) && (cmhCertificate.issuer) && (CMH.certificatesChecker.compareCertificateFingerprints(userCertificate.issuer, cmhCertificate.issuer))) { // Compare issuer certificate
-    return 'SC'
   } else {
     return 'KO'
   }
 }
 
+
 /**
  * @name handleVerificationResult
  * @function
- * @param {string}  result            - Verification result
- * @param {object}  url               - URL to check
- * @param {object}  [tabId]           - Tab to check
+ * @param {string} result            - Verification result
+ * @param {object} url               - URL to check
+ * @param {object} [tabId]           - Tab to check
  * @param {boolean} showNotifications - Show notifications
  * Check if the user's certificate is valid.
  */
@@ -173,35 +160,12 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
     }
   } else if (result === 'IDN') {
     if (tabId !== null) {
-      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.WARNING)
+      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.VALID)
     }
     if (CMH.options.settings.alertOnUnicodeIDNDomainNames) {
       if (showNotifications) {
-        CMH.ui.showNotification(browser.i18n.getMessage('__IDNwarning__', url))
+        CMH.ui.showNotification(browser.i18n.getMessage('__IDNwarning__', url), { openIDNInfoLinkPage: 1 })
       }
-    }
-  } 
-  else if (result === 'SC') {
-    if (tabId !== null) {
-      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.WARNING)
-    }
-    if (showNotifications) {
-      CMH.ui.showNotification(browser.i18n.getMessage('__severalCertificats__'))
-    }
-  }
-  else if (result === 'ERR') {
-    if (tabId !== null) {
-      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.UNKNOWN)
-    }
-    if (showNotifications) {
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverUnreachable__'))
-    }
-  } else if (result === 'SSLP') {
-    if (tabId !== null) {
-      CMH.tabsManager.setTabStatus(tabId, CMH.common.status.INVALID)
-    }
-    if (showNotifications) {
-      CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { priority: 2 })
     }
   } else if (result === 'KO') {
     if (tabId !== null) {
@@ -215,19 +179,21 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.UNKNOWN)
     }
     if (showNotifications) {
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverUnreachable__'))
+      CMH.ui.showNotification(browser.i18n.getMessage('__unknownIssue__'))
     }
   }
 }
 
+
 /**
  * @name compareCertificateFingerprints
  * @function
- * @param {object} userCertificate - Certificate from the user
- * @param {object} cmhCertificate  - Certificate from the server
+ * @param {object} userCertificateFingerprint - SHA256 fingerprint of certificate from the user
+ * @param {object} cmhCertificateFingerprint  - SHA256 fingerprint of certificate from the check server
  * @returns {boolean}
  * Compare fingerprints of two certificates.
  */
-CMH.certificatesChecker.compareCertificateFingerprints = (userCertificate, cmhCertificate) => {
-  return (userCertificate.fingerprints.sha256 === cmhCertificate.fingerprints.sha256)
+CMH.certificatesChecker.compareCertificateFingerprints = (userCertificateFingerprint, cmhCertificateFingerprint) => {
+  //console.log(userCertificateFingerprint + " VS " + cmhCertificateFingerprint)
+  return (userCertificateFingerprint === cmhCertificateFingerprint)
 }

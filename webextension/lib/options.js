@@ -7,16 +7,61 @@
 CMH.options = {}
 
 /**
- * @name getCertUrl
- * @function
- * @param {string} url - URL to check
- * @returns {object} - fingerprints
- * Get the certificate fingerprints of an URL.
+ * @type {object}
+ * Cache of extension options.
+ * Default settings.
  */
-CMH.options.getCertUrl = async (url) => {
-    const { cert } = await CMH.certificatesManager.getCertUrl(url, true);
-    return cert;
+CMH.options.settings = {
+  checkOnPageLoad:               false,
+  alertOnUnicodeIDNDomainNames:  true,
+  disableNotifications:          false,
+  checkServerUrl:                'https://checkmyhttps.net/',
+  publicKey: `-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
+be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
+sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE
+5DO55nUbhp51HisOUsZwtYNEE53D8Ev8wX2iwzAx4X0E2KvVpoyI23u4UVFdQxUJ
+GVzI7Bs8OQyzFJBhalEjaylK3gDNDMFF3reNGgIEPIMIs9I6bUaOgaQsT/b65SR9
+qxWyrOrQcYl42y8mpC7SN+8zPnxUuRQgIgvR1VDThJVf5+pRi+phPLaX5exEkoDZ
+ISU8UiCquAfd0dgjNzo/wUvSykkJvAZHNtkn5kNeVE/cOYFw8jWZfX7oe2Gy5CGk
+83abNDpkpdvDpDJwHA8oP8q/0Wzd1EJkGyPfr79eEwtUEblWXaYvVPrvcrBkuex0
+F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
+MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
+8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
+17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
+-----END PUBLIC KEY-----`,
+  sha256: 'C9EF2A1588F70AF5D4022439CB60BD62E502E568B18F08C9AD0B10A39CA39F2B'
 }
+
+
+/**
+ * @type {object}
+ * Default check server (CheckMyHTTPS project server).
+ */
+CMH.options.defaultCheckServer = {
+  url: CMH.options.settings.checkServerUrl,
+  publicKey: CMH.options.settings.publicKey,
+  sha256: CMH.options.settings.sha256
+}
+
+// Get settings values
+browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey', 'sha256']).then((settings) => {
+  const settingsItems = Object.keys(settings)
+
+  for (let item of settingsItems) {
+    CMH.options.settings[item] = settings[item]
+  }
+  
+  CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.options.settings.publicKey);
+}, (error) => { console.error(error) })
+
+// Listen for settings changes
+browser.storage.onChanged.addListener((changes, area) => {
+  const changedItems = Object.keys(changes)
+
+  for (let item of changedItems)
+    CMH.options.settings[item] = changes[item].newValue
+})
 
 
 /**
@@ -67,139 +112,48 @@ CMH.options.importPublicKey = async (pem) => {
   );
 }
 
+
 /**
  * @name verifyServerAtStartup
  * @function
- * @param {string} serverUrl - Server URL
+ * @param {string} serverUrl - Check Server URL
  * @param {string} publicKey - Public key in PEM format
- * @returns {int} - 1 if everything is OK, 0 if the server signature is not correct or if the message is intercepted, -1 if no response, -2 if invalid public key
- * Check if the API server is working at startup and imports the public key.
+ * @param {string} type - Indicates that the function has been triggered from save button in options/options.js
+ * @returns {object} - If type, returns response and errors from checkMITM()
+ * Check if the API server is working at startup, verify the server's signature for a Man In The Middle
+ * and imports the public key.
  */
-CMH.options.verifyServerAtStartup = async (serverUrl, publicKey) => {
-  const { cert, data:response_data, response } = await CMH.certificatesManager.getCertUrl(serverUrl+'api.php?info&sign')
-  // Default check server unreachable ?
-  if ((cert === null) || (response === null))
-    return -1;
-  server_signature = response_data.signature
-  
-  try{
+CMH.options.verifyServerAtStartup = async (serverUrl, publicKey, type) => {
+  try {
     CMH.options.importedPublicKey = await CMH.options.importPublicKey(publicKey)
   }
-  catch(e)
+  catch (e)
   {
-    // Invalid public key
     CMH.options.importedPublicKey = 'PUBLIC_KEY_ERROR'
-    return -2
   }
 
-  response_to_verify = ""
-  response_to_verify = response_to_verify + response_data.version + response_data.title + response_data.cmh_sha256
-  response_to_verify = btoa(response_to_verify)
+  const response = await CMH.api.checkMITM(serverUrl+'api.php?info&sign')
 
-  server_signature = CMH.options.str2ab(atob(server_signature))
+  if (type === "nostartup")
+    return response
 
-  response_to_verify = CMH.options.str2ab(atob(response_to_verify))
-
-  signatureIsValid = await crypto.subtle.verify(
-    {
-      name: "RSASSA-PKCS1-v1_5",
-      hash: { name: "SHA-256" }
-    },
-    CMH.options.importedPublicKey,
-    server_signature,
-    response_to_verify
-  );
-  
-  certificatesFingerprintsAreEqual = CMH.certificatesChecker.compareCertificateFingerprints(cert, { fingerprints: { sha256: response_data.cmh_sha256 } })
-  
-  if (signatureIsValid == true && !certificatesFingerprintsAreEqual)
-	  return -3;
-  
-  // "SSL Pinning" alternative : just to check if there is a Man In The Middle, even if it is passive
-  return (signatureIsValid && certificatesFingerprintsAreEqual) === true ? 1 : 0;
-}
-
-/**
- * @type {object}
- * Cache of extension options.
- */
-CMH.options.settings = {
-  checkOnPageLoad:               false,
-  alertOnUnicodeIDNDomainNames:  true,
-  disableNotifications:          false, 
-  checkServerUrl:                'https://checkmyhttps.net/',
-  publicKey: `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
-be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
-sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE
-5DO55nUbhp51HisOUsZwtYNEE53D8Ev8wX2iwzAx4X0E2KvVpoyI23u4UVFdQxUJ
-GVzI7Bs8OQyzFJBhalEjaylK3gDNDMFF3reNGgIEPIMIs9I6bUaOgaQsT/b65SR9
-qxWyrOrQcYl42y8mpC7SN+8zPnxUuRQgIgvR1VDThJVf5+pRi+phPLaX5exEkoDZ
-ISU8UiCquAfd0dgjNzo/wUvSykkJvAZHNtkn5kNeVE/cOYFw8jWZfX7oe2Gy5CGk
-83abNDpkpdvDpDJwHA8oP8q/0Wzd1EJkGyPfr79eEwtUEblWXaYvVPrvcrBkuex0
-F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
-MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
-8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
-17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
------END PUBLIC KEY-----`
-}
-
-/**
- * @type {object}
- * Default check server (CheckMyHTTPS project server).
- */
-CMH.options.defaultCheckServer = {
-  url: 'https://checkmyhttps.net/',
-  publicKey: `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
-be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
-sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE
-5DO55nUbhp51HisOUsZwtYNEE53D8Ev8wX2iwzAx4X0E2KvVpoyI23u4UVFdQxUJ
-GVzI7Bs8OQyzFJBhalEjaylK3gDNDMFF3reNGgIEPIMIs9I6bUaOgaQsT/b65SR9
-qxWyrOrQcYl42y8mpC7SN+8zPnxUuRQgIgvR1VDThJVf5+pRi+phPLaX5exEkoDZ
-ISU8UiCquAfd0dgjNzo/wUvSykkJvAZHNtkn5kNeVE/cOYFw8jWZfX7oe2Gy5CGk
-83abNDpkpdvDpDJwHA8oP8q/0Wzd1EJkGyPfr79eEwtUEblWXaYvVPrvcrBkuex0
-F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
-MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
-8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
-17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
------END PUBLIC KEY-----`
-}
-
-// Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
-  const settingsItems = Object.keys(settings)
-
-  for (let item of settingsItems) {
-    CMH.options.settings[item] = settings[item]
+  switch(response.error) {
+    case 'PUBLIC_KEY':
+      CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
+      break;
+    case 'CHECK_SERVER_UNREACHABLE':
+      CMH.ui.showNotification(browser.i18n.getMessage('__checkServerUnreachable__'));
+      break;
+    case 'SIGNATURE':
+      CMH.ui.showNotification(browser.i18n.getMessage('__invalidServerSignature__'));
+      break;
+    case 'FINGERPRINT':
+      CMH.ui.showNotification(browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__'));
+      break;
+    case 'UNKNOWN_ISSUE':
+      CMH.ui.showNotification(browser.i18n.getMessage('__unknownIssue__'));
+      break;
+    default:
+      break;
   }
-  
-  // Verify the server's signature AND if there is a passive Man In The Middle
-	CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.options.settings.publicKey).then((response) => {
-	  switch(response) {
-		case 1:
-		  break;
-		case -1:
-		  CMH.ui.showNotification(browser.i18n.getMessage('__defaultServerUnreachable__'));
-		  break;
-		case -2:
-		  CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
-		  break;
-		case -3:
-		  CMH.ui.showNotification(browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__'));
-		  break;
-		default:
-		  CMH.ui.showNotification(browser.i18n.getMessage('__serverSignatureNotVerified__'));
-		  break;
-	  }
-	});
-  
-}, (error) => { console.error(error) })
-
-// Listen for settings changes
-browser.storage.onChanged.addListener((changes, area) => {
-  const changedItems = Object.keys(changes)
-
-  for (let item of changedItems)
-    CMH.options.settings[item] = changes[item].newValue
-})
+}

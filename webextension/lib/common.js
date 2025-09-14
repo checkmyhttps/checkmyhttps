@@ -17,9 +17,9 @@ CMH.common.status = {
   VALID:   0,
   INVALID: 1,
   UNKNOWN: 2,
-  WARNING: 3,
-  WORKING: 4
+  WORKING: 3
 }
+
 
 /**
  * @name statusCode
@@ -30,7 +30,6 @@ CMH.common.statusCode = [
   'valid',
   'invalid',
   'unknown',
-  'warning',
   'working'
 ]
 
@@ -38,14 +37,14 @@ CMH.common.statusCode = [
 /**
  * @name parseURL
  * @function
- * @param {string} urlStr - URL to parsed
+ * @param {string} urlStr - URL to parse
  * @returns {object} - Host and port
  * Parse an URL.
  */
 CMH.common.parseURL = (urlStr) => {
   const url = new URL(urlStr)
-  const host = url.hostname
-  let   port = url.port
+  let host = url.hostname
+  let port = url.port
 
   if (port == '') {
     const protocol = url.protocol.slice(0, -1)
@@ -99,15 +98,6 @@ CMH.common.compareVersion = function (versionA, versionB) {
   return 0
 }
 
-/**
- * @name isWebExtTlsApiSupported
- * @function
- * @returns {boolean} - TLS API supported or not
- * Check if WebExtension TLS API is supported.
- */
-CMH.common.isWebExtTlsApiSupported = () => {
-  return (typeof browser.webRequest.getSecurityInfo !== 'undefined')
-}
 
 /**
  * @name platform
@@ -126,6 +116,7 @@ if (typeof browser.runtime.getBrowserInfo !== 'undefined') {
 } else {
   CMH.common.platform = 'desktop'
 }
+
 
 /**
  * @name isDesktopPlatform

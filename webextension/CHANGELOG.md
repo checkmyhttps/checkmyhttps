@@ -1,5 +1,21 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.7.2 - 2025-08-09
+- By default, the extension icon is icon.png, not unknown.png anymore. Each tab
+- Visual improvement of Options page
+- Removed unused code
+- getCertUrl function was used to get the certificate of an URL from user's view (if httpHeadMethod=true) and from check server's view, which was confusing because 
+it was used to get either the 1st or 2nd type of certificate described but not both at the same time. The 1st type of certificate is now retrieved by function getCertFromUser, the 2nd type of certificate is now retrieved by function getCertFromCheckServer
+- getCertUrl function was used to get only the body response (data) to retrieve the check server's public key, now sendRequest function does it
+- Created checkMITM function in order to regroup code from verifyServerAtStartup and getCertFromCheckServer (formerly requestFromUrl)
+- Handle the case of checking addons.mozilla.org's certificate which is not possible due to a safety feature where Firefox prevents its extensions from manipulating the extension store website
+- Improved error handling messages
+- Reorganized and improved localization messages
+- Removed severalCertificates 'SC' case handling. It is now considered invalid.
+- Checking an IDN (Internationalized Domain Name) website is now considered valid (as long as both certificate fingerprints are equal). 
+- Made the IDN warning notification clickable to redirect the user to wikipedia's IDN homograph attack page
+- Removed Warning status as severalCertificates and IDN cases are no longer considered warning
+
 ## 5.7.1 - 2024-02-04
 - Fix loading of options on browser startup (custom server and public key)
 - Better error messages

@@ -1,0 +1,101 @@
+:root {
+    --border-radius: 8px;
+    --primary-color: #3182f3;
+    --primary-color-hover: #0765e9;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: x-small;
+}
+
+h1 {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+h2 {
+    color: black;
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 2%;
+}
+
+p {
+    font-size: 1.7em;
+}
+
+p.message[data-type='success'] {
+    color: green;
+    font-weight: bold;
+}
+p.message[data-type='error'] {
+    color: red;
+    font-weight: bold;
+}
+
+label {
+    font-size: 2em;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+input[type="text"] {
+    display: flex;
+    max-width: 100%;
+    width: 94%;
+    padding: 1%;
+    font-family: monospace;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+}
+
+textarea {
+    width: 97%;
+    max-width: 100%;
+    min-width: 70%;
+    min-height: 59px;
+    padding: 1%;
+    box-sizing: border-box;
+    font-family: monospace;
+    white-space: pre;
+    font-size:small;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+}
+
+.buttons {
+    display: flex;
+    gap: 2%;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    font-size: 160%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: var(--primary-color-hover);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}

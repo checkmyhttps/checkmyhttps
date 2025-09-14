@@ -6,12 +6,12 @@
 
 CMH.tabsManager = {}
 
-
 /**
  * @type {object}
  * Check status of tabs.
  */
 CMH.tabsManager.tabsStatus = {}
+
 
 /**
  * @name setTabStatus
@@ -21,12 +21,10 @@ CMH.tabsManager.tabsStatus = {}
  * Set the status of a tab.
  */
 CMH.tabsManager.setTabStatus = (tabId, status) => {
-  if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
-    CMH.tabsManager.tabsStatus[tabId] = {}
-  }
   CMH.tabsManager.tabsStatus[tabId].status = status
   CMH.ui.setStatus(status, tabId)
 }
+
 
 /**
  * @name deleteTabStatus
@@ -40,6 +38,7 @@ CMH.tabsManager.deleteTabStatus = (tabId) => {
   }
 }
 
+
 /**
  * @name setTabUrl
  * @function
@@ -49,28 +48,15 @@ CMH.tabsManager.deleteTabStatus = (tabId) => {
  */
 CMH.tabsManager.setTabUrl = (tabId, url) => {
   if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
-    CMH.tabsManager.tabsStatus[tabId] = {
-      status: CMH.common.status.UNKNOWN
-    }
+    CMH.tabsManager.tabsStatus[tabId] = {}
   }
 
   const newUrl = CMH.common.parseURL(url)
-  if (typeof CMH.tabsManager.tabsStatus[tabId].host !== 'undefined') {
-    const oldUrl = CMH.tabsManager.tabsStatus[tabId]
-    if ((newUrl.host !== oldUrl.host) || (newUrl.port !== oldUrl.port)) {
-      CMH.tabsManager.tabsStatus[tabId].certificates = null
-      CMH.tabsManager.tabsStatus[tabId].ip = null
-      CMH.tabsManager.tabsStatus[tabId].status       = CMH.common.status.UNKNOWN
-    }
-  } else {
-    CMH.tabsManager.tabsStatus[tabId].certificates = null
-    CMH.tabsManager.tabsStatus[tabId].ip = null
-    CMH.tabsManager.tabsStatus[tabId].status       = CMH.common.status.UNKNOWN
-  }
-
+  
   CMH.tabsManager.tabsStatus[tabId].host = newUrl.host
   CMH.tabsManager.tabsStatus[tabId].port = newUrl.port
 }
+
 
 /**
  * @name setTabCertificates
@@ -82,27 +68,32 @@ CMH.tabsManager.setTabUrl = (tabId, url) => {
  */
 CMH.tabsManager.setTabCertificates = (tabId, certificates, url) => {
   if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
-    CMH.tabsManager.tabsStatus[tabId] = {
-      status: CMH.common.status.UNKNOWN
-    }
+    CMH.tabsManager.tabsStatus[tabId] = {}
   }
+
   if (typeof url !== 'undefined') {
     CMH.tabsManager.setTabUrl(tabId, url)
   }
   CMH.tabsManager.tabsStatus[tabId].certificates = certificates
 }
 
+
 /**
  * @name setTabIp
  * @function
  * @param {number} tabId    - Tab ID
- * @param {string} ip       - Current ip
+ * @param {string} ip       - Current IP address
  * @param {string} [url]    - Tab URL
- * Set the ip of a tab.
+ * Set the IP address of a tab.
  */
 CMH.tabsManager.setTabIp = (tabId, ip) => {
+  if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
+    CMH.tabsManager.tabsStatus[tabId] = {}
+  }
+
   CMH.tabsManager.tabsStatus[tabId].ip = ip
 }
+
 
 /**
  * @name getTabCertificate
@@ -118,34 +109,21 @@ CMH.tabsManager.getTabCertificate = (tabId) => {
   return CMH.tabsManager.tabsStatus[tabId].certificates
 }
 
+
 /**
  * @name getTabIp
  * @function
  * @param {number} tabId - Tab ID
- * @returns {string} - ip
- * Get the ip of a tab.
+ * @returns {string} - IP address
+ * Get the IP address of a tab.
  */
- CMH.tabsManager.getTabIp = (tabId) => {
+CMH.tabsManager.getTabIp = (tabId) => {
   if ((typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') || (typeof CMH.tabsManager.tabsStatus[tabId].ip === 'undefined') || CMH.tabsManager.tabsStatus[tabId].ip == null) {
     return ""
   }
   return CMH.tabsManager.tabsStatus[tabId].ip
 }
 
-/**
- * @name onTabActivated
- * @function
- * @param {number} tabId - Tab ID
- * Event on tab switch.
- */
-CMH.tabsManager.onTabActivated = (tabId) => {
-  if (typeof CMH.tabsManager.tabsStatus[tabId] !== 'undefined') {
-    CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId)
-  } else {
-    CMH.ui.setStatus(CMH.common.status.UNKNOWN, tabId)
-  }
-}
-browser.tabs.onActivated.addListener((activeInfo) => { CMH.tabsManager.onTabActivated(activeInfo.tabId) })
 
 /**
  * @name onTabClose
@@ -156,13 +134,14 @@ browser.tabs.onActivated.addListener((activeInfo) => { CMH.tabsManager.onTabActi
 CMH.tabsManager.onTabClose = (tabId) => {
   CMH.tabsManager.deleteTabStatus(tabId)
 }
-browser.tabs.onRemoved.addListener((tabId, removeInfo) => { CMH.tabsManager.onTabClose(tabId) })
+browser.tabs.onRemoved.addListener((tabId) => { CMH.tabsManager.onTabClose(tabId) })
+
 
 /**
  * @name onHeadersReceived
  * @function
  * @param {object} requestDetails - Request data
- * Event on request event.
+ * Store certificates of each request received from main frame.
  */
 CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
   const securityInfo = await browser.webRequest.getSecurityInfo(requestDetails.requestId, { certificateChain: true })
@@ -176,6 +155,7 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
   ['blocking']
 )
 
+
 /**
  * @name onHeadersReceivedForIp
  * @function
@@ -185,8 +165,17 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  */
 CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
   if (requestDetails.ip != null) {
-    if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] !== 'undefined') {
-      if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
+    let n = 0
+
+    while (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined') {
+      await new Promise(resolve => setTimeout(resolve, 1)); // Wait while tab is not set (by setTabUrl in onTabUpdated)
+      n++
+
+      if (n>9)
+        break;
+    }
+    if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
+      if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
         CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
       }
     }
@@ -197,6 +186,7 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
   ['blocking']
 )
 
+
 /**
  * @name onTabUpdated
  * @function
@@ -206,22 +196,16 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  * Event on tab update.
  */
 CMH.tabsManager.onTabUpdated = (tabId, changeInfo, tabInfo) => {
-  if (typeof changeInfo.url !== 'undefined') {
+  if (typeof changeInfo.url !== 'undefined' && !changeInfo.url.includes("about:") && !changeInfo.url.includes("moz-extension:")) {
     CMH.tabsManager.setTabUrl(tabId, tabInfo.url)
-
     if (CMH.options.settings.checkOnPageLoad) {
-      if ((CMH.tabsManager.tabsStatus[tabId].status === CMH.common.status.UNKNOWN) && CMH.certificatesChecker.isCheckableUrl(tabInfo.url, false)) {
+      if (CMH.tabsManager.tabsStatus[tabId].status === undefined) {
         // Check on page load
+        CMH.tabsManager.tabsStatus[tabId].status = -1 // Set a default status so pages that already got checked don't show the same notification again
         CMH.certificatesChecker.checkTab(tabInfo, !CMH.options.settings.disableNotifications)
+      } else if (CMH.tabsManager.tabsStatus[tabId].status !== -1) {
+        CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId) // Page has already been checked, display its status logo again if page was reloaded
       }
-    }
-  }
-  if ((typeof changeInfo.status !== 'undefined') && (changeInfo.status === 'loading')) {
-    // Fix browser action icon reset to default
-    if (typeof CMH.tabsManager.tabsStatus[tabId] !== 'undefined') {
-      CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId)
-    } else {
-      CMH.ui.setStatus(CMH.common.status.UNKNOWN, tabId)
     }
   }
 }
