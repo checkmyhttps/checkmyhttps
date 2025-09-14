@@ -11,7 +11,11 @@
   "homepage_url": "https://checkmyhttps.net",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "79.0"
+      "id": "info@checkmyhttps.net",
+      "strict_min_version": "115.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "background": {

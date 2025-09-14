@@ -1,7 +1,7 @@
 # CheckMyHTTPS WebExtension Changelog
 
-## 5.7.2 - 2025-08-09
-- By default, the extension icon is icon.png, not unknown.png anymore. Each tab
+## 5.7.2 - 2025-09-14
+- By default, the extension icon is icon.png, not unknown.png anymore.
 - Visual improvement of Options page
 - Removed unused code
 - getCertUrl function was used to get the certificate of an URL from user's view (if httpHeadMethod=true) and from check server's view, which was confusing because 
