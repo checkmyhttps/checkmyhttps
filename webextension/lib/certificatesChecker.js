@@ -67,7 +67,7 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
 
   // Get the certificate of tab.url from user's view
   let userCert = await CMH.certificatesManager.getCertTab(tab)
-  if (userCert === null) {
+  if (userCert === null || userCert.error !== undefined) {
     CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
     if (showNotifications) {
       CMH.ui.showNotification(browser.i18n.getMessage('__webServerToCheckUnreachable__'))

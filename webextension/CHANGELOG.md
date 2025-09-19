@@ -15,6 +15,8 @@ it was used to get either the 1st or 2nd type of certificate described but not b
 - Checking an IDN (Internationalized Domain Name) website is now considered valid (as long as both certificate fingerprints are equal). 
 - Made the IDN warning notification clickable to redirect the user to wikipedia's IDN homograph attack page
 - Removed Warning status as severalCertificates and IDN cases are no longer considered warning
+- Fixed wrong IP address being used to check certificate of websites using CDNs
+- Handled a case where some websites do not allow HEAD method, which is used to get their certificate
 
 ## 5.7.1 - 2024-02-04
 - Fix loading of options on browser startup (custom server and public key)

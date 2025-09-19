@@ -144,6 +144,8 @@ browser.tabs.onRemoved.addListener((tabId) => { CMH.tabsManager.onTabClose(tabId
  * Store certificates of each request received from main frame.
  */
 CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
+  CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+
   const securityInfo = await browser.webRequest.getSecurityInfo(requestDetails.requestId, { certificateChain: true })
   if (securityInfo.state === 'secure' || securityInfo.state === 'weak') {
     certificateFormatted = CMH.certificatesManager.formatCertificate(securityInfo.certificates)
@@ -162,18 +164,9 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  * @param {object} requestDetails - Request data
  * When event, setTabIp when originUrl hostname and real request hostname same
  * Get ip event when ip not in main_frame
- */
-CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
-  if (requestDetails.ip != null) {
-    let n = 0
-
-    while (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined') {
-      await new Promise(resolve => setTimeout(resolve, 1)); // Wait while tab is not set (by setTabUrl in onTabUpdated)
-      n++
-
-      if (n>9)
-        break;
-    }
+ */ 
+/*CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
+  if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined') {
     if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
       if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
         CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
@@ -181,10 +174,10 @@ CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
     }
   }
 }
-browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,
-  { urls: ['https://*/*'] },
-  ['blocking']
-)
+browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,*/
+  //{ urls: ['https://*/*'] },
+  //['blocking']
+//)
 
 
 /**
