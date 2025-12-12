@@ -43,8 +43,6 @@ rsync -av --delete $IN/www/ $OUT/
 ln -sTf $KEYDIR/public_key $OUT/download/public_key
 
 echo "Config"
-CERT_SHA=`openssl x509 -in $CRT -inform PEM -out /dev/stdout -outform DER | sha256sum | tr a-z A-Z | cut -d ' ' -f 1`
-sed 's/SHA256_FINGERPRINT_OF_YOUR_SERVER_S_HTTPS_CERTIFICATE/'$CERT_SHA'/' -i $OUT/config.php
 sed 's#/path/to/your/private/key#'"$KEYDIR"'/private_key#' -i $OUT/config.php
 TH=`tr ',' '\n' <<<"$THOSTS" | awk '{ aa = "'"'"'" $0 "'"'"'" ; if (a) { a=a "," aa } else a=aa} END {print "["a"]"}'`
 sed -r -i 's#(\$TRUSTED_HOSTS=).*#\1'$TH';#' $OUT/config.php

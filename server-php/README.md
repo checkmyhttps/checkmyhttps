@@ -4,7 +4,7 @@
 
 ### Manual installation
 
-**REQUIRMENTS**
+**REQUIREMENTS**
 
 * You need an HTTPS server with PHP, the PHP class Normalizer (php-intl) and php-filter module
 * You also need a TMPFS partition for the cache. Here is the process (Linux):
@@ -24,9 +24,8 @@ The cache is enabled by default, but you can turn it off by setting the variable
 6. Create the RSA private key (PEM format) to sign the server's answers: `openssl genrsa -out private_key 4096`.
 7. Create the associated public key for the clients to check the server's signature: `openssl rsa -in private_key -pubout -out public_key`.
 8. Store your private key **outside the web server folder**. Copy the public key in the folder `download/public_key`.
-9. Edit `config.php` to set the path of your private key ($PRIVATE_KEY='/path_to_your_private_key`).
-10. Edit `config.php` to set the SHA256 fingerprint (**uppercase without colons**) of your HTTPS certificate ($CERT_SHA256='SH256_of_your_CMH_server_certificate'). You can use this command to compute this SHA256 fingerprint : ` openssl x509 -in your_certificate.crt -inform PEM -out /dev/stdout -outform DER | sha256sum | tr a-z A-Z`
-11. Edit `config.php` and replace `['checkmyhttps.net','www.checkmyhttps.net','185.235.207.57']` with all your server's FQDN and ip addresses.
+9. Edit `config.php` to set the path of your private key ($PRIVATE_KEY=`/path_to_your_private_key`).
+10. Edit `config.php` and replace `['checkmyhttps.net','www.checkmyhttps.net','185.235.207.57']` with all your server's FQDN and ip addresses.
 
 **INSTALLATION**
 
@@ -36,7 +35,7 @@ The cache is enabled by default, but you can turn it off by setting the variable
 
 ### Scripted installation
 
-**REQUIRMENTS**
+**REQUIREMENTS**
 
 * You need an HTTPS server with PHP and php-filter module
 

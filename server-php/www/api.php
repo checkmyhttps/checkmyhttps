@@ -3,31 +3,19 @@
 include __DIR__ . '/config.php';
 
 define('INSTANCE_TITLE', 'CheckMyHTTPS API server');
-define('VERSION', '1.6.0');
-define('SOCKET_TIMEOUT', ini_get('default_socket_timeout'));
+define('VERSION', '1.7.0');
+define('SOCKET_TIMEOUT', ini_get('default_socket_timeout') / 10);
 define('CMH_DEBUG', false);
 
 header('Content-Type: application/json');
 
-//DNS record found in cache ?
+// DNS record found in cache ?
 $cacheFound = false;
 $insertInCache = true;
 $canWrite = -1;
 
-// Allow check private IP
+// Allow to check private IP addresses
 $allowPrivateIp = false;
-
-// Do not send a dedicated message for private domains
-$privateDomainsHidden = false;
-
-// List of private domains
-$privateDomains = [
-    // 'localhost'
-];
-
-$sign = false;
-
-if (isset($_GET['sign'])) $sign = true;
 
 // Information page
 if (isset($_GET['info'])) {
@@ -35,30 +23,36 @@ if (isset($_GET['info'])) {
 		'version' => VERSION,
 		'title'   => INSTANCE_TITLE
 	];
-	echo json_encode(hashAndEncrypt($response, $sign));
+	echo json_encode(hashAndEncrypt($response));
 	exit();
 }
 
 // User inputs
 $data = json_decode( file_get_contents("php://input") );
 
-// For POST requests
-if ( isset($data->url) ) $request_url = $data->url;
-if ( isset($data->host) ) $request_host = $data->host;
-if ( isset($data->port) ) $request_port = $data->port;
-if ( isset($data->sign) ) $sign = $data->sign;
-if ( isset($data->ip) ) $request_ip = $data->ip;
+// For GET and POST requests
+// === 1. HOST
+$raw_host = filter_input(INPUT_GET, 'host', FILTER_SANITIZE_STRING) ?? (isset($data->host) ? filter_var($data->host, FILTER_SANITIZE_STRING) : null);
 
-// For GET requests
-if (isset($_GET['url']))  $request_url  = $_GET['url'];
-if (isset($_GET['host'])) $request_host = $_GET['host'];
-if (isset($_GET['port'])) $request_port = $_GET['port'];
-if (isset($_GET['ip'])) $request_ip = $_GET['ip'];
+if ($raw_host !== null && $raw_host !== false && $raw_host !== '') {
+    $request_host = $raw_host;
+}
 
-//error_log("AFFICHAGE DES VALEURS");
-//error_log("Valeur host" . print_r($request_host, true) );
-//error_log("Valeur ip" . print_r($request_ip, true) );
+// === 2. PORT
+$raw_port = filter_input(INPUT_GET, 'port', FILTER_SANITIZE_NUMBER_INT) ?? (isset($data->port) ? filter_var($data->port, FILTER_SANITIZE_NUMBER_INT) : null);
 
+if ($raw_port !== null && $raw_port !== false && $raw_port !== '') {
+    $request_port = $raw_port;
+}
+
+// === 3. IP
+$raw_ip = filter_input(INPUT_GET, 'ip', FILTER_SANITIZE_STRING) ?? (isset($data->ip) ? filter_var($data->ip, FILTER_SANITIZE_STRING) : null);
+
+if ($raw_ip !== null && $raw_ip !== false && $raw_ip !== '') {
+    if (filter_var($raw_ip, FILTER_VALIDATE_IP)) {
+        $request_ip = $raw_ip;
+    }
+}
 
 // Service requested by the user
 $service = (object) [
@@ -67,45 +61,32 @@ $service = (object) [
 	'ip'   => null
 ];
 
-// Parse host:port from URL
-if ((isset($request_url)) && (!isset($request_host) && !isset($request_port)))
+// Check port
+if (isset($request_port))
 {
-	if ((!filter_var($request_url, FILTER_VALIDATE_URL)) && (!filter_var(unicodeToPunycode($request_url), FILTER_VALIDATE_URL)))
-	{
-		echo json_encode(hashAndEncrypt((object)['error' => 'INVALID_URL'], $sign));
-		exit();
-	}
-	else
-	{
-		$url = parse_url($request_url);
-		$request_host = isset($url['host']) ? $url['host'] : null;
-		$request_port = isset($url['port']) ? $url['port'] : null;
-
-		if (($request_port === null) && (isset($url['scheme'])))
-		{
-			$request_port = getPortFromScheme($url['scheme']);
-		}
-	}
+	if(is_numeric($request_port) && (0 <= intval($request_port) && intval($request_port) <= 65535))
+		$service->port = intval($request_port);
 }
 
-if(isset($request_ip))
+if (empty($service->port))
 {
-	if (filter_var($request_ip, FILTER_VALIDATE_IP) && strpos($request_ip, ':') === false)
-		$service->ip = $request_ip;
+	echo json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_PORT']));
+	exit();
+}
+
+if (isset($request_ip))
+{
+	$service->ip = $request_ip;
 }
 
 // Check hostname
 if (isset($request_host))
 {
-	if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
-		$service->host = $request_host;
-	else
-	{
-		// Convert IDNA 2008
-		$request_host =  unicodeToPunycode($request_host);
+	// If not IDN then Punycode covertion will make the domain the same. If IDN then convert it to Punycode
+	$request_host = unicodeToPunycode($request_host);
 
-		if (preg_match('/^[a-zA-Z0-9-_.]+$/', $request_host))
-			$service->host = $request_host;
+	if ($request_host !== false) {
+		$service->host = $request_host;
 	}
 
 	// Get IP address
@@ -126,7 +107,7 @@ if (isset($request_host))
 
 				$curdate = time();
 
-				//Looking for a DNS + fingerprints record in cache
+				// Looking for a DNS + fingerprints record in cache
 				if (file_exists($cachename))
 				{
 					$cacheFound = true;
@@ -137,15 +118,13 @@ if (isset($request_host))
 					$cache_exploded = explode("\n", $cache);
 
 					$ip = $cache_exploded[0];
-					$sha1cache = $cache_exploded[1];
-					$sha256cache = $cache_exploded[2];
-					$sha1cacheissuers = $cache_exploded[3];
-					$sha256cacheissuers = $cache_exploded[4];
+					$sha256cache = $cache_exploded[1];
+					$sha256cacheissuers = $cache_exploded[2];
 
 					$cachetimestamp = filemtime($cachename);
 
 					$time_passed = $curdate - $cachetimestamp;
-					if($time_passed > $cacheTTL) //Old cache, we need to update it
+					if($time_passed > $cacheTTL) // Old cache, we need to update it
 					{
 						$files = glob($path_to_cache."*");
 						foreach($files as $file)
@@ -156,13 +135,14 @@ if (isset($request_host))
 									unlink($file);
 							}
 						}
-						//We delete the old cache row and all the older records
+						// We delete the old cache row and all the older records
 						$insertInCache = true;
 						$cacheFound = false;
 					}
 				}
 			}
-			//DNS record not found in cache, or it was too old, or ip@ already given by the client
+
+			// DNS record not found in cache, or it was too old, or ip@ already given by the client
 			if($cacheFound === false && !isset($service->ip))
 			{
 				$insertInCache = true;
@@ -186,105 +166,81 @@ if (isset($request_host))
 	}
 }
 
-// Check port
-if (isset($request_port))
+if (empty($service->host) || empty($service->ip))
 {
-	if(is_numeric($request_port) && (0 <= intval($request_port) && intval($request_port) <= 65535))
-		$service->port = intval($request_port);
+	echo json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_HOST']));
+	exit();
 }
-
-if(empty($service->host) || empty($service->ip))
-	exit(json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_HOST'], $sign)));
-
-if(empty($service->port))
-	exit(json_encode(hashAndEncrypt((object)['error' => 'UNKNOWN_PORT'], $sign)));
 
 // Replace this array with your server's FQDNs and public IP addresses :
 if (in_array($service->host, $TRUSTED_HOSTS)) $service->ip = '127.0.0.1';
 
-if((!$allowPrivateIp) && ($service->ip !== '127.0.0.1') && (!filter_var($service->ip, FILTER_VALIDATE_IP, ['flags' => (FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)])))
+// If not own server and IP address is invalid or private/reserved
+if ((!$allowPrivateIp) && ($service->ip !== '127.0.0.1') && (!filter_var($service->ip, FILTER_VALIDATE_IP, ['flags' => (FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)])))
 {
-	if(($privateDomainsHidden) && ($service->ip !== $service->host))
-		exit(json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE'], $sign)));
-	else
-		exit(json_encode(hashAndEncrypt((object)['error' => 'PRIVATE_HOST'], $sign)));
+	echo json_encode(hashAndEncrypt((object)['error' => 'PRIVATE_HOST']));
+	exit();
 }
 
-if(in_array($service->host, $privateDomains))
-{
-	if($privateDomainsHidden)
-		exit(json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE'], $sign)));
-	else
-		exit(json_encode(hashAndEncrypt((object)['error' => 'PRIVATE_HOST'], $sign)));
-}
-
-//No record found in cache, so, we can fetch the certificates chain
-if($cacheFound === false)
+// No record found in cache, so, we can fetch the certificates chain
+if ($cacheFound === false)
 {
 	$certificate = getCertificate($service);
-	if($certificate === null)
+	if($certificate === null || $certificate === '')
 	{
-		echo json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE'], $sign));
+		echo json_encode(hashAndEncrypt((object)['error' => 'HOST_UNREACHABLE']));
 		exit();
 	}
 }
 else
 {
-	//Write fingerprints from cache to send them to the client
+	// Write fingerprints from cache to send them to the client
 	$certificate = (object) [
 		'fingerprints' => (object) [
-		'sha1'   => $sha1cache,
 		'sha256' => $sha256cache
 		]
 	];
-	$nbIssuers = strlen($sha1cacheissuers) / 40;
+	$nbIssuers = strlen($sha256cacheissuers) / 64;
 	$tmpIssuer = $certificate;
 
-	$sha1_issuers_fingerprints_chain = $sha1cacheissuers;
 	$sha256_issuers_fingerprints_chain = $sha256cacheissuers;
 
-	//Write issuers fingerprints
+	// Write issuers fingerprints
 	while($nbIssuers > 0)
 	{
 		$tmpIssuer->issuer = (object) [
 			'fingerprints' => (object) [
-			'sha1'   => null,
 			'sha256' => null
 			]
 		];
 		$tmpIssuer = $tmpIssuer->issuer;
-		$tmpIssuer->fingerprints->sha1 = substr($sha1cacheissuers, 0, 40);
 		$tmpIssuer->fingerprints->sha256 = substr($sha256cacheissuers, 0, 64);
 		$nbIssuers = $nbIssuers - 1;
 
-		$sha1cacheissuers = substr($sha1cacheissuers, 40);
 		$sha256cacheissuers = substr($sha256cacheissuers, 64);
 	}
 }
 
 $ip_formated = (strpos($service->ip, ':') !== false) ? '['.$service->ip.']' : $service->ip;
 $certificate->host        = $service->host.':'.$service->port;
-$certificate->host_raw    = $ip_formated  .':'.$service->port;
-$certificate->whitelisted = checkHostWhitelisted($service->host);
+$certificate->host_ip     = $ip_formated.':'.$service->port;
 
-if($insertInCache === true && $use_cache === true)
+if ($insertInCache === true && $use_cache === true)
 {
-	$sha1_issuers_fingerprints_chain = "";
 	$sha256_issuers_fingerprints_chain = "";
 	$tmpCert = $certificate;
 	while (isset($tmpCert->issuer))
 	{
-		$sha1_issuers_fingerprints_chain = $sha1_issuers_fingerprints_chain . $tmpCert->issuer->fingerprints->sha1;
-		$sha256_issuers_fingerprints_chain = $sha256_issuers_fingerprints_chain . $tmpCert->issuer->fingerprints->sha256;
+		$sha256_issuers_fingerprints_chain = $sha256_issuers_fingerprints_chain.$tmpCert->issuer->fingerprints->sha256;
 		$tmpCert = $tmpCert->issuer;
 	}
 
-	$canWrite = file_put_contents($cachename, $service->ip."\n".$certificate->fingerprints->sha1."\n".$certificate->fingerprints->sha256."\n".$sha1_issuers_fingerprints_chain."\n".$sha256_issuers_fingerprints_chain."\n", FILE_APPEND | LOCK_EX);
+	$canWrite = file_put_contents($cachename, $service->ip."\n".$certificate->fingerprints->sha256."\n".$sha256_issuers_fingerprints_chain."\n", FILE_APPEND | LOCK_EX);
 
-	//Can't write in cache, probably full
+	// Can't write in cache, probably full
 	if($canWrite === false)
 	{
-		//Empty the cache
+		// Empty the cache
 		$files = glob($path_to_cache."*");
 		foreach($files as $file)
 		{
@@ -294,7 +250,7 @@ if($insertInCache === true && $use_cache === true)
 	}
 }
 
-echo json_encode(hashAndEncrypt($certificate, $sign));
+echo json_encode(hashAndEncrypt($certificate));
 exit();
 
 /**
@@ -312,7 +268,6 @@ function formatCertificateChain($certificateChain)
 
 	$certificate = (object) [
 		'fingerprints' => (object) [
-		'sha1'   => strtoupper(openssl_x509_fingerprint($cert, 'sha1')),
 		'sha256' => strtoupper(openssl_x509_fingerprint($cert, 'sha256'))
 		]
 	];
@@ -340,7 +295,7 @@ function getCertificate($service)
 	{
 		if(CMH_DEBUG)
 		{
-			echo json_encode(hashAndEncrypt((object)['error' => true, 'errno' => $errno, 'errstr' => utf8_encode($errstr)], $sign), JSON_UNESCAPED_UNICODE);
+			echo json_encode(hashAndEncrypt((object)['error' => true, 'errno' => $errno, 'errstr' => utf8_encode($errstr)]), JSON_UNESCAPED_UNICODE);
 			exit();
 		}
 	}
@@ -383,22 +338,17 @@ function objToString($obj, &$str)
  * Hashes the response and encrypts the hash.
  *
  * @param object $response response of the server
- * @param string $sign set to true if the client wants the server's signature
- * @return object Returns response with its encrypted hash if the parameter $sign is true
+ * @return object Returns response with its encrypted hash
  */
-function hashAndEncrypt($response, $sign)
+function hashAndEncrypt($response)
 {
-	global $PRIVATE_KEY, $CERT_SHA256;
-	if(!$sign)
-		return $response;
-
+	global $PRIVATE_KEY;
+	
 	$private_key = file_get_contents($PRIVATE_KEY);
-
-	$response->cmh_sha256 = $CERT_SHA256;
 
 	$response_to_sign = "";
 
-	//Concatenates all the fields of the response to a single string
+	// Concatenates all the fields of the response to a single string
 	objToString($response, $response_to_sign);
 
 	$signature = "";
@@ -431,31 +381,13 @@ function getPortFromScheme($protocol)
 	return isset($portsByProtocol[$protocol]) ? $portsByProtocol[$protocol] : null;
 }
 
-/**
- * Check if a host is whitelisted.
- *
- * @param string $host Host
- * @return bool
- */
-function checkHostWhitelisted($host)
-{
-	$whitelist = include 'api_whitelist.php';
-
-	if(in_array($host, $whitelist['domains']))
-		return true;
-
-	foreach ($whitelist['domains_re'] as $regex)
-	{
-		if(preg_match("/$regex/", $host))
-			return true;
-	}
-	return false;
-}
-
 function unicodeToPunycode($input) {
     $normalized = \Normalizer::normalize($input, \Normalizer::FORM_C);
+	if ($normalized === false || $normalized === '') {
+        return false;
+    }
     $punycode = idn_to_ascii($normalized, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
-    return $punycode;
+    return $punycode !== false ? $punycode : false;
 }
 
 function punycodeToUnicode($input) {
@@ -464,4 +396,4 @@ function punycodeToUnicode($input) {
     return $normalized;
 }
 
-?> 
+?>
