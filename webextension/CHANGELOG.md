@@ -1,6 +1,6 @@
 # CheckMyHTTPS WebExtension Changelog
 
-## 5.7.3 - 2025-09-28
+## 5.7.3 - 2025-12-12
 - Added a list of private Top Level Domains so that the extension does not check (e.g. .localhost)
 - Added a list of reserved IP addresses so that the extension does not check (e.g. 100.64.0.0/10)
 - Added an informative button on Options page about IDN

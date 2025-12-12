@@ -92,77 +92,75 @@ if (isset($request_host))
 	// Get IP address
 	if (!$allowPrivateIp && !empty($service->host))
 	{
-		if (filter_var($service->host, FILTER_VALIDATE_IP))
-			$service->ip = $service->host;
-		else
+		$host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
+		
+		if($use_cache === true)
 		{
-			$host_fqdn = ((!preg_match('/\.$/', $service->host)) ? $service->host.'.' : $service->host); // prevent DNS requests with the local server domain suffixed
-			
-			if($use_cache === true)
+			if(isset($service->ip))
+				$cachename = $path_to_cache.$host_fqdn."_".$request_port."_".$service->ip;
+			else
+				$cachename = $path_to_cache.$host_fqdn."_".$request_port;
+
+			if (filter_var($service->host, FILTER_VALIDATE_IP))
+				$service->ip = $service->host;
+
+			$curdate = time();
+
+			// Looking for a DNS + fingerprints record in cache
+			if (file_exists($cachename))
 			{
-				if(isset($service->ip))
-					$cachename = $path_to_cache.$host_fqdn."_".$request_port."_".$service->ip;
-				else
-					$cachename = $path_to_cache.$host_fqdn."_".$request_port;
+				$cacheFound = true;
+				$insertInCache = false;
 
-				$curdate = time();
+				$cache = file_get_contents($cachename);
 
-				// Looking for a DNS + fingerprints record in cache
-				if (file_exists($cachename))
+				$cache_exploded = explode("\n", $cache);
+
+				$ip = $cache_exploded[0];
+				$sha256cache = $cache_exploded[1];
+				$sha256cacheissuers = $cache_exploded[2];
+
+				$cachetimestamp = filemtime($cachename);
+
+				$time_passed = $curdate - $cachetimestamp;
+				if($time_passed > $cacheTTL) // Old cache, we need to update it
 				{
-					$cacheFound = true;
-					$insertInCache = false;
-
-					$cache = file_get_contents($cachename);
-
-					$cache_exploded = explode("\n", $cache);
-
-					$ip = $cache_exploded[0];
-					$sha256cache = $cache_exploded[1];
-					$sha256cacheissuers = $cache_exploded[2];
-
-					$cachetimestamp = filemtime($cachename);
-
-					$time_passed = $curdate - $cachetimestamp;
-					if($time_passed > $cacheTTL) // Old cache, we need to update it
+					$files = glob($path_to_cache."*");
+					foreach($files as $file)
 					{
-						$files = glob($path_to_cache."*");
-						foreach($files as $file)
+						if(is_file($file))
 						{
-							if(is_file($file))
-							{
-								if($curdate - filemtime($file) > $cacheTTL)
-									unlink($file);
-							}
+							if($curdate - filemtime($file) > $cacheTTL)
+								unlink($file);
 						}
-						// We delete the old cache row and all the older records
-						$insertInCache = true;
-						$cacheFound = false;
 					}
+					// We delete the old cache row and all the older records
+					$insertInCache = true;
+					$cacheFound = false;
 				}
 			}
-
-			// DNS record not found in cache, or it was too old, or ip@ already given by the client
-			if($cacheFound === false && !isset($service->ip))
-			{
-				$insertInCache = true;
-				// Request IPv4 of the domain name
-				$ip = gethostbyname($host_fqdn);
-				if($ip !== $host_fqdn)
-					$service->ip = $ip;
-				else
-				{
-					// Try with IPv6
-					$ip = dns_get_record($host_fqdn, DNS_AAAA);
-					if(($ip !== false) && (!empty($ip)) && isset($ip[0]['ipv6']))
-						$service->ip = $ip[0]['ipv6'];
-					else
-						$insertInCache = false;
-				}
-			}
-			else if (!isset($service->ip))
-				$service->ip = $ip;
 		}
+
+		// DNS record not found in cache, or it was too old, or ip@ already given by the client
+		if($cacheFound === false && !isset($service->ip))
+		{
+			$insertInCache = true;
+			// Request IPv4 of the domain name
+			$ip = gethostbyname($host_fqdn);
+			if($ip !== $host_fqdn)
+				$service->ip = $ip;
+			else
+			{
+				// Try with IPv6
+				$ip = dns_get_record($host_fqdn, DNS_AAAA);
+				if(($ip !== false) && (!empty($ip)) && isset($ip[0]['ipv6']))
+					$service->ip = $ip[0]['ipv6'];
+				else
+					$insertInCache = false;
+			}
+		}
+		else if (!isset($service->ip))
+			$service->ip = $ip;
 	}
 }
 

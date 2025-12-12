@@ -1,20 +1,25 @@
 # CheckMyHTTPS
 
-CheckMyHTTPS is a method allowing the verification (check) that your secured web connections ('HTTPS' protocols) are not intercepted (neither decrypted, nor listened, nor modified). We have created several simple tools that use this method (WEB browser add-ons, smartphone apps, etc.).
+CheckMyHTTPS ensures that your secured WEB connections (HTTPS) are not intercepted (neither decrypted, nor listened, nor modified.
+We have created several simple tools that use this method : Firefox & Chromium-based WEB browser add-ons and an Android app.
 
 # How it works?
 
-If you have any doubt (or when you want), you are free to check your HTTPS connection by clicking on the CheckMyHTTPS icon (a gray padlock). At that time, the check of your HTTPS connection is performed. The gray padlock can turn to the following colors:
-- Green: the HTTPS connection isn't intercepted;
-- Red: the HTTPS connection is intercepted;
-- Blue: the verification is impossible (check server unreachable, website in whitelist);
-- Gray: the verification is in progress.
+When browsing on secured sites ("https://..." websites), you can check the security status by clicking on the extension icon.
+
+- The icon is green : your connection is not compromised;
+- The icon is red : your connection is considered very risky (hijacked, modified, listened);
+- The icon is gray : the verification is impossible (check server is unreachable, network error);
+- The icon is black : the verification is in progress.
 
 # Respect for privacy:
 
-- The extension is only active when you click on its icon. At that moment, it only uses the name of the visited website and the certificate received from it;
-- The "verification server" only receives the name of the visited website
-- You can create your own "verification server"
+The CheckMyHTTPS extension requires to send only two parameters to the check server :
+- The domain name of the visited website;
+- The IP address of the visited website.
+You have free choice regarding the website to check.
+
+Moreover, we give you the possibility to be free regarding the check server as you can make and host your own.
 
 # More details:
 
@@ -25,21 +30,25 @@ ________________________________________________________________________________
 
 # CheckMyHTTPS
 
-CheckMyHTTPS est une méthode permettant de vérifier (check) que vos connexions WEB sécurisées (protocoles HTTPS) ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées). Nous avons développé plusieurs outils simples qui exploitent cette méthode (modules additionnels pour navigateurs WEB, application pour mobiles, etc.).
+CheckMyHTTPS s'assure que vos connexions WEB sécurisées (protocole 'HTTPS') ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées).
+Nous avons créé plusieurs outils simples utilisant cette méthode : des extensions pour navigateurs WEB Firefox et Chromium, ainsi qu’une application Android.
 
 # Comment cette extension fonctionne-t-elle ?
 
-Si vous avez un doute (ou quand vous le souhaitez), vous êtes libre de vérifier votre connexion HTTPS en cliquant sur l'icône de l'extension CheckMyHTTPS (un cadenas gris). À ce moment-là, le contrôle de votre connexion HTTPS est effectué. Le cadenas gris peut prendre les couleurs suivantes :
-- Vert : la connexion HTTPS n'est pas interceptée;
-- Rouge : la connexion HTTPS est interceptée;
-- Bleu : la vérification est impossible (le serveur de vérification est injoignable, le site à vérifier est en liste blanche);
-- Gris : la vérification est en cours.
+Lors de votre navigation sur des sites sécurisés (sites en "https://..."), vous pouvez vérifier l’état de la sécurité en cliquant sur l'icône de l’extension.
+L'icône est verte : votre connexion n’est pas compromise;
+L'icône est rouge : votre connexion est considérée comme très risquée (détournement, modification, écoute)
+L'icône est grise : la vérification est impossible (le serveur de vérification est injoignable, erreur réseau);
+L'icône est noire : la vérification est en cours.
 
 # Respect de la vie privée :
 
-- L’extension n'est active que lorsque vous cliquez sur son icône. À ce moment là, elle n'utilise que le nom du site visité et le certificat reçu de ce dernier;
-- Le "serveur de vérification" externe ne reçoit que le nom du site visité;
-- Vous pouvez créer votre propre "serveur de vérification".
+L’extension CheckMyHTTPS nécessite d'envoyer seulement deux paramètres au serveur de vérification:
+- Le nom de domaine du site visité;
+- L'adresse IP du site visité.
+Vous avez le libre choix concernant le site web à vérifier.
+
+De plus, nous vous offrons la possibilité de choisir librement le serveur de vérification, en créant et en hébergeant le vôtre.
 
 # Plus de détails :
 
@@ -51,9 +60,7 @@ ________________________________________________________________________________
 
 Original idea & project management: Richard REY (aka Rexy)
 
-Current developers : Sylvain BOUTEILLER, Adrien SCHNEIDER, Cyril LEBLAY
-
-Previous developers : Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA, Quentin COLLART, Mathis CADIO, Ghassen LAHDHIRI, Ahmed BOUSRIH, Mehdi BELAJOUZA 
+Previous developers : Sylvain BOUTEILLER, Adrien SCHNEIDER, Cyril LEBLAY, Raphaël PION, Hugo MEZIANI, Tom HOUDAYER, Catarina DE FARIA, Quentin COLLART, Mathis CADIO, Ghassen LAHDHIRI, Ahmed BOUSRIH, Mehdi BELAJOUZA
 
 Logo: Clément SICCARDI
 
