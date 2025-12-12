@@ -189,5 +189,4 @@ chrome.storage.onChanged.addListener((changes, area) => {
   
     for (let item of changedItems)
       CMH.options.settings[item] = changes[item].newValue
-})
-  
+}) 

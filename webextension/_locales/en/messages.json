@@ -29,6 +29,9 @@
   "__alertOnUnicodeIDNDomainNames__": {
     "message": "Alert on Unicode IDN"
   },
+  "__infoUnicodeIDNDomainNames__": {
+    "message": "Alert if the website URL contains non-ASCII characters suggesting a potential IDN homograph attack. Click for more info."
+  },
   "__disableNotifications__": {
     "message": "Disable notifications"
   },
@@ -58,11 +61,14 @@
   },
 
 
+  "__wrongUrl__": {
+    "message": "The URL to check is malformed !"
+  },
   "__noHttps__": {
     "message": "It is not an HTTPS website. Please check the URL."
   },
   "__privateHost__": {
-    "message": "We could not reach this host from the check server (it is a private host)."
+    "message": "We could not reach this host from the check server as it is a private host."
   },
   "__firefoxRestriction__": {
     "message": "Unable to verify this host's certificate, Firefox prevents its extensions from manipulating the extension store website."
@@ -78,11 +84,11 @@
   "__checkServerUnreachable__": {
       "message": "Check Server unreachable... Is the check server's HTTPS certificate valid ? Developers, if you created your own certification authority, you need to add it to your browser."
   },
+  "__checkServerError__": {
+    "message": "The check server API sent an error : $1"
+  },
   "__invalidServerSignature__": {
     "message": "The server response signature is invalid. This means that it has been signed by a potential malicious entity. Your connection may be intercepted. Please be careful."
-  },
-  "__serverHardcodedFingerprintNotCorresponding__": {
-    "message": "The SHA256 hash specified in the server's response does not match with the SHA256 hash of its certificate. \nHave you updated its fingerprint in the variable cmh_sha256 (server side) in api.php ? \nHave you updated the variable CMH.options.settings.sha256 (client side) ?"
   },
   "__unknownIssue__": {
     "message": "That's a strange unknown issue."

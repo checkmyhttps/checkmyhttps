@@ -23,7 +23,6 @@ CMH.api.getCertFromCheckServer = async (urlTested, ip) => {
     args = {
       host: encodeURIComponent(host),
       port: port,
-      sign: true
     }
   }
   else 
@@ -31,7 +30,6 @@ CMH.api.getCertFromCheckServer = async (urlTested, ip) => {
     args = {
       host: encodeURIComponent(host),
       port: port,
-      sign: true,
       ip:ip
     }
   }
@@ -52,44 +50,46 @@ CMH.api.getCertFromCheckServer = async (urlTested, ip) => {
  * error: 'PUBLIC_KEY' if invalid public key,
  * error: 'CHECK_SERVER_UNREACHABLE' if no response from check server,
  * error: 'UNKNOWN_ISSUE' if idk,
- * error: 'SIGNATURE' if the server signature is not correct,
- * error: 'FINGERPRINT' if Check Server's certificates from user's view and from check server's hardcoded SHA256 are different.
+ * error: 'CHECK_SERVER_ERROR' if the check server API sends an error,
+ * error: 'SIGNATURE' if the server signature is not correct.
  */
 CMH.api.checkMITM = async (checkServerUrl, fetchInit) => {
   if (CMH.options.importedPublicKey === 'PUBLIC_KEY_ERROR') {
     return { error: 'PUBLIC_KEY' }
   }
 
-  const response = await CMH.api.sendRequest(checkServerUrl, fetchInit) // Retrieve Check Server certificate from its body response (cmh_sha256)
-  const cert = await CMH.api.getCertFromUser(checkServerUrl) // Get Check Server certificate via webRequest.getSecurityInfo()
-  if ((cert.error !== undefined) || (response.error !== undefined))
+  const response = await CMH.api.sendRequest(checkServerUrl, fetchInit) // Retrieve Check Server API body response
+  
+  if (response === null)
+    return { error: 'UNKNOWN_ISSUE' }
+  
+  if (response.error !== undefined)
     return { error: 'CHECK_SERVER_UNREACHABLE' }
 
-  if ((cert === null) || (response === null))
-    return { error: 'UNKNOWN_ISSUE' }
-
   const response_data = response.data
+
+  if (response_data.error !== undefined) {
+    return { error: 'CHECK_SERVER_ERROR' + '.' + response_data.error }
+  }
   
   if (checkServerUrl.includes("?info")) { // Signature pattern for verification in CMH.options.verifyServerAtStartup()
     response_to_verify = ""
-    response_to_verify = response_to_verify + response_data.version + response_data.title + response_data.cmh_sha256
+    response_to_verify = response_to_verify + response_data.version + response_data.title
   }
   else
   {
     response_to_verify = ""
-    response_to_verify = response_to_verify + response_data.fingerprints.sha1 + response_data.fingerprints.sha256
+    response_to_verify = response_to_verify + response_data.fingerprints.sha256
 
     obj = response_data
 
     while(obj.issuer)
     {
-      response_to_verify = response_to_verify + obj.issuer.fingerprints.sha1 + obj.issuer.fingerprints.sha256
+      response_to_verify = response_to_verify + obj.issuer.fingerprints.sha256
       obj = obj.issuer
     }
 
-    response_to_verify = response_to_verify + response_data.host + response_data.host_raw
-    response_to_verify = response_to_verify + (response_data.whitelisted ? 1 : 0)
-    response_to_verify = response_to_verify + response_data.cmh_sha256
+    response_to_verify = response_to_verify + response_data.host + response_data.host_ip
   }
 
   response_to_verify = btoa(response_to_verify)
@@ -110,12 +110,6 @@ CMH.api.checkMITM = async (checkServerUrl, fetchInit) => {
 
   if (!signatureIsValid)
     return { error: 'SIGNATURE' };
-
-  certificatesFingerprintsAreEqual = CMH.certificatesChecker.compareCertificateFingerprints(cert.fingerprints.sha256, response_data.cmh_sha256 )
-  hardcodedCertificatesFingerprintsAreEqual = CMH.certificatesChecker.compareCertificateFingerprints(CMH.options.settings.sha256, cert.fingerprints.sha256)
-
-  if ( !certificatesFingerprintsAreEqual || !hardcodedCertificatesFingerprintsAreEqual )
-	  return { error: 'FINGERPRINT' };
 
   return response
 }
@@ -152,7 +146,7 @@ CMH.api.sendRequest = async (url, fetchInit) => {
   }
 
   return { data: response_data }
-} 
+}
 
 
 /**

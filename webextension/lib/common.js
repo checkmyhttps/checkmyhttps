@@ -43,7 +43,7 @@ CMH.common.statusCode = [
  */
 CMH.common.parseURL = (urlStr) => {
   const url = new URL(urlStr)
-  let host = url.hostname
+  const host = url.hostname
   let port = url.port
 
   if (port == '') {
@@ -58,44 +58,6 @@ CMH.common.parseURL = (urlStr) => {
   }
 
   return { host: host, port: port }
-}
-
-
-/**
- * @name compareVersion
- * @function
- * @param {string} versionA - version "A"
- * @param {string} versionB - version "B"
- * @returns {number} - 1 (A>B), 0 (A=B) or -1 (A<B)
- * Compare two version numbers.
- */
-CMH.common.compareVersion = function (versionA, versionB) {
-  if (versionA === versionB) {
-      return 0
-  }
-
-  const versionA_array = versionA.split('.')
-  const versionB_array = versionB.split('.')
-
-  const versionLength = Math.min(versionA_array.length, versionB_array.length)
-
-  for (let i = 0; i < versionLength; i++) {
-    if (parseInt(versionA_array[i]) > parseInt(versionB_array[i])) {
-      return 1
-    }
-    if (parseInt(versionA_array[i]) < parseInt(versionB_array[i])) {
-      return -1
-    }
-  }
-
-  if (versionA_array.length > versionB_array.length) {
-    return 1
-  }
-  if (versionA_array.length < versionB_array.length) {
-    return -1
-  }
-
-  return 0
 }
 
 

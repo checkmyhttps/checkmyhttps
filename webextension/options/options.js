@@ -4,15 +4,16 @@
  * @license GPL-3.0
  */
 
-const box_pageLoad               = document.querySelector('input[name="checkOnPageLoad"]')
-const box_alertIDNDomains        = document.querySelector('input[name="alertOnUnicodeIDNDomainNames"]')
-const box_notifications          = document.querySelector('input[name="disableNotifications"]')
-const txt_server                 = document.querySelector('input[name="api_server"]')
-const txt_publicKey              = document.querySelector('textarea[name="api_publicKey"]')
-const btn_save                   = document.getElementById('form-submit')
-const btn_restoreDefault         = document.getElementById('restore-default')
-const btn_getPublicKey           = document.getElementById('get-publicKey')
-const div_messageCheckServer     = document.querySelector('p.message-checkserver')
+const box_pageLoad           = document.querySelector('input[name="checkOnPageLoad"]')
+const box_alertIDNDomains    = document.querySelector('input[name="alertOnUnicodeIDNDomainNames"]')
+const helpbtn                = document.getElementById("help-btn")
+const box_notifications      = document.querySelector('input[name="disableNotifications"]')
+const txt_server             = document.querySelector('input[name="api_server"]')
+const txt_publicKey          = document.querySelector('textarea[name="api_publicKey"]')
+const btn_save               = document.getElementById('form-submit')
+const btn_restoreDefault     = document.getElementById('restore-default')
+const btn_getPublicKey       = document.getElementById('get-publicKey')
+const div_messageCheckServer = document.querySelector('p.message-checkserver')
 
 
 browser.runtime.getBackgroundPage().then((backgroundPage) => {
@@ -26,12 +27,16 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   document.querySelector('label[for="disableNotifications"]').textContent         = browser.i18n.getMessage('__disableNotifications__')
   document.querySelector('label[for="api_server"]').textContent                   = browser.i18n.getMessage('__checkServerAddress__')
 	document.querySelector('label[for="api_publicKey"]').textContent                = browser.i18n.getMessage('__checkServerPublicKey__')
-  btn_save.textContent                 = browser.i18n.getMessage('__save__')
-  btn_restoreDefault.textContent       = browser.i18n.getMessage('__restoreDefault__')
-  btn_getPublicKey.textContent         = browser.i18n.getMessage('__getPublicKey__')
+  btn_save.textContent           = browser.i18n.getMessage('__save__')
+  btn_restoreDefault.textContent = browser.i18n.getMessage('__restoreDefault__')
+  btn_getPublicKey.textContent   = browser.i18n.getMessage('__getPublicKey__')
 
   box_pageLoad.checked = CMH.options.settings.checkOnPageLoad
   box_alertIDNDomains.checked = CMH.options.settings.alertOnUnicodeIDNDomainNames
+  helpbtn.onclick = function() {
+    browser.tabs.create({ url: "https://wikipedia.org/wiki/IDN_homograph_attack" })
+  };
+  helpbtn.title = browser.i18n.getMessage('__infoUnicodeIDNDomainNames__');
   box_notifications.checked = CMH.options.settings.disableNotifications
   txt_server.value = CMH.options.settings.checkServerUrl
   txt_publicKey.value = CMH.options.settings.publicKey
@@ -102,18 +107,24 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
     } else {
       btn_save.disabled = false
       div_messageCheckServer.dataset.type = 'error'
+      if (isValidCheckServer.error.includes('CHECK_SERVER_ERROR'))
+      {
+        parts = isValidCheckServer.error.split('.')
+        error = parts[parts.length - 1]
+        isValidCheckServer.error = 'CHECK_SERVER_ERROR'
+      }
       switch (isValidCheckServer.error) {
         case 'PUBLIC_KEY':
           div_messageCheckServer.textContent = browser.i18n.getMessage('__invalidPublicKeyInOptions__')
           break;
         case 'CHECK_SERVER_UNREACHABLE':
           div_messageCheckServer.textContent = browser.i18n.getMessage('__checkServerUnreachable__')
-          break;  
+          break;
+        case 'CHECK_SERVER_ERROR':
+          div_messageCheckServer.textContent = browser.i18n.getMessage('__checkServerError__', error)
+          break;
         case 'SIGNATURE':
           div_messageCheckServer.textContent = browser.i18n.getMessage('__invalidServerSignature__')
-          break;
-        case 'FINGERPRINT':
-          div_messageCheckServer.textContent = browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__');
           break;
         case 'UNKNOWN_ISSUE':
           div_messageCheckServer.textContent = browser.i18n.getMessage('__unknownIssue__');

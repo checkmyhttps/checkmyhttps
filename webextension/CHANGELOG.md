@@ -1,5 +1,17 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.7.3 - 2025-09-28
+- Added a list of private Top Level Domains so that the extension does not check (e.g. .localhost)
+- Added a list of reserved IP addresses so that the extension does not check (e.g. 100.64.0.0/10)
+- Added an informative button on Options page about IDN
+- The extension now also checks the fingerprint of the issuer's certificate
+- Added error handling of malformed URLs to check
+- Added error handling for errors from check server API
+- Removed SHA-1 fingerprint usage
+- Removed hardcoded SHA256 of check server's certicate (cmh_sha256). If there is a MITM with a valid signature, checkMITM() won't return any error because the RSA-SHA256 signature verification would OK but the signed body response will still contain the (right) SHA256 of the requested's website certificate. Hence, that last hash will be different from the (wrong) SHA256 of the certificate on client side and CMH status will be invalid
+- Removed API query parameter 'sign'. Now, every request is signed, no need to specify this parameter
+- Renamed API query parameter 'host_raw' to 'host_ip'
+
 ## 5.7.2 - 2025-09-14
 - By default, the extension icon is icon.png, not unknown.png anymore.
 - Visual improvement of Options page
@@ -12,7 +24,7 @@ it was used to get either the 1st or 2nd type of certificate described but not b
 - Improved error handling messages
 - Reorganized and improved localization messages
 - Removed severalCertificates 'SC' case handling. It is now considered invalid.
-- Checking an IDN (Internationalized Domain Name) website is now considered valid (as long as both certificate fingerprints are equal). 
+- Checking an IDN (Internationalized Domain Name) website is now considered valid (as long as both certificate fingerprints are equal).
 - Made the IDN warning notification clickable to redirect the user to wikipedia's IDN homograph attack page
 - Removed Warning status as severalCertificates and IDN cases are no longer considered warning
 - Fixed wrong IP address being used to check certificate of websites using CDNs

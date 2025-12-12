@@ -29,8 +29,7 @@ F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
 MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
 8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
 17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
------END PUBLIC KEY-----`,
-  sha256: 'C9EF2A1588F70AF5D4022439CB60BD62E502E568B18F08C9AD0B10A39CA39F2B'
+-----END PUBLIC KEY-----`
 }
 
 
@@ -41,11 +40,10 @@ MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
 CMH.options.defaultCheckServer = {
   url: CMH.options.settings.checkServerUrl,
   publicKey: CMH.options.settings.publicKey,
-  sha256: CMH.options.settings.sha256
 }
 
 // Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey', 'sha256']).then((settings) => {
+browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
   const settingsItems = Object.keys(settings)
 
   for (let item of settingsItems) {
@@ -132,11 +130,17 @@ CMH.options.verifyServerAtStartup = async (serverUrl, publicKey, type) => {
     CMH.options.importedPublicKey = 'PUBLIC_KEY_ERROR'
   }
 
-  const response = await CMH.api.checkMITM(serverUrl+'api.php?info&sign')
+  const response = await CMH.api.checkMITM(serverUrl+'api.php?info')
 
   if (type === "nostartup")
     return response
 
+  if (response.error !== undefined && response.error.includes('CHECK_SERVER_ERROR'))
+  {
+    parts = response.error.split('.')
+    error = parts[parts.length - 1]
+    response.error = 'CHECK_SERVER_ERROR'
+  }
   switch(response.error) {
     case 'PUBLIC_KEY':
       CMH.ui.showNotification(browser.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
@@ -144,11 +148,11 @@ CMH.options.verifyServerAtStartup = async (serverUrl, publicKey, type) => {
     case 'CHECK_SERVER_UNREACHABLE':
       CMH.ui.showNotification(browser.i18n.getMessage('__checkServerUnreachable__'));
       break;
+    case 'CHECK_SERVER_ERROR':
+      CMH.ui.showNotification(browser.i18n.getMessage('__checkServerError__', error));
+      break;
     case 'SIGNATURE':
       CMH.ui.showNotification(browser.i18n.getMessage('__invalidServerSignature__'));
-      break;
-    case 'FINGERPRINT':
-      CMH.ui.showNotification(browser.i18n.getMessage('__serverHardcodedFingerprintNotCorresponding__'));
       break;
     case 'UNKNOWN_ISSUE':
       CMH.ui.showNotification(browser.i18n.getMessage('__unknownIssue__'));
