@@ -4,37 +4,24 @@
  * @license GPL-3.0
  */
 
-CMH.certificatesManager = {}
 
-/**
- * @name getCertUrl
- * @function
- * @param {string}  urlTested              - URL to check
- * @param {boolean} [httpHeadMethod=false] - Use HTTP HEAD method
- * Get the certificate of an URL.
- */
-CMH.certificatesManager.getCertUrl = async (urlTested, httpHeadMethod=false, arguments={}) => {
-  let response      = null
-  let response_data = null
-
-  try {
-    if (httpHeadMethod) {
-      fetchInit = { method: 'HEAD' }
-    } else {
-      fetchInit = { method: 'POST', headers: {"Content-Type": "application/json"}, cache: 'no-cache', body: JSON.stringify(arguments)}
-    }
-    response = await fetch(urlTested, fetchInit)
-
-    const contentType = response.headers.get('content-type')
-    if(contentType && contentType.includes('application/json')) {
-      response_data = await response.json()
-    } else {
-      response_data = await response.text()
-    }
-    
-  } catch (e) {
-    // console.error(e)
-  }
-
-  return { data: response_data, response: response }
+/*
+Functions that make the Send button at the bottom of Main page in sidePanel check the actual tab
+*/
+async function getCurrentTab() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  return tab;
 }
+
+function onSubmittingCertificate() {
+  let certificateValue = document.getElementById("certificateInput").value; 
+  if (certificateValue === "")
+      return 
+
+  // The upperCase method if mandatory for sha256 comparison function
+  getCurrentTab().then( tab => {
+      CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications, certificateValue.toUpperCase() );
+  });
+}
+
+document.getElementById("sendCertificate").addEventListener("click", onSubmittingCertificate);

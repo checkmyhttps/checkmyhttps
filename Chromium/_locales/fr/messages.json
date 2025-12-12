@@ -1,115 +1,98 @@
 {
   "extensionDescription": {
-    "message": "CheckMyHTTPS s'assure que vos connexions WEB sécurisée (protocole 'HTTPS') ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées)."
-  },
-  
-  "__serverSignatureNotVerified__": {
-    "message": "La signature de la réponse du serveur ne peut pas être vérifiée. Cela signifie qu'elle a été signée par une potentielle entité malicieuse. Votre connexion est sûrement interceptée. Soyez prudents."
+    "message": "CheckMyHTTPS s'assure que vos connexions WEB sécurisées (HTTPS) ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées)."
   },
 
-  "__defaultServerUnreachable__": {
-    "message": "Serveur de vérification par défaut injoignable !"
-  },
 
-  "__invalidPublicKey__": {
-    "message": "Votre clé publique semble invalide ! Veuillez la vérifier dans le menu des options ou cliquer ici."
-  },
-  
-  "__invalidPublicKeyInOptions__": {
-    "message": "Votre clé publique semble invalide ! Veuillez la vérifier de nouveau."
-  },
-  
-  "__publicKeyNotCorresponding__": {
-    "message": "Cette clé publique ne correspond pas à celle requise par le serveur."
-  },
-
-  "__clickToCheck__": {
+  "clickToCheck": {
     "message": "Cliquez pour vérifier cette connexion HTTPS"
   },
 
-  "__noHttps__": {
-    "message": "Ce n'est pas un site HTTPS. Veuillez vérifier l'URL."
-  },
-
-  "__privateHost__": {
-    "message": "Nous ne pouvons pas joindre cet hôte via notre serveur de test (il s'agit d'un hôte privé)."
-  },
-
-  "__serverUnreachable__": {
-    "message": "Serveur injoignable... Le certificat HTTPS du serveur de vérification est-il valide ? Si vous êtes développeur et que vous avez généré votre autorité de certification, veillez à bien l'ajouter à votre navigateur."
-  },
-
-  "__serverHardcodedFingerprintNotCorresponding__": {
-    "message": "Le hash SHA256 spécifié dans la réponse du serveur ne correspond pas au hash SHA256 de son certificat. Avez-vous bien mis à jour la variable cmh_sha256 (côté serveur) dans api.php ?"
-  },
-  
-  "__publicKeyUnreachable__": {
-    "message": "Impossible de trouver une clé publique sur ce serveur ..."
-  },
-
-  "__danger__": {
-    "message": "Votre connexion est peut-être interceptée..."
-  },
 
   "__alertTitle__": {
     "message": "Alerte de CheckMyHTTPS !"
   },
 
-  "__severalCertificats__": {
-    "message": "Ce site possède plusieurs certificats de sécurité. Le contrôle de conformité du flux HTTPS ne peut donc pas être assuré."
-  },
-
-  "__idnwarning__": {
-    "message": "Ceci est un nom de domaine internationalisé affiché en Unicode ! La forme Punycode est : \"$1\"."
-  },
 
   "__checkMyHttpsSettings__": {
     "message": "Paramètres CheckMyHTTPS"
   },
-
   "__general__": {
     "message": "Général"
   },
-
-  "__checkOnPageLoad__": {
-    "message": "Vérifier au chargement de la page"
-  },
-
-  "__alertOnUnicodeIDNDomainNames__": {
-    "message": "Alerte sur les IDN en Unicode"
-  },
-
-  "__disableNotifications__": {
-    "message": "Désactiver les notifications"
-  },
-
   "__checkServerSettings__": {
     "message": "Paramètres du serveur de vérification"
   },
-
+  "__alertOnUnicodeIDNDomainNames__": {
+    "message": "Alerte sur les IDN en Unicode"
+  },
+  "__infoUnicodeIDNDomainNames__": {
+    "message": "Permettre d'alerter si l'URL du site web vérifié contient des caractères non ASCII laissant penser à une attaque par homographe IDN. Cliquer pour plus d'info."
+  },
+  "__disableNotifications__": {
+    "message": "Désactiver les notifications"
+  },
   "__checkServerAddress__": {
     "message": "Adresse du serveur"
   },
-
   "__checkServerPublicKey__": {
     "message": "Clé publique de l'API du serveur"
   },
-
   "__save__": {
     "message": "Sauver"
   },
-
   "__restoreDefault__": {
     "message": "Défaut"
   },
-
   "__getPublicKey__": {
     "message": "Récupérer sa clé publique"
   },
-
   "__settingsSaved__": {
     "message": "Paramètres sauvegardés"
   },
+  "__invalidPublicKeyInOptions__": {
+    "message": "Votre clé publique semble invalide ! Veuillez la vérifier de nouveau."
+  },
+  "__publicKeyUnreachable__": {
+    "message": "Impossible de trouver une clé publique sur ce serveur..."
+  },
+
+
+  "__wrongUrl__": {
+    "message": "L'URL à vérifier est malformée !"
+  },
+  "__noHttps__": {
+    "message": "Ce n'est pas un site HTTPS. Veuillez vérifier l'URL."
+  },
+  "__privateHost__": {
+    "message": "Nous ne pouvons pas joindre cet hôte via le serveur de vérification car il s'agit d'un hôte privé."
+  },
+
+  
+  "__invalidPublicKey__": {
+    "message": "Votre clé publique semble invalide ! Veuillez la vérifier dans le menu des options ou cliquer ici."
+  },
+  "__checkServerUnreachable__": {
+    "message": "Serveur de vérification injoignable... Le certificat HTTPS du serveur de vérification est-il valide ? Si vous êtes développeur et que vous avez généré votre autorité de certification, veillez à bien l'ajouter à votre navigateur."
+  },
+  "__checkServerError__": {
+    "message": "L'API du serveur de vérification a envoyé une erreur : $1"
+  },
+  "__invalidServerSignature__": {
+    "message": "La signature de la réponse du serveur est invalide. Cela signifie qu'elle a été signée par une potentielle entité malicieuse. Votre connexion est sûrement interceptée. Soyez prudents."
+  },
+  "__unknownIssue__": {
+    "message": "Il s'agit d'une erreur inconnue étrange."
+  },
+
+
+  "__IDNwarning__": {
+    "message": "Le nom de domaine du site web à vérifier contient des caractères non ASCII. Êtes-vous sur le site attendu ? \nSa forme Punycode est: $1 \nCliquer ici pour plus d'info."
+  },
+  "__danger__": {
+    "message": "Votre connexion est peut-être interceptée..."
+  },
+
 
   "__valid__": {
     "message": "La connexion n'est pas interceptée"
@@ -118,12 +101,49 @@
     "message": "La connexion est interceptée"
   },
   "__unknown__": {
-    "message": "Cliquez pour vérifier cette connexion HTTPS"
-  },
-  "__warning__": {
-    "message": "Le serveur de vérification est injoignable"
+    "message": "Impossible de vérifier votre connexion"
   },
   "__working__": {
     "message": "Le test de vérification est en cours"
+  },
+
+  "__restriction__": {
+    "message": "En raison d'une restriction Chromium, nous ne pouvons pas récupérer le certificat en interne, merci de suivre ces étapes:"
+  },
+  "__showSteps__": {
+    "message": "▲ Afficher Etapes"
+  },
+  "__hideSteps__": {
+    "message": "▼ Cacher Etapes"
+  },
+  "__step1__": {
+    "message": "Etape 1"
+  },
+  "__step2__": {
+    "message": "Etape 2"
+  },
+  "__step3__": {
+    "message": "Etape 3"
+  },
+  "__step4__": {
+    "message": "Etape 4"
+  },
+  "__img1__": {
+    "message": "images/steps/step1_fr.png"
+  },
+  "__img2__": {
+    "message": "images/steps/step2_fr.png"
+  },
+  "__img3__": {
+    "message": "images/steps/step3_fr.png"
+  },
+  "__img4__": {
+    "message": "images/steps/step4_fr.png"
+  },
+  "__certInput__": {
+    "message": "Copier-coller le texte de l'étape 4 ici"
+  },
+  "__send__": {
+    "message": "Envoyer"
   }
 }

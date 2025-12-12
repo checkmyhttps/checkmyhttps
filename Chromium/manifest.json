@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "CheckMyHttps",
-    "version": "1.0",
+    "name": "CheckMyHTTPS",
+    "version": "5.7.3",
     "description": "__MSG_extensionDescription__",
     "default_locale": "en",
     "minimum_chrome_version": "114",
@@ -16,11 +16,19 @@
         "default_icon":{
             "128": "images/icon.png"
         },
-        "default_title": "Click to open panel"
+        "default_title": "__MSG_clickToCheck__"
     },
-    "host_permissions": [ 
-        "https://checkmyhttps.net/*",
-        "https://*/*"
+    "icons": {
+      "128": "images/icon.png"
+    },
+    "permissions": [
+        "notifications",
+        "storage",
+        "tabs",
+        "webRequest",
+        "sidePanel"
     ],
-    "permissions": ["storage", "sidePanel", "tabs", "notifications"]
+    "host_permissions":[
+        "https://*/*"
+    ]
 }

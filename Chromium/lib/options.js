@@ -6,28 +6,15 @@
 
 CMH.options = {}
 
-/**
- * @type {object}
- * Cache of extension options.
- */
-CMH.options.settings = {
-  checkOnPageLoad:               false,
-  alertOnUnicodeIDNDomainNames:  true,
-  disableNotifications:          false,
-  checkServerUrl:                'https://checkmyhttps.net/',
-  checkServerFingerprintsSha256: 'DBA08676853A7FE79FAC8569C24E87D9C5F57820AE472110FB497AC2F7551398'
+/*
+Function that sends a message to service_worker to get content of variables in DEFAULT_SETTINGS object
+*/
+async function askServiceWorkerAboutDataVariableInLocalStorage(variableMapStruct) {
+  const response = await chrome.runtime.sendMessage({dataVariable : variableMapStruct});
+
+  return response.response;
 }
 
-/**
- * @type {object}
- * Default check server (CheckMyHTTPS project server).
- */
-CMH.options.defaultCheckServer = {
-  url: 'https://checkmyhttps.net/',
-  fingerprints: {
-    sha256: 'DBA08676853A7FE79FAC8569C24E87D9C5F57820AE472110FB497AC2F7551398'
-  }
-}
 
 /**
  * @name str2ab
@@ -81,112 +68,74 @@ CMH.options.importPublicKey = async (pem) => {
 /**
  * @name verifyServerAtStartup
  * @function
- * @param {string} serverUrl - Server URL
+ * @param {string} serverUrl - Check Server URL
  * @param {string} publicKey - Public key in PEM format
- * @returns {int} - 1 if everything is OK, 0 if the server signature is not correct or if the message is intercepted, -1 if no response, -2 if invalid public key
- * Check if the API server is working at startup and imports the public key.
+ * @param {string} type - Indicates that the function has been triggered from save button in options/options.js
+ * @returns {object} - If type, returns response and errors from checkMITM()
+ * Check if the API server is working at startup, verify the server's signature for a Man In The Middle
+ * and imports the public key.
  */
-CMH.options.verifyServerAtStartup = async (serverUrl, publicKey) => {
-
-  try{
+CMH.options.verifyServerAtStartup = async (serverUrl, publicKey, type) => {
+  try {
     CMH.options.importedPublicKey = await CMH.options.importPublicKey(publicKey)
   }
-  catch(e)
+  catch (e)
   {
-    // Invalid public key
     CMH.options.importedPublicKey = 'PUBLIC_KEY_ERROR'
-    return -2
   }
 
-  // "SSL Pinning" alternative : just to check if there is a Man In The Middle, even if it is passive
-  //return (signatureIsValid && CMH.certificatesChecker.compareCertificateFingerprints(cert, { fingerprints: { sha256: response_data.cmh_sha256 } })) === true ? 1 : 0;
+  const response = await CMH.api.checkMITM(serverUrl+'api.php?info')
+
+  if (type === "nostartup")
+    return response
   
-  // TODO : Check signature at startup too (just to be REALLY sure), as we did for Firefox (this part is skipped for now in this Chromium extension as we don't have access to the WebRequest API)
-  return 1
-}
-
-
-/**
- * @type {object}
- * Cache of extension options.
- */
-CMH.options.settings = {
-  checkOnPageLoad:               false,
-  alertOnUnicodeIDNDomainNames:  true,
-  disableNotifications:          false, 
-  checkServerUrl:                'https://checkmyhttps.net/',
-  publicKey: `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
-be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
-sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE
-5DO55nUbhp51HisOUsZwtYNEE53D8Ev8wX2iwzAx4X0E2KvVpoyI23u4UVFdQxUJ
-GVzI7Bs8OQyzFJBhalEjaylK3gDNDMFF3reNGgIEPIMIs9I6bUaOgaQsT/b65SR9
-qxWyrOrQcYl42y8mpC7SN+8zPnxUuRQgIgvR1VDThJVf5+pRi+phPLaX5exEkoDZ
-ISU8UiCquAfd0dgjNzo/wUvSykkJvAZHNtkn5kNeVE/cOYFw8jWZfX7oe2Gy5CGk
-83abNDpkpdvDpDJwHA8oP8q/0Wzd1EJkGyPfr79eEwtUEblWXaYvVPrvcrBkuex0
-F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
-MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
-8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
-17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
------END PUBLIC KEY-----`
-}
-
-/**
- * @type {object}
- * Default check server (CheckMyHTTPS project server).
- */
-CMH.options.defaultCheckServer = {
-  url: 'https://checkmyhttps.net/',
-  publicKey: `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAvPk7sw/smaqXrF+glR1i
-be/AjaxTnUCVwYJ+iSYxizBl5n42RGRaxhbbkJuM9esnFJd74bb9Uv5oM5rZWtSO
-sedr49uY237V5C3z0PPSYPaJD290bJzwK4bOZim9cr8DT25KhRj5WoXbnuULVLAE
-5DO55nUbhp51HisOUsZwtYNEE53D8Ev8wX2iwzAx4X0E2KvVpoyI23u4UVFdQxUJ
-GVzI7Bs8OQyzFJBhalEjaylK3gDNDMFF3reNGgIEPIMIs9I6bUaOgaQsT/b65SR9
-qxWyrOrQcYl42y8mpC7SN+8zPnxUuRQgIgvR1VDThJVf5+pRi+phPLaX5exEkoDZ
-ISU8UiCquAfd0dgjNzo/wUvSykkJvAZHNtkn5kNeVE/cOYFw8jWZfX7oe2Gy5CGk
-83abNDpkpdvDpDJwHA8oP8q/0Wzd1EJkGyPfr79eEwtUEblWXaYvVPrvcrBkuex0
-F1MMQJ82WtAwP7DtwEvkHDezuMyjK2jO0cxcYfXh1mjuTRYuCZ4fdvVUpIyoDo8g
-MoWqP4U0RmOXjG7GoqVVH89aFxtMYmXWolL08sYSOBG2R3sD/kMQq2I++DpDyxtX
-8cxDdBxXrh+PNQTOLbuuQIesn/MTHSHMo8bHDVsooEVrgGDIad2/AK2seihhVMsj
-17aoSfDrFx7OQi+0BmiZKzsCAwEAAQ==
------END PUBLIC KEY-----`
-}
-
-
-// Verify the server's signature AND if there is a passive Man In The Middle
-// Currently not in full version (compared to the Firefox version of the extension (5.7.0))
-CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.options.settings.publicKey).then((response) => {
-  switch(response) {
-    case 1:
-      break;
-    case -1:
-      CMH.ui.showNotification(chrome.i18n.getMessage('__defaultServerUnreachable__'));
-      break;
-    case -2:
+  if (response.error !== undefined && response.error.includes('CHECK_SERVER_ERROR'))
+  {
+    parts = response.error.split('.')
+    error = parts[parts.length - 1]
+    response.error = 'CHECK_SERVER_ERROR'
+  }
+  switch(response.error) {
+    case 'PUBLIC_KEY':
       CMH.ui.showNotification(chrome.i18n.getMessage('__invalidPublicKey__'), { openOptionsPage: 1 });
       break;
+    case 'CHECK_SERVER_UNREACHABLE':
+      CMH.ui.showNotification(chrome.i18n.getMessage('__checkServerUnreachable__'));
+      break;
+    case 'CHECK_SERVER_ERROR':
+      CMH.ui.showNotification(chrome.i18n.getMessage('__checkServerError__', error));
+      break;
+    case 'SIGNATURE':
+      CMH.ui.showNotification(chrome.i18n.getMessage('__invalidServerSignature__'));
+      break;
+    case 'UNKNOWN_ISSUE':
+      CMH.ui.showNotification(chrome.i18n.getMessage('__unknownIssue__'));
+      break;
     default:
-      CMH.ui.showNotification(chrome.i18n.getMessage('__serverSignatureNotVerified__'));
       break;
   }
-});
+}
 
 
-// Get settings values
-chrome.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
-  const settingsItems = Object.keys(settings)
+document.addEventListener('DOMContentLoaded', async () => {
+  CMH.options.settings = {}
 
-  for (let item of settingsItems) {
-    CMH.options.settings[item] = settings[item]
+  let keys = await chrome.runtime.sendMessage({ type: 'GetDefaultSettings' })
+
+  for (let key of Object.keys(keys)){
+    await askServiceWorkerAboutDataVariableInLocalStorage([key]).then( (response) => {
+      CMH.options.settings[key] = response
+    })
   }
-}, (error) => { console.error(error) })
+  CMH.options.verifyServerAtStartup(CMH.options.settings.checkServerUrl, CMH.options.settings.publicKey);
 
-
-// Listen for settings changes
-chrome.storage.onChanged.addListener((changes, area) => {
+  // Listen for settings changes
+  chrome.storage.onChanged.addListener((changes, area) => {
     const changedItems = Object.keys(changes)
-  
     for (let item of changedItems)
       CMH.options.settings[item] = changes[item].newValue
-}) 
+  })
+
+  // Once options are initialized, tell options/options.js to execute
+  document.dispatchEvent(new CustomEvent('OptionsReady'))
+});

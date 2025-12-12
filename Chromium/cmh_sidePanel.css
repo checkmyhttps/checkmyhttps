@@ -1,28 +1,50 @@
-h1 {
-    color: #787878;
-    text-align: center;
-    font-size: 3em;
-} 
+:root {
+    --border-radius: 8px;
+    --primary-color: #3182f3;
+    --primary-color-hover: #0765e9;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+#restrictionMessage {
+    margin-top: 5%;
+}
+
+#display-steps {
+    margin: 0 auto auto;
+}
+
+.hidden {
+    display: none;
+}
 
 h2 {
-    color: #787878;
-    font-weight: 400;
+    color: black;
+    font-weight: bold;
     font-size: 2em;
     margin-bottom: 2%;
 }
 
+#main h2 {
+    text-decoration: underline;
+}
+
 p {
-    color: #a2a2a2;
-    font-size: large;
+    font-size: 1.5em;
 }
 
 p.message[data-type='success'] {
     color: green;
+    font-weight: bold;
 }
 p.message[data-type='error'] {
     color: red;
+    font-weight: bold;
 }
-
 
 img {
     display: block;
@@ -30,27 +52,30 @@ img {
     max-height: 100vh;
     width: auto;
     margin: auto;
-}
-
-#sendCertificate {
-
-    margin-top: 2%;
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
-    height: 35px;
-    background-color: #3182f3;
-    border-color: #3182f3;
-    color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 #certificateInput {
+    width: 91%;
+    height: 35px;
+    padding: 1%;
+    border-radius: var(--border-radius);
+    margin: 5% auto auto;
+    margin-bottom: -2%;
+}
 
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
-    height: 50px;
-    padding: 0;
+#certificateInput::placeholder {
+    font-size: 120%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#sendCertificate {
+    width: 93%;
+    height: 35px;
+    font-size: 150%;
+    border-radius: var(--border-radius);
+    margin: 0 auto auto;
 }
 
 [data-tab-content] {
@@ -66,22 +91,27 @@ img {
     justify-content: space-around;
     list-style-type: none;
     margin: 0;
-    padding: 0;
-    border-bottom: 1px solid black;
+    padding: 1%;
     font-size: 2em;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    border-radius: var(--border-radius);
+    border-bottom: 3px solid rgb(58, 57, 57);
 }
 
 .tab {
     cursor: pointer;
-    padding: 10px;
+    padding: 2%;
+    border-radius: var(--border-radius);
 }
 
 .tab:hover {
-    background-color: #AAA;
+    background-color: var(--primary-color-hover);
 }
 
 .tab.active {
-    background-color: #CCC;
+    background-color: var(--primary-color-hover);
 }
 
 label {
@@ -89,6 +119,69 @@ label {
 }
 
 input[type="checkbox"] {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
+}
+
+input[type="text"] {
+    display: flex;
+    max-width: 100%;
+    width: 94%;
+    padding: 1%;
+    font-family: monospace;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+}
+
+textarea {
+    width: 97%;
+    max-width: 100%;
+    min-width: 55%;
+    min-height: 59px;
+    padding: 1%;
+    box-sizing: border-box;
+    font-family: monospace;
+    white-space: pre;
+    font-size:small;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+}
+
+.buttons {
+    display: flex;
+    gap: 2%;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    font-size: 130%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: var(--primary-color-hover);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#help-btn {
+    width: 20px;
+    height: 20px;
+    display: inline;
+    padding: 0%;
+    margin-left: 2%;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAUrSURBVHhe7ZtHyCRFGEB/c3YXMSGYBWUXI4aD6WJA0IMiHsVwWRFvrgEPKgoqIgY8iJjAhGJCBcXsQQUz5oOomMWEOYf3ZrqkqOmenfm7umca+8Gje4fdqurqquqqr2oXenp6ev7PrFZc28L8tsKtcVNcH+UX/AY/wo/xb2yFpitgTdwfD8cDcHfcGMdhZbyKz+Aj+BT+gZ1iZ7wcv8B/avo1Xo3Lce7ZDe9Fm3DZw9TRNB/AvTAbubrAJngxnoyr+0MJPsS7aPN+D7/Cn1DWQ8eE7dFuYguqSseKuAnPQFvHzDkCP8X0jelveB8ej1vipFihx+Ht+DOWpf05Hokzwzd0IZY192/xfNwc67IUz8Sy8cS8L8Kq1tIY6+AdmBbI0fpK9A3mZkO0wn/FNN+70DK1wtr4IKaFeBv3xqbxa/Aypvk/jOtiozho2i/TzO/GDbAtfNs3YloOv0BrYGOci2mmfqNb74MFF2BansuwEQ7BvzDOzIdvezqdUlYJx2JWlqDz9DgTm/2s3nzK9RiXzXWFa45s+KbjDBzwHJXrcCC+iW9h3cHTgfkFjMt4J2ZhGfp5Cwl7n2O0fx1Dmk/7Q012QRdSIU21kmtjTcaJXoE5+AxDmraoHJyHcVldSdZiJ4wHPmd4uSY58fTZbpADP8XptHxfrGRVg9gKjP/OVegAk4PHi6s8UVzr4uLq0uHtf/gMi8IJRdxMXdjkmNsHXAGeiifgWv6QiY3wewzl9t68psYBJCSiruq6gsvluOxHYSnjusBhxTVwT3HtAmlZ02eZiCcx1KDLzmnW85OyD+43vM2Kc5TfMZTfxdPUOOKHBIzk5MalbUj/dH/IzIsY0rcynCxNjG87/GN1vZ2beGr9mj9k5jqMn8GJ0ghVY8A2xTXwfnHNiSHzQM6vQMC4Y0z6TAOqKsAAZcyXxbVLpGVOn2lAVQWkwQ0Dk10jRJwDpQGbqgqY9Rq/CRwHRqiqAFdVMWEPr0ukZU5bxICqCnDTIqa0/8w5aZnTZxpQVQHu0Ma4Y9M10jL72R2hqgI+wR+HtwP2KK5dIi7zn1j6Ka+qAKe+7uEFdsQthredwP4fV8A76Gp2hKoKEPfnA34VDh3edoKDMZ76PltcRxhXAR5OiDmmuHaBtKyPFtepcHrqyBnm0u7J5fwaNBETFJt/vJBzElcZwR7XAoz+ugEacDvqlOHtXGOEyR3lgNtl8YA+FbtiqEn1QEKceB2aaAFujn6IcZlrh8YfwjjBNOi4WJqogLMwLmvl4DcNhpXjQxAGFzzGUpeXMKSZIyq8A9rUQ5rqfmYWbsY4YQMYi4q0Rri79Dy6eeHuUx2MLfjZjst4P2bDSZDr6ziDW3FeVo3p3qWh8G0xK0djnInmGg/qkPZ7PREbwcMHaWaX4KxawtmYlucGbAx3i+xbaaaOEY2fz4mwz6fNXg3lN35YysHPfb0081ewjeOsbtj6eUvzd0D1IEcrWAllJ8VccRnvr3t4ogzzPAeN7KT5er6gtYcP2Aw9E5gWRj3FuRJXdTJ8EqzM0zA9ohP0tFhrZwTL8EirW+ZlhXNicgv6BZmmMnxoNzQd0L7DsrR/wJOwFrlGbw8keTzeyqjCqMwbWHZY2hWcK83t0ECGp87HbZbY/WwVHwz+NEf4nyMew7I3lsPnsBOBmT3xGqzqGtPoev42PAg7h2Ep9+adQPmZKjvonGocwq5yLXrg0RMfjdH2DM4vh+Fq5+mboX3fMviWjTU40js+WFE9PT09Pc2ysPAv5sgA5QuaXwwAAAAASUVORK5CYII=") center/contain no-repeat;
 }
