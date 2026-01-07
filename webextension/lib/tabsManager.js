@@ -165,7 +165,7 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  * When event, setTabIp when originUrl hostname and real request hostname same
  * Get ip event when ip not in main_frame
  */ 
-/*CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
+CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
   if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined') {
     if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
       if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
@@ -174,10 +174,10 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
     }
   }
 }
-browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,*/
-  //{ urls: ['https://*/*'] },
-  //['blocking']
-//)
+browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,
+  { urls: ['https://*/*'] },
+  ['blocking']
+)
 
 
 /**

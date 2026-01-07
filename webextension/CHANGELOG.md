@@ -1,5 +1,8 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.7.32 - 2025-01-07
+- Fix being unable to check a non private website, sending the error "We could not reach this host from the check server as it is a private host."
+
 ## 5.7.3 - 2025-12-12
 - Added a list of private Top Level Domains so that the extension does not check (e.g. .localhost)
 - Added a list of reserved IP addresses so that the extension does not check (e.g. 100.64.0.0/10)
