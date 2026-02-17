@@ -10,3 +10,6 @@ $path_to_cache = "/var/tmp/cmh_cache/";
 
 //Max duration of cache (default: 21600 seconds = 6 hours)
 $cacheTTL = 21600;
+
+// Log request
+$LOG_REQS = false;
