@@ -90,3 +90,5 @@ www-data
 This server does not store clients data.
 
 It only stores files containing the DNS resolution of checked hostnames and their certificates fingerprints, for a defined amount of time (default = 6 hours).
+
+It is possible to log client request for debugging purposes. Edit `config.php` and set `$LOG_REGS = true`

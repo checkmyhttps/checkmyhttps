@@ -32,7 +32,7 @@ $data = json_decode( file_get_contents("php://input") );
 
 // For GET and POST requests
 // === 1. HOST
-$raw_host = filter_input(INPUT_GET, 'host', FILTER_SANITIZE_STRING) ?? (isset($data->host) ? filter_var($data->host, FILTER_SANITIZE_STRING) : null);
+$raw_host = filter_input(INPUT_GET, 'host', FILTER_SANITIZE_URL) ?? (isset($data->host) ? filter_var($data->host, FILTER_SANITIZE_URL) : null);
 
 if ($raw_host !== null && $raw_host !== false && $raw_host !== '') {
     $request_host = $raw_host;
@@ -46,7 +46,7 @@ if ($raw_port !== null && $raw_port !== false && $raw_port !== '') {
 }
 
 // === 3. IP
-$raw_ip = filter_input(INPUT_GET, 'ip', FILTER_SANITIZE_STRING) ?? (isset($data->ip) ? filter_var($data->ip, FILTER_SANITIZE_STRING) : null);
+$raw_ip = filter_input(INPUT_GET, 'ip', FILTER_SANITIZE_URL) ?? (isset($data->ip) ? filter_var($data->ip, FILTER_SANITIZE_URL) : null);
 
 if ($raw_ip !== null && $raw_ip !== false && $raw_ip !== '') {
     if (filter_var($raw_ip, FILTER_VALIDATE_IP)) {
@@ -249,6 +249,16 @@ if ($insertInCache === true && $use_cache === true)
 }
 
 echo json_encode(hashAndEncrypt($certificate));
+if ($LOG_REQS === true ) {
+  $re = $_SERVER['REMOTE_ADDR'];
+  $ca = "";
+  if ($use_cache == true) {
+    $ttem=$cacheTTL-@$time_passed;
+    $cf = $cacheFound ? "HIT" : "MISS";
+    $ca = "CACHE $cf $ttem ";
+  }
+  error_log("$re LOOKED ".$service->host." ".$certificate->host_ip." $ca ".@($certificate->fingerprints->sha256));
+}
 exit();
 
 /**
