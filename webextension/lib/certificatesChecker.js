@@ -168,7 +168,34 @@ CMH.certificatesChecker.isCheckableUrl = (urlTested, ip, showNotifications) => {
  * Check a tab.
  */
 CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
+  async function getActiveTabIP() {
+    try {
+      const tabs = await browser.tabs.query({
+        currentWindow: true,
+        active: true
+      });
+      
+      // Get Tab URL
+      let url = new URL(tabs[0].url)
+      let domain = url.hostname
+  
+      // IPv4 Lookup
+      const result = await browser.dns.resolve(domain, ["disable_ipv6"])
+      const ipAddress = result.addresses?.[0] || null
+      console.log("New method:", domain, ipAddress)
+      return ipAddress
+    } catch (error) {
+      console.error("DNS resolution failed:", error)
+      return null
+    }
+  }
   let ip = CMH.tabsManager.getTabIp(tab.id)
+  console.log("Old method:", ip)
+ 
+  if (!ip || ip === "")
+    ip = await getActiveTabIP()
+  console.log()
+  
   if (!CMH.certificatesChecker.isCheckableUrl(tab.url, ip, showNotifications)) {
     return
   }

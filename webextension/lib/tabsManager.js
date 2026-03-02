@@ -53,6 +53,7 @@ CMH.tabsManager.setTabUrl = (tabId, url) => {
 
   const newUrl = CMH.common.parseURL(url)
   
+  CMH.tabsManager.tabsStatus[tabId].lastHost = CMH.tabsManager.tabsStatus[tabId].host
   CMH.tabsManager.tabsStatus[tabId].host = newUrl.host
   CMH.tabsManager.tabsStatus[tabId].port = newUrl.port
 }
@@ -144,12 +145,15 @@ browser.tabs.onRemoved.addListener((tabId) => { CMH.tabsManager.onTabClose(tabId
  * Store certificates of each request received from main frame.
  */
 CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
-  CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+  if ( (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined') || (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip !== requestDetails.ip) ) {
+    CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+    console.log("setTabIp from onHeadersReceived:", requestDetails.ip)
 
-  const securityInfo = await browser.webRequest.getSecurityInfo(requestDetails.requestId, { certificateChain: true })
-  if (securityInfo.state === 'secure' || securityInfo.state === 'weak') {
-    certificateFormatted = CMH.certificatesManager.formatCertificate(securityInfo.certificates)
-    CMH.tabsManager.setTabCertificates(requestDetails.tabId, certificateFormatted, requestDetails.url)
+    const securityInfo = await browser.webRequest.getSecurityInfo(requestDetails.requestId, { certificateChain: true })
+    if (securityInfo.state === 'secure' || securityInfo.state === 'weak') {
+      certificateFormatted = CMH.certificatesManager.formatCertificate(securityInfo.certificates)
+      CMH.tabsManager.setTabCertificates(requestDetails.tabId, certificateFormatted, requestDetails.url)
+    }
   }
 }
 browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
@@ -170,6 +174,7 @@ CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
     if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
       if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
         CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+        console.log("setTabIp from onHeadersReceivedForIp:", requestDetails.ip)
       }
     }
   }
@@ -190,16 +195,32 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  */
 CMH.tabsManager.onTabUpdated = (tabId, changeInfo, tabInfo) => {
   if (typeof changeInfo.url !== 'undefined' && !changeInfo.url.includes("about:") && !changeInfo.url.includes("moz-extension:")) {
+    const lastHost = CMH.tabsManager.tabsStatus[tabId].lastHost // set lastHost before it gets updated next line
     CMH.tabsManager.setTabUrl(tabId, tabInfo.url)
     if (CMH.options.settings.checkOnPageLoad) {
-      if (CMH.tabsManager.tabsStatus[tabId].status === undefined) {
+      if ( (CMH.tabsManager.tabsStatus[tabId].status === undefined) || (lastHost !== CMH.tabsManager.tabsStatus[tabId].host || lastHost === undefined) ) { // Resend a request only if newly loaded website is different from previous website
         // Check on page load
-        CMH.tabsManager.tabsStatus[tabId].status = -1 // Set a default status so pages that already got checked don't show the same notification again
-        CMH.certificatesChecker.checkTab(tabInfo, !CMH.options.settings.disableNotifications)
-      } else if (CMH.tabsManager.tabsStatus[tabId].status !== -1) {
-        CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId) // Page has already been checked, display its status logo again if page was reloaded
+        if (!backForwardTabs.has(tabId)) { // User has not used 'back' or 'forward' buttons when navigating
+          CMH.certificatesChecker.checkTab(tabInfo, !CMH.options.settings.disableNotifications)
+        } else {
+          backForwardTabs.delete(tabId);
+        }
+      } else {
+        CMH.ui.setStatus(CMH.tabsManager.tabsStatus[tabId].status, tabId) // Page has already been checked, display its status logo again if page was reloaded     
       }
     }
   }
 }
 browser.tabs.onUpdated.addListener(CMH.tabsManager.onTabUpdated)
+
+// If user uses 'Go back one page' or 'Go forward one page' buttons when navigating, browser.webRequest.onHeadersReceived is not called so CMH.tabsManager.tabsStatus doesn't get updated
+const backForwardTabs = new Set();
+browser.webNavigation.onCommitted.addListener(async (details) => {
+  if (details.frameId !== 0) {
+    return;
+  }
+
+  if (details.transitionQualifiers.includes("forward_back")) {
+    backForwardTabs.add(details.tabId);
+  }
+});

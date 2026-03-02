@@ -37,7 +37,10 @@
     "storage",
     "tabs",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "dns",
+    "activeTab",
+    "webNavigation"
   ],
   "host_permissions":[
     "https://*/*"
