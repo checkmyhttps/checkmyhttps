@@ -178,10 +178,12 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
       // Get Tab URL
       let url = new URL(tabs[0].url)
       let domain = url.hostname
-  
+
+      const index = CMH.tabsManager.tabsStatus[tab.id].hosts.findIndex(item => item === domain)
+
       // IPv4 Lookup
-      const result = await browser.dns.resolve(domain, ["disable_ipv6"])
-      const ipAddress = result.addresses?.[0] || null
+      //const result = await browser.dns.resolve(domain, ["disable_ipv6"])
+      const ipAddress = CMH.tabsManager.tabsStatus[tab.id].ips[index] //result.addresses?.[0] || null
       console.log("New method:", domain, ipAddress)
       return ipAddress
     } catch (error) {
@@ -192,7 +194,7 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
   let ip = CMH.tabsManager.getTabIp(tab.id)
   console.log("Old method:", ip)
  
-  if (!ip || ip === "")
+  //if (!ip || ip === "")
     ip = await getActiveTabIP()
   console.log()
   

@@ -96,6 +96,8 @@ CMH.tabsManager.setTabIp = (tabId, ip) => {
   }
 
   CMH.tabsManager.tabsStatus[tabId].ip = ip
+  CMH.tabsManager.tabsStatus[tabId].ips = []
+  CMH.tabsManager.tabsStatus[tabId].hosts = []
 }
 
 
@@ -173,14 +175,19 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  * Get ip event when ip not in main_frame
  */ 
 CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
-  //if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined') {
-    //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host == (new URL(requestDetails.url)).hostname) {
+  if (requestDetails.ip !== null) {
+  //if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] !== 'undefined') {
+    //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host === (new URL(requestDetails.url)).hostname) {
       //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
         //CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
-        console.log("setTabIp from onHeadersReceivedForIp:", requestDetails.ip)
+        if (!CMH.tabsManager.tabsStatus[requestDetails.tabId].ips.includes(requestDetails.ip) && !CMH.tabsManager.tabsStatus[requestDetails.tabId].hosts.includes((new URL(requestDetails.url)).hostname)) {
+          CMH.tabsManager.tabsStatus[requestDetails.tabId].ips.push(requestDetails.ip)
+          CMH.tabsManager.tabsStatus[requestDetails.tabId].hosts.push((new URL(requestDetails.url)).hostname)
+          //console.log("setTabIp from onHeadersReceivedForIp:", requestDetails.ip)
+        }
       //}
-    //}
-  //}
+   // }
+  }
 }
 browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceivedForIp,
   { urls: ['https://*/*'] },
