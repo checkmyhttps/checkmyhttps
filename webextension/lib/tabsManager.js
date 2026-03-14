@@ -57,7 +57,7 @@ CMH.tabsManager.setTabUrl = (tabId, url) => {
   const newUrl = CMH.common.parseURL(url)
   
   CMH.tabsManager.tabsStatus[tabId].lastHost = CMH.tabsManager.tabsStatus[tabId].host
-  CMH.tabsManager.tabsStatus[tabId].host = newUrl.host
+  //CMH.tabsManager.tabsStatus[tabId].host = newUrl.host
   CMH.tabsManager.tabsStatus[tabId].port = newUrl.port
 }
 
@@ -78,7 +78,7 @@ CMH.tabsManager.setTabCertificates = (tabId, certificates, url) => {
   if (typeof url !== 'undefined') {
     CMH.tabsManager.setTabUrl(tabId, url)
   }
-  CMH.tabsManager.tabsStatus[tabId].certificates = certificates
+  CMH.tabsManager.tabsStatus[tabId].certificates.push(certificates)
 }
 
 
@@ -95,9 +95,10 @@ CMH.tabsManager.setTabIp = (tabId, ip) => {
     CMH.tabsManager.tabsStatus[tabId] = {}
   }
 
-  CMH.tabsManager.tabsStatus[tabId].ip = ip
+  //CMH.tabsManager.tabsStatus[tabId].ip = ip
   CMH.tabsManager.tabsStatus[tabId].ips = []
   CMH.tabsManager.tabsStatus[tabId].hosts = []
+  //CMH.tabsManager.tabsStatus[tabId].certificates = []
 }
 
 
@@ -161,10 +162,10 @@ CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
     }
   }
 }
-browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
-  { urls: ['https://*/*'], types: ['main_frame'] },
-  ['blocking']
-)
+//browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceived,
+  //{ urls: ['https://*/*'], types: ['main_frame'] },
+  //['blocking']
+//)
 
 
 /**
@@ -179,10 +180,12 @@ CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
   //if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] !== 'undefined') {
     //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host === (new URL(requestDetails.url)).hostname) {
       //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
-        //CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
+        if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined')
+          CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
         if (!CMH.tabsManager.tabsStatus[requestDetails.tabId].ips.includes(requestDetails.ip) && !CMH.tabsManager.tabsStatus[requestDetails.tabId].hosts.includes((new URL(requestDetails.url)).hostname)) {
           CMH.tabsManager.tabsStatus[requestDetails.tabId].ips.push(requestDetails.ip)
           CMH.tabsManager.tabsStatus[requestDetails.tabId].hosts.push((new URL(requestDetails.url)).hostname)
+
           //console.log("setTabIp from onHeadersReceivedForIp:", requestDetails.ip)
         }
       //}
@@ -205,7 +208,7 @@ browser.webRequest.onHeadersReceived.addListener(CMH.tabsManager.onHeadersReceiv
  */
 CMH.tabsManager.onTabUpdated = (tabId, changeInfo, tabInfo) => {
   if (typeof changeInfo.url !== 'undefined' && !changeInfo.url.includes("about:") && !changeInfo.url.includes("moz-extension:")) {
-    const lastHost = CMH.tabsManager.tabsStatus[tabId].lastHost // set lastHost before it gets updated next line
+    const lastHost = undefined //CMH.tabsManager.tabsStatus[tabId].lastHost // set lastHost before it gets updated next line
     CMH.tabsManager.setTabUrl(tabId, tabInfo.url)
     if (CMH.options.settings.checkOnPageLoad) {
       if ( (CMH.tabsManager.tabsStatus[tabId].status === undefined) || (lastHost !== CMH.tabsManager.tabsStatus[tabId].host || lastHost === undefined) ) { // Resend a request only if newly loaded website is different from previous website
