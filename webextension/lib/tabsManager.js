@@ -180,7 +180,7 @@ CMH.tabsManager.onHeadersReceivedForIp = async (requestDetails) => {
   //if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] !== 'undefined') {
     //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].host === (new URL(requestDetails.url)).hostname) {
       //if (CMH.tabsManager.tabsStatus[requestDetails.tabId].ip != requestDetails.ip) {
-        if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined')
+        if (typeof CMH.tabsManager.tabsStatus[requestDetails.tabId] === 'undefined' || typeof CMH.tabsManager.tabsStatus[requestDetails.tabId].hosts === 'undefined')
           CMH.tabsManager.setTabIp(requestDetails.tabId, requestDetails.ip)
         if (!CMH.tabsManager.tabsStatus[requestDetails.tabId].ips.includes(requestDetails.ip) && !CMH.tabsManager.tabsStatus[requestDetails.tabId].hosts.includes((new URL(requestDetails.url)).hostname)) {
           CMH.tabsManager.tabsStatus[requestDetails.tabId].ips.push(requestDetails.ip)
