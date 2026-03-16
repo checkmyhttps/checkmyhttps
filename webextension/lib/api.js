@@ -25,7 +25,7 @@ CMH.api.getCertFromCheckServer = async (urlTested, ip) => {
       port: port,
     }
   }
-  else 
+  else
   {
     args = {
       host: encodeURIComponent(host),

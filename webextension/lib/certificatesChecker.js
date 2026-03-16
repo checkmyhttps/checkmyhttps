@@ -168,36 +168,57 @@ CMH.certificatesChecker.isCheckableUrl = (urlTested, ip, showNotifications) => {
  * Check a tab.
  */
 CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
-  async function getActiveTabIP() {
+  async function getIPFromDNSRequest(domain) {
     try {
-      const tabs = await browser.tabs.query({
-        currentWindow: true,
-        active: true
-      });
-      
-      // Get Tab URL
-      let url = new URL(tabs[0].url)
-      let domain = url.hostname
-
-      const index = CMH.tabsManager.tabsStatus[tab.id].hosts.findIndex(item => item === domain)
-
-      // IPv4 Lookup
-      //const result = await browser.dns.resolve(domain, ["disable_ipv6"])
-      const ipAddress = CMH.tabsManager.tabsStatus[tab.id].ips[index] //result.addresses?.[0] || null
-      console.log("New method:", domain, ipAddress)
+      const result = await browser.dns.resolve(domain, ["disable_ipv6"])
+      const ipAddress = result.addresses?.[0] || null
       return ipAddress
     } catch (error) {
       console.error("DNS resolution failed:", error)
       return null
     }
   }
-  let ip = CMH.tabsManager.getTabIp(tab.id)
-  console.log("Old method:", ip)
+
+  let url = new URL(tab.url)
+  let domain = url.hostname
+  if (CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost === domain)
+    return
+
+  CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost = domain
+
+  const combined = [];
+  for (let i = 0; i < CMH.tabsManager.tabsStatus[tab.id].ips.length; i++) {
+    combined.push([
+      CMH.tabsManager.tabsStatus[tab.id].ips[i],
+      CMH.tabsManager.tabsStatus[tab.id].hosts[i],
+      CMH.tabsManager.tabsStatus[tab.id].certificates[i]
+    ]);
+  }
+  const unique = [...new Set(combined.map(entry => JSON.stringify(entry)))].map(s => JSON.parse(s))
+  console.log(unique)
+
  
-  //if (!ip || ip === "")
-    ip = await getActiveTabIP()
+  let index = -1
+  for (let i = 0; i < unique.length; i++) {
+    if (unique[i][1] === domain)
+    {
+      index = i
+      break
+    }
+  }
+  CMH.tabsManager.tabsStatus[tab.id].ips = []
+  CMH.tabsManager.tabsStatus[tab.id].hosts = []
+  CMH.tabsManager.tabsStatus[tab.id].certificates = []
+
+  let ip = unique[index]?.[0]
+  console.log("Old method:", ip, unique[index]?.[1], unique[index]?.[2])
+
+  if (!ip || ip === "") {
+    ip = await getIPFromDNSRequest(domain)
+    console.log("New method:", ip)
+  }
   console.log()
-  
+
   if (!CMH.certificatesChecker.isCheckableUrl(tab.url, ip, showNotifications)) {
     return
   }
@@ -205,8 +226,12 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
   CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.WORKING)
 
   // Get the certificate of tab.url from user's view
-  let userCert = await CMH.certificatesManager.getCertTab(tab)
-  if (userCert === null || userCert.error !== undefined) {
+  let userCert = unique[index]?.[2]
+  if (!userCert) {
+    // If certificate is not already stored, get it from a new request
+    userCert = await CMH.api.getCertFromUser(tab.url)
+  }
+  if (!userCert || userCert.error !== undefined) {
     CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
     if (showNotifications) {
       CMH.ui.showNotification(browser.i18n.getMessage('__webServerToCheckUnreachable__'))
