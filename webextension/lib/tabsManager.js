@@ -89,9 +89,10 @@ CMH.tabsManager.deleteTabStatus = (tabId) => {
  * @param {string} [url]    - Tab URL
  * Set the IP address of a tab.
  */
-CMH.tabsManager.setTabIp = (tabId) => {
-  if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined') {
-    CMH.tabsManager.tabsStatus[tabId] = {}
+CMH.tabsManager.setTabIp = (tabId, force) => {
+  if (typeof CMH.tabsManager.tabsStatus[tabId] === 'undefined' || force) {
+    if (!force)
+      CMH.tabsManager.tabsStatus[tabId] = {}
     
     CMH.tabsManager.tabsStatus[tabId].ips = []
     CMH.tabsManager.tabsStatus[tabId].hosts = []

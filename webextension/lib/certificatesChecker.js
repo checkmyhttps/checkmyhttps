@@ -179,6 +179,7 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
     }
   }
 
+  CMH.tabsManager.setTabIp(tab.id)
   let url = new URL(tab.url)
   let domain = url.hostname
   if (CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost === domain)
@@ -196,7 +197,6 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
   }
   const unique = [...new Set(combined.map(entry => JSON.stringify(entry)))].map(s => JSON.parse(s))
   console.log(unique)
-
  
   let index = -1
   for (let i = 0; i < unique.length; i++) {
@@ -206,9 +206,7 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
       break
     }
   }
-  CMH.tabsManager.tabsStatus[tab.id].ips = []
-  CMH.tabsManager.tabsStatus[tab.id].hosts = []
-  CMH.tabsManager.tabsStatus[tab.id].certificates = []
+  CMH.tabsManager.setTabIp(tab.id, true)
 
   let ip = unique[index]?.[0]
   console.log("Old method:", ip, unique[index]?.[1], unique[index]?.[2])
