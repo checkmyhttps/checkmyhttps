@@ -173,10 +173,10 @@ CMH.api.getCertFromUser = async (urlTested) => {
 
   let response;
   try {
-    response = await fetch(urlTested, { method: 'HEAD' })
+    response = await fetch(urlTested, { method: 'HEAD', mode: 'no-cors' })
     if (response.status === 405)
     {
-      response = await fetch(urlTested, { method: 'GET' })
+      response = await fetch(urlTested, { method: 'GET', mode: 'no-cors' })
     }
   } catch (e) {
     return { error: 'SERVER_UNREACHABLE' };
