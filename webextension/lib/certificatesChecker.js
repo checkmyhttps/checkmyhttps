@@ -165,69 +165,32 @@ CMH.certificatesChecker.isCheckableUrl = (urlTested, ip, showNotifications) => {
  * @function
  * @param {object}  tab               - Tab to check
  * @param {boolean} showNotifications - Show notifications
+ * @param {number} index - Current index of CMH.tabsManager.tabsStatus[tab.id].unique
  * Check a tab.
  */
-CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
-  async function getIPFromDNSRequest(domain) {
-    try {
-      const result = await browser.dns.resolve(domain, ["disable_ipv6"])
-      const ipAddress = result.addresses?.[0] || null
-      return ipAddress
-    } catch (error) {
-      console.error("DNS resolution failed:", error)
-      return null
-    }
-  }
-
-  CMH.tabsManager.setTabIp(tab.id)
-  let url = new URL(tab.url)
-  let domain = url.hostname
-  if (CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost === domain)
-    return
-
-  CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost = domain
-
-  const combined = [];
-  for (let i = 0; i < CMH.tabsManager.tabsStatus[tab.id].ips.length; i++) {
-    combined.push([
-      CMH.tabsManager.tabsStatus[tab.id].ips[i],
-      CMH.tabsManager.tabsStatus[tab.id].hosts[i],
-      CMH.tabsManager.tabsStatus[tab.id].certificates[i]
-    ]);
-  }
-  const unique = [...new Set(combined.map(entry => JSON.stringify(entry)))].map(s => JSON.parse(s))
-  console.log(unique)
- 
-  let index = -1
-  for (let i = 0; i < unique.length; i++) {
-    if (unique[i][1] === domain)
-    {
-      index = i
-      break
-    }
-  }
-  CMH.tabsManager.setTabIp(tab.id, true)
-
-  let ip = unique[index]?.[0]
-  console.log("Old method:", ip, unique[index]?.[1], unique[index]?.[2])
+CMH.certificatesChecker.checkTab = async (tab, showNotifications, index, ip, url, userCert) => {
+  console.log("Old method:", ip, url, userCert)
 
   if (!ip || ip === "") {
-    ip = await getIPFromDNSRequest(domain)
-    console.log("New method:", ip)
+    CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
+    if (showNotifications) {
+      CMH.ui.showNotification(browser.i18n.getMessage('__dnsFailed__'))
+    }
+
+    return 'stop'
   }
   console.log()
 
-  if (!CMH.certificatesChecker.isCheckableUrl(tab.url, ip, showNotifications)) {
-    return
+  if (!CMH.certificatesChecker.isCheckableUrl(url, ip, showNotifications)) {
+    return 'stop'
   }
 
   CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.WORKING)
 
-  // Get the certificate of tab.url from user's view
-  let userCert = unique[index]?.[2]
+  // userCert is the certificate of url from user's view
   if (!userCert) {
     // If certificate is not already stored, get it from a new request
-    userCert = await CMH.api.getCertFromUser(tab.url)
+    userCert = await CMH.api.getCertFromUser(url)
   }
   if (!userCert || userCert.error !== undefined) {
     CMH.tabsManager.setTabStatus(tab.id, CMH.common.status.UNKNOWN)
@@ -235,11 +198,11 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
       CMH.ui.showNotification(browser.i18n.getMessage('__webServerToCheckUnreachable__'))
     }
 
-    return
+    return 'stop'
   }
   
-  // Get the certificate of tab.url from check server's view
-  data_api = await CMH.api.getCertFromCheckServer(tab.url, ip)
+  // Get the certificate of url from check server's view
+  data_api = await CMH.api.getCertFromCheckServer(url, ip)
 
   if (data_api.error) {
     if (data_api.error === 'PUBLIC_KEY') {
@@ -271,12 +234,12 @@ CMH.certificatesChecker.checkTab = async (tab, showNotifications) => {
       }
     }
 
-    return
+    return 'stop'
   }
 
   // Compare certificates from user's view and from check server's view
   const verificationRes = CMH.certificatesChecker.verifyCertificate(userCert, data_api.data)
-  CMH.certificatesChecker.handleVerificationResult(verificationRes, tab.url, tab.id, showNotifications)
+  CMH.certificatesChecker.handleVerificationResult(verificationRes, url, tab.id, showNotifications, index)
 }
 
 
@@ -348,16 +311,21 @@ CMH.certificatesChecker.verifyCertificate = (userCertificate, cmhCertificate) =>
  * @param {object} url               - URL to check
  * @param {object} [tabId]           - Tab to check
  * @param {boolean} showNotifications - Show notifications
+ * @param {number} index - Current index of CMH.tabsManager.tabsStatus[tab.id].unique
  * Check if the user's certificate is valid.
  */
-CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNotifications) => {
+CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNotifications, index) => {
   if (result === 'OK') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.VALID)
+      if (CMH.options.settings.deepInspection)
+        CMH.tabsManager.tabsStatus[tabId].unique[index][3] = CMH.common.status.VALID
     }
   } else if (result === 'IDN') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.VALID)
+      if (CMH.options.settings.deepInspection)
+        CMH.tabsManager.tabsStatus[tabId].unique[index][3] = CMH.common.status.VALID
     }
     if (CMH.options.settings.alertOnUnicodeIDNDomainNames) {
       if (showNotifications) {
@@ -367,6 +335,8 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
   } else if (result === 'KO') {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.INVALID)
+      if (CMH.options.settings.deepInspection)
+        CMH.tabsManager.tabsStatus[tabId].unique[index][3] = CMH.common.status.INVALID
     }
     if (showNotifications) {
       CMH.ui.showNotification(browser.i18n.getMessage('__danger__'), { priority: 2 })
@@ -374,6 +344,8 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
   } else {
     if (tabId !== null) {
       CMH.tabsManager.setTabStatus(tabId, CMH.common.status.UNKNOWN)
+      if (CMH.options.settings.deepInspection)
+        CMH.tabsManager.tabsStatus[tabId].unique[index][3] = CMH.common.status.UNKNOWN
     }
     if (showNotifications) {
       CMH.ui.showNotification(browser.i18n.getMessage('__unknownIssue__'))
@@ -391,6 +363,6 @@ CMH.certificatesChecker.handleVerificationResult = (result, url, tabId, showNoti
  * Compare fingerprints of two certificates.
  */
 CMH.certificatesChecker.compareCertificateFingerprints = (userCertificateFingerprint, cmhCertificateFingerprint) => {
-  //console.log(userCertificateFingerprint + " VS " + cmhCertificateFingerprint)
+  console.log(userCertificateFingerprint + " VS " + cmhCertificateFingerprint)
   return (userCertificateFingerprint === cmhCertificateFingerprint)
 }

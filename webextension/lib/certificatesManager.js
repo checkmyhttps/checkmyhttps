@@ -7,23 +7,6 @@
 CMH.certificatesManager = {}
 
 /**
- * @name getCertTab
- * @function
- * @param {object} tab - Tab to check
- * Get the certificate of a tab.
- */
-/*CMH.certificatesManager.getCertTab = async (tab, index) => {
-  let cert = CMH.tabsManager.getTabCertificate(tab.id)
-  cert = cert[index]
-  if (!cert) {
-    // If certificate is not already stored, get it from a new request
-    cert = await CMH.api.getCertFromUser(tab.url)
-  }
-  return cert
-}*/
-
-
-/**
  * @name formatCertificate
  * @function
  * @param {object} certificateChain - Array of every certificate in the chain

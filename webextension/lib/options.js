@@ -43,7 +43,7 @@ CMH.options.defaultCheckServer = {
 }
 
 // Get settings values
-browser.storage.local.get(['checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
+browser.storage.local.get(['deepInspection', 'checkOnPageLoad', 'alertOnUnicodeIDNDomainNames', 'disableNotifications', 'checkServerUrl', 'publicKey']).then((settings) => {
   const settingsItems = Object.keys(settings)
 
   for (let item of settingsItems) {

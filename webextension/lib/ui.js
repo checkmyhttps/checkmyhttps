@@ -11,11 +11,11 @@ CMH.ui = {}
  * @function
  * Initialize user interface.
  */
-CMH.ui.init = () => {
+/*CMH.ui.init = () => {
   browser.action.onClicked.addListener((tab) => {
-    CMH.certificatesChecker.checkTab(tab, !CMH.options.settings.disableNotifications)
+    CMH.tabsManager.processTab(tab, !CMH.options.settings.disableNotifications)
   })
-}
+}*/
 
 
 /**
@@ -104,7 +104,7 @@ CMH.ui.showNotification = (message, options) => {
 }
 
 // Initialize UI when the current platform is detected
-(() => {
+/*(() => {
   interval = setInterval(() => {
     if (typeof CMH.common.isDesktopPlatform() !== 'undefined') {
       clearInterval(interval)
@@ -112,4 +112,4 @@ CMH.ui.showNotification = (message, options) => {
       CMH.ui.init()
     }
   }, 10)
-})()
+})()*/

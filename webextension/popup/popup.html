@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .domain-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+    .domain-item:hover { background-color: #f5f5f5; }
+    .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+    .valid { background-color: #4caf50; } /* Green */
+    .invalid { background-color: #f44336; } /* Red */
+    .unknown { background-color: #9e9e9e; } /* Gray */
+    .details { display: none; padding-left: 20px; font-size: 0.9em; color: #555; }
+    .expanded .details { display: block; }
+  </style>
+</head>
+<body>
+  <div id="domain-list"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

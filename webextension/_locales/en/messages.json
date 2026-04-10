@@ -75,6 +75,9 @@
   },
 
 
+  "__dnsFailed__": {
+    "message": "DNS resolution failed, cannot get the IP address of requested host."
+  },
   "__webServerToCheckUnreachable__": {
     "message": "The website to be checked is unreachable! Are you connected to the Internet ?"
   },

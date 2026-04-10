@@ -4,6 +4,7 @@
  * @license GPL-3.0
  */
 
+const box_deepInspection     = document.querySelector('input[name="deepInspection"]')
 const box_pageLoad           = document.querySelector('input[name="checkOnPageLoad"]')
 const box_alertIDNDomains    = document.querySelector('input[name="alertOnUnicodeIDNDomainNames"]')
 const helpbtn                = document.getElementById("help-btn")
@@ -31,6 +32,7 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   btn_restoreDefault.textContent = browser.i18n.getMessage('__restoreDefault__')
   btn_getPublicKey.textContent   = browser.i18n.getMessage('__getPublicKey__')
 
+  box_deepInspection.checked = CMH.options.settings.deepInspection
   box_pageLoad.checked = CMH.options.settings.checkOnPageLoad
   box_alertIDNDomains.checked = CMH.options.settings.alertOnUnicodeIDNDomainNames
   helpbtn.onclick = function() {
@@ -42,6 +44,18 @@ browser.runtime.getBackgroundPage().then((backgroundPage) => {
   txt_publicKey.value = CMH.options.settings.publicKey
 
   let lastDomainSaved  = CMH.options.settings.checkServerUrl.match(/^https:\/\/([^:\/\s]+)/)[1]
+
+  box_deepInspection.addEventListener('input', (e) => {
+    browser.storage.local.set({
+      deepInspection: box_deepInspection.checked,
+    }).then(() => {
+      div_messageCheckServer.dataset.type = 'success'
+      div_messageCheckServer.textContent  = browser.i18n.getMessage('__settingsSaved__')
+    }, (error) => {
+      div_messageCheckServer.dataset.type = 'error'
+      div_messageCheckServer.textContent  = 'Error!'
+    })
+  })
 
   box_pageLoad.addEventListener('input', (e) => {
     browser.storage.local.set({

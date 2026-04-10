@@ -75,6 +75,9 @@
   },
 
 
+  "__dnsFailed__": {
+    "message": "La résolution DNS a échoué, impossible d'obtenir l'adresse IP de l'hôte demandé."
+  },
   "__webServerToCheckUnreachable__": {
     "message": "Le site web à vérifier est injoignable ! Etes-vous connecté à l'Internet ?"
   },

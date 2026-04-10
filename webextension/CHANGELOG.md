@@ -1,5 +1,13 @@
 # CheckMyHTTPS WebExtension Changelog
 
+## 5.8.0 - 2026-04-10
+- Added support for Deep Inspection, feature that checks all loaded links' certificates in a web page. Available in the extension options.
+
+## 5.7.33 - 2026-03-21
+- Added a feature not to check again the same website if it has just been. With 'Check when the page loads' setting, it prevents having to constantly check while browsing the same website.
+- Fixed an issue where it was impossible to check some websites, resulting in "We could not reach this host from the check server as it is a private host.". It explains why the extension now requires the DNS permission.
+- Fixed an issue where requests could not be sent because of CORS policy errors.
+
 ## 5.7.32 - 2025-01-07
 - Fix being unable to check a non private website, sending the error "We could not reach this host from the check server as it is a private host."
 

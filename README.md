@@ -41,6 +41,15 @@ When browsing on secured sites ("https://..." websites), you can check the secur
 - The icon is gray <img src="Chromium/images/unknown.png" width="16"/> : the verification is impossible (check server is unreachable, network error);
 - The icon is black <img src="Chromium/images/working.png" width="16"/> : the verification is in progress.
 
+# Security Features
+
+| Security feature | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/edge/edge_32x32.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/opera/opera_32x32.png" alt="Opera"> | <img src="https://developer.android.com/static/images/brand/android-head_flat.svg" alt="Android" width="32"> | [Manual check page](https://checkmyhttps.net/check.php) |
+|----------|----------|----------|----------|----------|----------|----------|
+| TLS Man in the middle attack protection | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Check server verified by signature | ✅ | ✅ | ✅ | ✅ | ✅ | - |
+| Domain name homograph [attack](https://wikipedia.org/wiki/IDN_homograph_attack) protection | ✅ | ✅ | ✅ | ✅ | ✅ | - |
+| Link Deep Inspection | ✅ | - | - | - | - | - |
+
 # Repository structure
 
 ```
@@ -66,34 +75,6 @@ A secure website (HTTPS) justifies its identity with your browser by sending a c
 The method we propose to you, verifies that the certificate you receive is the one issued by the server.
 
 All explanations are detailed on the https://checkmyhttps.net project website.
-
-________________________________________________________________________________
-
-# CheckMyHTTPS
-
-CheckMyHTTPS s'assure que vos connexions WEB sécurisées (protocole 'HTTPS') ne sont pas interceptées (ni déchiffrées, ni écoutées, ni modifiées).
-Nous avons créé plusieurs outils simples utilisant cette méthode : des extensions pour navigateurs WEB Firefox et Chromium, ainsi qu’une application Android.
-
-# Comment cette extension fonctionne-t-elle ?
-
-Lors de votre navigation sur des sites sécurisés (sites en "https://..."), vous pouvez vérifier l’état de la sécurité en cliquant sur l'icône de l’extension.
-L'icône est verte : votre connexion n’est pas compromise;
-L'icône est rouge : votre connexion est considérée comme très risquée (détournement, modification, écoute)
-L'icône est grise : la vérification est impossible (le serveur de vérification est injoignable, erreur réseau);
-L'icône est noire : la vérification est en cours.
-
-# Respect de la vie privée :
-
-L’extension CheckMyHTTPS nécessite d'envoyer seulement deux paramètres au serveur de vérification:
-- Le nom de domaine du site visité;
-- L'adresse IP du site visité.
-Vous avez le libre choix concernant le site web à vérifier.
-
-De plus, nous vous offrons la possibilité de choisir librement le serveur de vérification, en créant et en hébergeant le vôtre.
-
-# Plus de détails :
-
-Un site web sécurisé (HTTPS) justifie son identité auprès de votre navigateur par l’envoi d’un certificat de sécurité validé par une autorité de certification reconnue. Les techniques d'interception, pour fonctionner, génèrent dynamiquement de faux certificats (un peu comme une fausse carte d'identité). La méthode que nous vous proposons vérifie que le certificat que vous recevez est bien celui qui a été émis par le serveur.
 
 ________________________________________________________________________________
 
