@@ -54,7 +54,7 @@ CMH.tabsManager.initTab = (tabId, force) => {
     if (!force) {
       CMH.tabsManager.tabsStatus[tabId] = {}
     }
-    
+
     CMH.tabsManager.tabsStatus[tabId].ips = []
     CMH.tabsManager.tabsStatus[tabId].hosts = []
     CMH.tabsManager.tabsStatus[tabId].certificates = []
@@ -81,7 +81,7 @@ browser.tabs.onRemoved.addListener((tabId) => { CMH.tabsManager.onTabClose(tabId
 /**
  * @name getIPFromDNSRequest
  * @function
- * @param {string} domain - Domain of host to check
+ * @param {string} url - Protocol + domain name of host to check
  * @returns {string} - IP address or null
  * Get the IP address of a domain via DNS request.
  */
@@ -103,6 +103,7 @@ CMH.tabsManager.getIPFromDNSRequest = async (url) => {
  * @function
  * @param {object} tab - Tab to process
  * @param {boolean} showNotifications - Show notifications
+ * @returns {number} Index of element corresponding to main frame url
  * Process the list of stored arrays: ips, hosts and certificates in a tab
  */
 CMH.tabsManager.processTab = async (tab, showNotifications) => {
@@ -110,7 +111,12 @@ CMH.tabsManager.processTab = async (tab, showNotifications) => {
   let url = new URL(tab.url)
   let domain = url.hostname
   if (CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost === domain) // Do not check again if this host has already been. With 'Check when the page loads' setting, it prevents having to constantly check while browsing the same website.
-    return
+  {   
+    let indexElementToCheck = CMH.tabsManager.tabsStatus[tab.id].unique?.findIndex(row => row.includes(url.protocol+"//"+url.hostname))
+    if (!indexElementToCheck || indexElementToCheck === -1)
+      indexElementToCheck = 0
+    return [indexElementToCheck]
+  }
 
   CMH.tabsManager.tabsStatus[tab.id].lastCheckedHost = domain
 
@@ -126,20 +132,33 @@ CMH.tabsManager.processTab = async (tab, showNotifications) => {
       CMH.tabsManager.tabsStatus[tab.id].ips[i],
       CMH.tabsManager.tabsStatus[tab.id].hosts[i],
       CMH.tabsManager.tabsStatus[tab.id].certificates[i],
-      CMH.common.status.VALID
+      -1 // So popup.js can wait for this value to be populated by CMH.certificatesChecker.handleVerificationResult
     ]);
   }
   CMH.tabsManager.tabsStatus[tab.id].unique = [...new Set(combined.map(entry => JSON.stringify(entry)))].map(s => JSON.parse(s))
-  console.log(CMH.tabsManager.tabsStatus[tab.id].unique)
- 
-  CMH.certificatesChecker.checkTab(tab, showNotifications, 0, CMH.tabsManager.tabsStatus[tab.id].unique[0]?.[0], CMH.tabsManager.tabsStatus[tab.id].unique[0]?.[1], CMH.tabsManager.tabsStatus[tab.id].unique[0]?.[2]) // Only checks the main frame URL (first in array)
-  if (CMH.options.settings.deepInspection) {
-    for (let i = 1; i < CMH.tabsManager.tabsStatus[tab.id].unique.length; i++) {
-      if (CMH.certificatesChecker.checkTab(tab, false, i, CMH.tabsManager.tabsStatus[tab.id].unique[i]?.[0], CMH.tabsManager.tabsStatus[tab.id].unique[i]?.[1], CMH.tabsManager.tabsStatus[tab.id].unique[i]?.[2]) === 'stop')
-        return
+  
+  let indexElementToCheck = CMH.tabsManager.tabsStatus[tab.id].unique?.findIndex(row => row.includes(url.protocol+"//"+url.hostname)) // Index of element corresponding to main frame url
+  if (!indexElementToCheck || indexElementToCheck === -1)
+    indexElementToCheck = 0
+  let stop = null // if true, tells popup.js to close the popup window
+  if (!CMH.options.settings.deepInspection) {
+    await CMH.certificatesChecker.checkTab(tab, showNotifications, indexElementToCheck, true, CMH.tabsManager.tabsStatus[tab.id].unique[indexElementToCheck]?.[0], CMH.tabsManager.tabsStatus[tab.id].unique[indexElementToCheck]?.[1], CMH.tabsManager.tabsStatus[tab.id].unique[indexElementToCheck]?.[2]) // Only checks the main frame URL (first in array)
+  } else {
+    for (let i = 0; i < CMH.tabsManager.tabsStatus[tab.id].unique.length; i++) {
+      let indexIsMainFrameUrl = false
+      if (i === indexElementToCheck)
+        indexIsMainFrameUrl = true
+      if (await CMH.certificatesChecker.checkTab(tab, showNotifications, i, indexIsMainFrameUrl, CMH.tabsManager.tabsStatus[tab.id].unique[i]?.[0], CMH.tabsManager.tabsStatus[tab.id].unique[i]?.[1], CMH.tabsManager.tabsStatus[tab.id].unique[i]?.[2]) === 'stop') {
+        stop = true
+        break
+      }
     }
   }
   CMH.tabsManager.initTab(tab.id, true)
+
+  if (stop)
+    return 'stop'
+  return indexElementToCheck
 }
 
 
@@ -151,7 +170,6 @@ CMH.tabsManager.processTab = async (tab, showNotifications) => {
  */ 
 CMH.tabsManager.onHeadersReceived = async (requestDetails) => {
   if (requestDetails.tabId !== -1) { // Only requests coming from a tab
-    console.log("onHeadersReceived:", requestDetails.ip)
     CMH.tabsManager.initTab(requestDetails.tabId)
 
     const securityInfo = await browser.webRequest.getSecurityInfo(requestDetails.requestId, { certificateChain: true })

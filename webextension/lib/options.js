@@ -6,12 +6,14 @@
 
 CMH.options = {}
 
+
 /**
  * @type {object}
  * Cache of extension options.
  * Default settings.
  */
 CMH.options.settings = {
+  deepInspection:                false,
   checkOnPageLoad:               false,
   alertOnUnicodeIDNDomainNames:  true,
   disableNotifications:          false,

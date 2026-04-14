@@ -6,17 +6,6 @@
 
 CMH.ui = {}
 
-/**
- * @name init
- * @function
- * Initialize user interface.
- */
-/*CMH.ui.init = () => {
-  browser.action.onClicked.addListener((tab) => {
-    CMH.tabsManager.processTab(tab, !CMH.options.settings.disableNotifications)
-  })
-}*/
-
 
 /**
  * @name setStatus
@@ -102,14 +91,3 @@ CMH.ui.showNotification = (message, options) => {
   browser.notifications.onClicked.addListener(CMH.ui.openOptionsPageListener)
   browser.notifications.onClicked.addListener(CMH.ui.openIDNInfoLinkPageListener)
 }
-
-// Initialize UI when the current platform is detected
-/*(() => {
-  interval = setInterval(() => {
-    if (typeof CMH.common.isDesktopPlatform() !== 'undefined') {
-      clearInterval(interval)
-
-      CMH.ui.init()
-    }
-  }, 10)
-})()*/

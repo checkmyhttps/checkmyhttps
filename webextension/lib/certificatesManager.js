@@ -6,6 +6,7 @@
 
 CMH.certificatesManager = {}
 
+
 /**
  * @name formatCertificate
  * @function
