@@ -15,7 +15,7 @@ publish_to: 'none'
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 5.7.2+8 # !Important! You also need to change android/local.properties file to match the fields flutter.versionName and flutter.versionCode to that actual field in pubspec.yaml
+version: 5.7.3+9 # !Important! You also need to change android/local.properties file to match the fields flutter.versionName and flutter.versionCode to that actual field in pubspec.yaml
 
 environment:
   sdk: ^3.7.2

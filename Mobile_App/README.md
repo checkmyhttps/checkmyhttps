@@ -6,7 +6,7 @@ This application is a client of the CheckMyHTTPS project designed for smartphone
 
 ## Installation 
 
-Download Android studio following their [tutorial](https://developer.android.com/studio/install)
+Download Android Studio following their [tutorial](https://developer.android.com/studio/install)
 
 ### Download the dependencies of the project.
 
@@ -14,7 +14,7 @@ Download Android studio following their [tutorial](https://developer.android.com
 
 ## Dependencies management
 
-We have adding a json file directly in the project in order to list all the dependencies of the flutter project, the goal is to be able to check quickly if there are dependencies out of date in
+We have added a json file directly in the project in order to list all the dependencies of the flutter project, the goal is to be able to check quickly if there are dependencies out of date in
 the project.
 
 If you want to reproduce this json file, you should follow this steps : 
@@ -29,7 +29,7 @@ If you want to reproduce this json file, you should follow this steps :
 
 ### Third Step :
 
-If you are looking for a specific dependency, you can use the research bar in the top right corner.
+If you are looking for a specific dependency, you can use the search bar in the top right corner.
  
 
 ## FAQ
@@ -42,12 +42,8 @@ This project is mainly maintained by students from ESIEA, and Flutter is part of
 
 Due to a specificity of the Dart language, the current version of the app only works with servers that have a certificate signed by a CA Root recognized by Mozilla. You may need to modify parts of the code to use it if your organization issues its own certificates.
 
-### What's new in this version?
-
-We have changed the framework and also added signature verification to the app to enhance the security of the checks.
-
 ## Authors
 
 Developed by Ghassen LAHDHIRI, Ahmed BOUSRIH, and Mehdi BELAJOUZA.
 
-Review, updated and published by Cyril LEBLAY and Adrien SCHNEIDER.
+Reviewed, updated and published by Cyril LEBLAY and Adrien SCHNEIDER.

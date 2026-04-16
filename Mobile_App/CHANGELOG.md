@@ -1,5 +1,11 @@
 # CheckMyHTTPS Mobile App Changelog
 
+## 5.7.3 - 2026-04-16
+
+- Removed hardcoded SHA256 of check server's certicate (cmh_sha256). If there is a MITM with a valid signature, the RSA-SHA256 signature verification would be OK but the signed body response will still contain the (right) SHA256 of the requested's website certificate. Hence, that last hash will be different from the (wrong) SHA256 of the certificate on client side and CMH status will be invalid
+- Removed API query parameter 'sign'. Now, every request is signed, no need to specify this parameter
+- When serverUnreachable (CMH server or host to check), it now displays the unknown logo instead of the warning one
+
 ## 5.7.2 - 2025-06-27
 
 - Updates to current Flutter syntax

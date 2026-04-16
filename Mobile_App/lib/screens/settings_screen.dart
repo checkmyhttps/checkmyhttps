@@ -123,37 +123,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
     handleDefaultUrlChange(defaultUrl.text);
     handleCheckServerAddressChange(checkServerAddress.value.text);
     CheckServerFingerprints? checkServerData;
-    checkServerData = await VerificationService.verifySignatureSettings(
-      apiBaseUrl: Uri.parse(checkServerAddress.text).host,
-    );
-    var response = jsonToResponse(checkServerData.apiInfo);
+    try {
+      checkServerData = await VerificationService.verifySignatureSettings(
+        apiBaseUrl: Uri.parse(checkServerAddress.text).host,
+      ).timeout(const Duration(seconds: 5));
 
-    /// Perform RSA signature verification.
-    bool result = await RSA.verifyPKCS1v15Bytes(
-      base64.decode(checkServerData.apiInfo["signature"].toString()),
-      Uint8List.fromList(response.codeUnits),
-      Hash.SHA256,
-      checkServerPublicKey.text.toString(),
-    );
+      var response = jsonToResponse(checkServerData.apiInfo);
 
-    /// Check verification result and handle accordingly.
-    if (result == false) {
-      dataCertException = const VerificationException(
-        type: VerificationExceptionType.warning,
-        cause: VerificationExceptionCause.checkServerPublicKey,
+      /// Perform RSA signature verification.
+      bool result = await RSA.verifyPKCS1v15Bytes(
+        base64.decode(checkServerData.apiInfo["signature"].toString()),
+        Uint8List.fromList(response.codeUnits),
+        Hash.SHA256,
+        checkServerPublicKey.text.toString(),
       );
-    } else {
-      /// Update check server public key if verification is successful.
-      handleCheckServerPublicKeyChange(checkServerPublicKey.text);
-    }
 
-    /// Display verification exception alert if there is an exception.
-    if (dataCertException != null) {
+      /// Check verification result and handle accordingly.
+      if (result == false) {
+        dataCertException = const VerificationException(
+          type: VerificationExceptionType.warning,
+          cause: VerificationExceptionCause.checkServerPublicKey,
+        );
+      } else {
+        /// Update check server public key if verification is successful.
+        handleCheckServerPublicKeyChange(checkServerPublicKey.text);
+      }
+
+      /// Display verification exception alert if there is an exception.
+      if (dataCertException != null) {
+        showVerificationExceptionAlert(dataCertException, context);
+      }
+      setState(() {
+        loading = false;
+      });
+    } catch (e) {
+      dataCertException = const VerificationException(
+        type: VerificationExceptionType.unknown,
+        cause: VerificationExceptionCause.serverUnreachable,
+      );
       showVerificationExceptionAlert(dataCertException, context);
+      setState(() {
+        loading = false;
+      });
     }
-    setState(() {
-      loading = false;
-    });
   }
 
   void resetDefault() async {
@@ -169,7 +181,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     bool withResponse = true;
-    Uri url = Uri.parse("${checkServerAddress.value.text}download/public_key");
+    String serverUrl = checkServerAddress.value.text.trim();
+    if (serverUrl.endsWith('/')) {
+      serverUrl = serverUrl.substring(0, serverUrl.length - 1);
+    }
+    Uri url = Uri.parse("$serverUrl/download/public_key");
     try {
       if (kIsWeb == true) {
         throw const VerificationException(
@@ -195,7 +211,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       HttpClientResponse httpsConnection = await httpsConnectionRequest.done
           .timeout(
-            const Duration(milliseconds: 1000),
+            const Duration(milliseconds: 5000),
             onTimeout: () {
               return httpsConnectionRequest.close();
             },
@@ -212,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } on HandshakeException catch (e) {
       if (e.message.toUpperCase().contains("HANDSHAKE ERROR")) {
         throw const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
       } else {
@@ -353,8 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             ActionButton(
               text: AppLocalizations.of(context).getPublicKey,
-              onPressed:
-                  getPublicKey, //(Uri.parse("https://checkmyhttps.net/download/public_key")),
+              onPressed: getPublicKey,
               loading: loading,
               textColor: Colors.white,
             ),

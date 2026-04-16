@@ -34,7 +34,7 @@ migrate_working_dir/
 /build/
 /linux/
 /android/.gradle/
-
+/android/build/
 
 # Symbolication related
 app.*.symbols

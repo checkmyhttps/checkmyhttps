@@ -83,18 +83,19 @@ class _HomeScreenState extends State<HomeScreen> {
       CheckServerFingerprints? checkServerData;
 
       try {
+        // Get certificate from user's view
         dataCert = await VerificationService.getFingerprints(
           Uri.parse(checkUrl),
         );
       } on VerificationException catch (err) {
         dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
         debugPrint("ERROR(dataCertException): $dataCertException $err");
       } catch (err) {
         dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
         debugPrint("ERROR(dataCert): $err");
@@ -103,18 +104,16 @@ class _HomeScreenState extends State<HomeScreen> {
       /// if no error about reaching the website we send api request
       if (dataCertException == null) {
         try {
-          checkServerData =
-              await VerificationService.getFingerprintsFromCheckServer(
-                apiBaseUrl:
-                    Uri.parse(storageService.getAppCheckServerAddress()!).host,
-                host: Uri.parse(checkUrl).host,
-                port: Uri.parse(checkUrl).port.toString(),
-                ip: dataCert?.ip,
-                sign: "",
-              );
+          checkServerData = await VerificationService.getCertFromCheckServer(
+            apiBaseUrl:
+                Uri.parse(storageService.getAppCheckServerAddress()!).host,
+            host: Uri.parse(checkUrl).host,
+            port: Uri.parse(checkUrl).port.toString(),
+            ip: dataCert?.ip,
+          );
         } catch (err) {
           dataCertException = const VerificationException(
-            type: VerificationExceptionType.warning,
+            type: VerificationExceptionType.unknown,
             cause: VerificationExceptionCause.serverUnreachable,
           );
           debugPrint("ERROR(checkServerData): $err");
@@ -147,38 +146,31 @@ class _HomeScreenState extends State<HomeScreen> {
       if (dataCertException?.cause == VerificationExceptionCause.danger &&
           checkServerData?.apiInfo["error"] == "HOST_UNREACHABLE") {
         dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
       } else if (dataCert == null &&
           checkServerData?.apiInfo["error"] == "HOST_UNREACHABLE") {
         dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
-          cause: VerificationExceptionCause.serverUnreachable,
-        );
-      } else if (checkServerData?.sha256 == null) {
-        dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
       } else if (dataCert == null &&
           checkServerData?.apiInfo["error"] == "UNKNOWN_HOST") {
         dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnknown,
         );
       } else if (checkServerData == null) {
         dataCertException = const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
       }
 
       if (dataCert?.sha256 !=
               checkServerData?.apiInfo["fingerprints"]["sha256"] ||
-          checkServerData?.apiInfo?["issuer"] == null ||
-          checkServerData!.sha256.toString() !=
-              checkServerData.apiInfo["cmh_sha256"]) {
+          checkServerData?.apiInfo?["issuer"] == null) {
         dataCertException = const VerificationException(
           type: VerificationExceptionType.invalid,
           cause: VerificationExceptionCause.danger,

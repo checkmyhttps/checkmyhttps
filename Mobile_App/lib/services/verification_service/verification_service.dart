@@ -25,9 +25,8 @@ class Fingerprints {
 
 class CheckServerFingerprints {
   final dynamic apiInfo;
-  final String sha256;
 
-  const CheckServerFingerprints({required this.apiInfo, required this.sha256});
+  const CheckServerFingerprints({required this.apiInfo});
 
   @override
   String toString() {
@@ -75,7 +74,7 @@ class VerificationService {
 
       HttpClientResponse httpsConnection = await httpsConnectionRequest.done
           .timeout(
-            const Duration(milliseconds: 1000),
+            const Duration(milliseconds: 5000),
             onTimeout: () {
               return httpsConnectionRequest.close();
             },
@@ -114,7 +113,7 @@ class VerificationService {
     } on HandshakeException catch (e) {
       if (e.message.toUpperCase().contains("HANDSHAKE ERROR")) {
         throw const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
       } else {
@@ -131,14 +130,14 @@ class VerificationService {
     } on SocketException catch (e) {
       if (e.message.toUpperCase().contains("FAILED HOST LOOKUP")) {
         throw const VerificationException(
-          type: VerificationExceptionType.warning,
+          type: VerificationExceptionType.unknown,
           cause: VerificationExceptionCause.serverUnreachable,
         );
       }
       rethrow;
     } on CertificateException {
       throw const VerificationException(
-        type: VerificationExceptionType.unknown,
+        type: VerificationExceptionType.warning,
         cause: VerificationExceptionCause.sslPeerUnverified,
       );
     } catch (e) {
@@ -149,23 +148,19 @@ class VerificationService {
     }
   }
 
-  static Future<CheckServerFingerprints> getFingerprintsFromCheckServer({
+  static Future<CheckServerFingerprints> getCertFromCheckServer({
     required String apiBaseUrl,
     required String host,
     required String port,
     required String? ip,
-    required String sign,
   }) async {
     final requestFingerprints = await getFingerprints(
       Uri(scheme: "https", host: apiBaseUrl, path: "api.php"),
       withResponse: true,
-      postArguments: {"host": host, "port": port, "ip": ip, "sign": true},
+      postArguments: {"host": host, "port": port, "ip": ip},
     );
 
-    return CheckServerFingerprints(
-      apiInfo: requestFingerprints.response,
-      sha256: requestFingerprints.sha256,
-    );
+    return CheckServerFingerprints(apiInfo: requestFingerprints.response);
   }
 
   static Future<CheckServerFingerprints> verifySignatureSettings({
@@ -174,12 +169,9 @@ class VerificationService {
     final requestFingerprints = await getFingerprints(
       Uri(scheme: "https", host: apiBaseUrl, path: "api.php"),
       withResponse: true,
-      postArguments: {"info": "", "sign": true},
+      postArguments: {"info": ""},
     );
-    return CheckServerFingerprints(
-      apiInfo: requestFingerprints.response,
-      sha256: requestFingerprints.sha256,
-    );
+    return CheckServerFingerprints(apiInfo: requestFingerprints.response);
   }
 }
 
