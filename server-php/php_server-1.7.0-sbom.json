@@ -1,0 +1,104 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "CheckMyHTTPS - PHP Server",
+  "documentNamespace": "https://github.com/checkmyhttps/checkmyhttps/blob/master/server-php/SBOM.json",
+  "creationInfo": {
+    "created": "2026-05-20T00:00:00Z",
+    "creators": [
+      "Tool: GitHub Copilot"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package",
+      "name": "CheckMyHTTPS-Server",
+      "version": "5.7.3",
+      "description": "CheckMyHTTPS API server - Backend service for SSL/TLS interception verification",
+      "downloadLocation": "https://github.com/checkmyhttps/checkmyhttps",
+      "filesAnalyzed": false,
+      "licenseDeclared": "GPL-3.0-only",
+      "licenseConcluded": "GPL-3.0-only",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:checkmyhttps:checkmyhttps-server:5.7.3:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-php",
+      "name": "PHP",
+      "version": "latest",
+      "downloadLocation": "https://www.php.net",
+      "filesAnalyzed": false,
+      "licenseDeclared": "PHP-3.01"
+    },
+    {
+      "SPDXID": "SPDXRef-apache",
+      "name": "Apache HTTP Server",
+      "version": "latest",
+      "downloadLocation": "https://httpd.apache.org",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0"
+    },
+    {
+      "SPDXID": "SPDXRef-php-intl",
+      "name": "PHP Intl Extension",
+      "version": "latest",
+      "downloadLocation": "https://www.php.net/manual/en/book.intl.php",
+      "filesAnalyzed": false,
+      "licenseDeclared": "PHP-3.01"
+    },
+    {
+      "SPDXID": "SPDXRef-php-filter",
+      "name": "PHP Filter Extension",
+      "version": "latest",
+      "downloadLocation": "https://www.php.net/manual/en/book.filter.php",
+      "filesAnalyzed": false,
+      "licenseDeclared": "PHP-3.01"
+    },
+    {
+      "SPDXID": "SPDXRef-openssl",
+      "name": "OpenSSL",
+      "version": "latest",
+      "downloadLocation": "https://www.openssl.org",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-php"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-apache"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-php-intl"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-php-filter"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-openssl"
+    }
+  ]
+}
