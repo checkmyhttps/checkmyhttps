@@ -1,0 +1,39 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "CheckMyHTTPS - Web Extension (Firefox)",
+  "documentNamespace": "https://github.com/checkmyhttps/checkmyhttps/blob/master/webextension/SBOM.json",
+  "creationInfo": {
+    "created": "2026-05-20T00:00:00Z",
+    "creators": [
+      "Tool: GitHub Copilot"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package",
+      "name": "CheckMyHTTPS-WebExtension",
+      "version": "5.8.0",
+      "description": "CheckMyHTTPS Web Extension for Firefox - Check if your encrypted web traffic is being intercepted",
+      "downloadLocation": "https://github.com/checkmyhttps/checkmyhttps",
+      "filesAnalyzed": false,
+      "licenseDeclared": "GPL-3.0-only",
+      "licenseConcluded": "GPL-3.0-only",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:checkmyhttps:checkmyhttps-webext:5.8.0:*:*:*:*:firefox:*:*"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package"
+    }
+  ]
+}
