@@ -1,0 +1,208 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "CheckMyHTTPS - Mobile App (Flutter)",
+  "documentNamespace": "https://github.com/checkmyhttps/checkmyhttps/blob/master/Mobile_App/SBOM.json",
+  "creationInfo": {
+    "created": "2026-05-20T00:00:00Z",
+    "creators": [
+      "Tool: GitHub Copilot"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package",
+      "name": "CheckMyHTTPS-MobileApp",
+      "version": "5.7.3+9",
+      "description": "CheckMyHTTPS Mobile App (Flutter) - Check if your encrypted web traffic is being intercepted",
+      "downloadLocation": "https://github.com/checkmyhttps/checkmyhttps",
+      "filesAnalyzed": false,
+      "licenseDeclared": "GPL-3.0-only",
+      "licenseConcluded": "GPL-3.0-only",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:checkmyhttps:checkmyhttps-mobile:5.7.3:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-flutter",
+      "name": "flutter",
+      "version": "0.0.0",
+      "downloadLocation": "https://flutter.dev",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-crypto",
+      "name": "crypto",
+      "version": "3.0.6",
+      "downloadLocation": "https://pub.dev/packages/crypto",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-convert",
+      "name": "convert",
+      "version": "3.1.2",
+      "downloadLocation": "https://pub.dev/packages/convert",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-fast-rsa",
+      "name": "fast_rsa",
+      "version": "3.8.3",
+      "downloadLocation": "https://pub.dev/packages/fast_rsa",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-provider",
+      "name": "provider",
+      "version": "6.1.5",
+      "downloadLocation": "https://pub.dev/packages/provider",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-shared-preferences",
+      "name": "shared_preferences",
+      "version": "2.5.3",
+      "downloadLocation": "https://pub.dev/packages/shared_preferences",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-connectivity-plus",
+      "name": "connectivity_plus",
+      "version": "6.1.4",
+      "downloadLocation": "https://pub.dev/packages/connectivity_plus",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-url-launcher",
+      "name": "url_launcher",
+      "version": "6.3.1",
+      "downloadLocation": "https://pub.dev/packages/url_launcher",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-google-fonts",
+      "name": "google_fonts",
+      "version": "6.2.1",
+      "downloadLocation": "https://pub.dev/packages/google_fonts",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-intl",
+      "name": "intl",
+      "version": "0.20.2",
+      "downloadLocation": "https://pub.dev/packages/intl",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-auto-size-text",
+      "name": "auto_size_text",
+      "version": "3.0.0",
+      "downloadLocation": "https://pub.dev/packages/auto_size_text",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-introduction-screen",
+      "name": "introduction_screen",
+      "version": "3.1.17",
+      "downloadLocation": "https://pub.dev/packages/introduction_screen",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT"
+    },
+    {
+      "SPDXID": "SPDXRef-dart-receive-sharing-intent",
+      "name": "receive_sharing_intent",
+      "version": "1.8.1",
+      "downloadLocation": "https://pub.dev/packages/receive_sharing_intent",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-flutter"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-crypto"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-convert"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-fast-rsa"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-provider"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-shared-preferences"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-connectivity-plus"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-url-launcher"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-google-fonts"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-intl"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-auto-size-text"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-introduction-screen"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEPENDS_ON",
+      "relatedSpdxElement": "SPDXRef-dart-receive-sharing-intent"
+    }
+  ]
+}
