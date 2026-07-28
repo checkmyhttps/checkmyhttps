@@ -61,7 +61,7 @@ class VerificationService {
 
       HttpClientRequest httpsConnectionRequest;
 
-      if (withResponse == true) {
+      /*if (withResponse == true) {
         httpsConnectionRequest = await client.postUrl(url);
         httpsConnectionRequest.headers.set(
           HttpHeaders.contentTypeHeader,
@@ -78,7 +78,24 @@ class VerificationService {
             onTimeout: () {
               return httpsConnectionRequest.close();
             },
-          );
+          );*/
+      if (withResponse == true) {
+        httpsConnectionRequest = await client.postUrl(url);
+
+        httpsConnectionRequest.headers.set(
+          HttpHeaders.contentTypeHeader,
+          "application/json; charset=UTF-8",
+        );
+
+        httpsConnectionRequest.write(jsonEncode(postArguments));
+      } else {
+        httpsConnectionRequest = await client.openUrl("HEAD", url);
+      }
+
+// Envoie la requête et attend la réponse (5 s max)
+      HttpClientResponse httpsConnection = await httpsConnectionRequest
+          .close()
+          .timeout(const Duration(seconds: 5));
 
       if (withResponse == true) {
         final contents = StringBuffer();
@@ -166,11 +183,20 @@ class VerificationService {
   static Future<CheckServerFingerprints> verifySignatureSettings({
     required String apiBaseUrl,
   }) async {
+    final uri = Uri(
+      scheme: "https",
+      host: apiBaseUrl,
+      path: "api.php",
+    );
+
+    debugPrint("Request URL: $uri");
+
     final requestFingerprints = await getFingerprints(
-      Uri(scheme: "https", host: apiBaseUrl, path: "api.php"),
+      Uri(scheme: "https", host: apiBaseUrl, path: "/api.php"),
       withResponse: true,
       postArguments: {"info": ""},
     );
+
     return CheckServerFingerprints(apiInfo: requestFingerprints.response);
   }
 }

@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:convert";
 import "dart:io";
 import "package:fast_rsa/fast_rsa.dart";
@@ -58,18 +59,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late TextEditingController defaultUrl;
   late TextEditingController checkServerAddress;
   late TextEditingController checkServerPublicKey;
+
+  //deactivate save button
   bool loading = false;
+  bool hasChanges = false;
+
+  late String initialDefaultUrl;
+  late String initialCheckServerAddress;
+  late String initialCheckServerPublicKey;
 
   @override
   void initState() {
     super.initState();
-    defaultUrl = TextEditingController(text: storageService.getAppDefaultUrl());
-    checkServerAddress = TextEditingController(
-      text: storageService.getAppCheckServerAddress(),
-    );
-    checkServerPublicKey = TextEditingController(
-      text: storageService.getAppCheckServerPublicKey(),
-    );
+
+    initialDefaultUrl = storageService.getAppDefaultUrl()!;
+    initialCheckServerAddress = storageService.getAppCheckServerAddress()!;
+    initialCheckServerPublicKey = storageService.getAppCheckServerPublicKey()!;
+
+    defaultUrl = TextEditingController(text: initialDefaultUrl);
+    checkServerAddress = TextEditingController(text: initialCheckServerAddress);
+    checkServerPublicKey = TextEditingController(text: initialCheckServerPublicKey);
+
+    defaultUrl.addListener(checkForChanges);
+    checkServerAddress.addListener(checkForChanges);
+    checkServerPublicKey.addListener(checkForChanges);
+  }
+
+  // Function to check if there is any change in the page
+  void checkForChanges() {
+    final changed =
+        defaultUrl.text != initialDefaultUrl ||
+            checkServerAddress.text != initialCheckServerAddress ||
+            checkServerPublicKey.text != initialCheckServerPublicKey;
+
+    if (changed != hasChanges) {
+      setState(() {
+        hasChanges = changed;
+      });
+    }
   }
 
   /// Function to handle theme change in the application.
@@ -116,14 +143,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// Function to save settings and perform verification.
   void save() async {
     closeKeyboard();
-    setState(() {
-      loading = true;
-    });
+
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+    }
+
     VerificationException? dataCertException;
+
     handleDefaultUrlChange(defaultUrl.text);
     handleCheckServerAddressChange(checkServerAddress.value.text);
+
     CheckServerFingerprints? checkServerData;
+
     try {
+      final serverUri = Uri.tryParse(checkServerAddress.text.trim());
+
+      if (serverUri == null || serverUri.host.isEmpty) {
+        throw const VerificationException(
+          type: VerificationExceptionType.warning,
+          cause: VerificationExceptionCause.serverUnreachable,
+        );
+      }
+
+      debugPrint(
+        "Verification server: ${checkServerAddress.text}",
+      );
+
       checkServerData = await VerificationService.verifySignatureSettings(
         apiBaseUrl: Uri.parse(checkServerAddress.text).host,
       ).timeout(const Duration(seconds: 5));
@@ -138,6 +185,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         checkServerPublicKey.text.toString(),
       );
 
+
       /// Check verification result and handle accordingly.
       if (result == false) {
         dataCertException = const VerificationException(
@@ -151,20 +199,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       /// Display verification exception alert if there is an exception.
       if (dataCertException != null) {
-        showVerificationExceptionAlert(dataCertException, context);
+        showVerificationExceptionAlert(
+          dataCertException,
+          context,
+        );
       }
-      setState(() {
-        loading = false;
-      });
-    } catch (e) {
+
+      // Les données saisies sont maintenant considérées comme sauvegardées.
+      if (mounted) {
+        setState(() {
+          initialDefaultUrl = defaultUrl.text;
+          initialCheckServerAddress = checkServerAddress.text;
+          initialCheckServerPublicKey = checkServerPublicKey.text;
+
+          hasChanges = false;
+        });
+      }
+
+    } on TimeoutException {
       dataCertException = const VerificationException(
         type: VerificationExceptionType.unknown,
         cause: VerificationExceptionCause.serverUnreachable,
       );
-      showVerificationExceptionAlert(dataCertException, context);
-      setState(() {
-        loading = false;
-      });
+
+      showVerificationExceptionAlert(
+        dataCertException,
+        context,
+      );
+
+    } catch (e, stack) {
+      debugPrint("Erreur save settings: $e");
+      debugPrint(stack.toString());
+
+      dataCertException = const VerificationException(
+        type: VerificationExceptionType.unknown,
+        cause: VerificationExceptionCause.serverUnreachable,
+      );
+
+      showVerificationExceptionAlert(
+        dataCertException,
+        context,
+      );
+
+    } finally {
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
 
@@ -238,6 +320,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       }
     }
+
+    initialDefaultUrl = defaultUrl.text;
+    initialCheckServerAddress = checkServerAddress.text;
+    initialCheckServerPublicKey = checkServerPublicKey.text;
+
     setState(() {
       loading = false;
     });
@@ -357,7 +444,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             ActionButton(
               text: AppLocalizations.of(context).save,
-              onPressed: save,
+              onPressed: hasChanges ? save : null,
               loading: loading,
               textColor: Colors.white,
             ),
