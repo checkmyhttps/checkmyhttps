@@ -5,6 +5,7 @@ import "package:provider/provider.dart";
 import "package:checkmyhttps/settings/settings.dart";
 import "package:checkmyhttps/cmh_app.dart";
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
